@@ -4,7 +4,13 @@ var handler = async (m, { conn, text}) => {
 
 conn.reply(m.chat, `${emoji2} Buscando un chiste, espere un momento...`, m)
 
-conn.reply(m.chat, `*┏━_͜͡-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡⚘-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡⚘-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡⚘-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡_͜͡━┓*\n\n❥ *"${pickRandom(global.chiste)}"*\n\n*┗━_͜͡-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡⚘-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡⚘-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡⚘-͜͡-͜͡-͜͡-͜͡-͜͡-͜͡_͜͡━┛*`, m)
+conn.reply(m.chat, `
+╭━━━❀━❀━❀━━━╮
+
+  ❥ *"${pickRandom(global.chiste)}*
+
+╰━━━❀━❀━❀━━━╯
+`, m)
 
 }
 handler.help = ['chiste']
