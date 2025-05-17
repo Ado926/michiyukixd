@@ -14,13 +14,13 @@ let handler = async (m, { conn, args }) => {
 ╰─〔 ☀︎ Info Principal ☀︎ 〕─╯
 
 ╭┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╮
-┃✦ Cliente: @${userId.split('@')[0]}
-┃✦ Modo: ⟬ Privado ⟭
-┃✦ URL OFC ☕︎︎:\n┃ https://play-youtubedescargas.vercel.app/
-┃✦ Activado: ${uptime}
-┃✦ Usuarios ☃︎: ${totalreg}
-┃✦ Comandos ☂︎: ${totalCommands}
-┃✦ Motor ➮ Baileys Multi Device
+┃✦ *Cliente:* @${userId.split('@')[0]}
+┃✦ *Modo:* ⟬ Privado ⟭
+┃✦ *URL OFC ☕︎︎:*\n┃ https://play-youtubedescargas.vercel.app/
+┃✦ *Activado:* ${uptime}
+┃✦ *Usuarios ☃︎: ${totalreg}
+┃✦ *Comandos ☂︎:* ${totalCommands}
+┃✦ *Motor ➮:* Baileys Multi Device
 ╰┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╯
 
 🌳 Puedes tener tu *Sub Bot*  
