@@ -17,7 +17,7 @@ let handler = async (m, { conn, args }) => {
 │🌺 Encendido: ${uptime}
 │🌻 Usuarios totales: ${totalreg}
 │🌼 Comandos disponibles: ${totalCommands}
-╰──────────𓂃𓈒𓏸🌸𓈒𓂃────────── `
+╰──────────𓂃𓈒𓏸🌸𓈒𓂃──────────
 
 🌳 Puedes tener tu *Sub Bot*
 ⌁ Usa *#code* o *#qr* para empezar.
