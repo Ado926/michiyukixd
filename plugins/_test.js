@@ -25,7 +25,7 @@ const formatViews = (views) => {
   return views.toString();
 };
 
-const handler = async (m, { conn, text, command }) => {
+const handler = async (m, { conn, text }) => {
   if (!text) return m.reply(toSansSerifPlain("✦ Ingresa el nombre o link de un video."));
 
   let video;
@@ -56,34 +56,7 @@ const handler = async (m, { conn, text, command }) => {
     caption: txt
   }, { quoted: m });
 
-  try {
-    if (['playt', 'yta', 'ytmp3', 'playaudio'].includes(command)) {
-      const json = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${url}`).then(r => r.json());
-      if (!json.result?.download?.url) throw 'audio no disponible';
-
-      const { data } = await conn.getFile(json.result.download.url);
-      conn.sendMessage(m.chat, {
-        audio: data,
-        fileName: `${title}.mp3`,
-        mimetype: 'audio/mpeg',
-        ptt: false
-      }, { quoted: m });
-    }
-
-    if (['play2', 'ytv', 'ytmp4', 'mp4'].includes(command)) {
-      const json = await fetch(`https://api.neoxr.eu/api/youtube?url=${url}&type=video&quality=360p&apikey=GataDios`).then(r => r.json());
-      if (!json.data?.url) throw 'video no disponible';
-
-      const { data } = await conn.getFile(json.data.url);
-      conn.sendMessage(m.chat, {
-        video: data,
-        fileName: `${title}.mp4`,
-        caption: title
-      }, { quoted: m });
-    }
-  } catch (e) {
-    return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e);
-  }
+  // Lógica de descarga eliminada
 };
 
 handler.command = ["playt"];
