@@ -25,30 +25,27 @@ const handler = async (m, { conn }) => {
   const match = quotedText.match(ytIdRegex);
   if (!match) return m.reply(toSansSerifPlain("✦ No se detectó un enlace de YouTube en el mensaje citado."));
 
+  await conn.sendMessage(m.chat, { react: { text: "🕓", key: m.key } });
+
   const videoUrl = `https://youtu.be/${match[1]}`;
   const res = await yts(videoUrl);
   const video = res.videos[0];
 
   if (!video) return m.reply(toSansSerifPlain("✦ No se encontró el video."));
 
-  const { title, url, thumbnail } = video;
-
-  await conn.sendMessage(m.chat, {
-    image: { url: thumbnail },
-    caption: toSansSerifPlain(`♫ Descargando audio de: ${title}`)
-  }, { quoted: m });
-
   try {
-    const json = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(url)}`).then(r => r.json());
+    const json = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(video.url)}`).then(r => r.json());
     if (!json.result?.download?.url) throw "audio no disponible";
 
     const { data } = await conn.getFile(json.result.download.url);
     await conn.sendMessage(m.chat, {
       audio: data,
-      fileName: `${title}.mp3`,
+      fileName: `${video.title}.mp3`,
       mimetype: 'audio/mpeg',
       ptt: false
     }, { quoted: m });
+
+    await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (e) {
     return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e);
