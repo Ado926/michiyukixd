@@ -7,7 +7,7 @@ conn.reply(
   `─── ⋆✩⋆ ───\n` +
   `🔗 Aquí está el link del grupo:\n\n` +
   `${link}\n\n` +
-  `${Dev}\n` +
+  `${dev}\n` +
   `─── ⋆✩⋆ ───`,
   m,
   { detectLink: true }
