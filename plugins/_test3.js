@@ -14,38 +14,32 @@ const toSansSerifPlain = (text = "") =>
     return map[char] || char;
   }).join("");
 
-// Expresión para extraer link de YouTube
 const ytLinkRegex = /https?:\/\/(?:www\.)?youtu(?:be\.com|\.be)\/[^\s]+/;
 
 const handler = async (m, { conn }) => {
-  // Validar que se responda a mensaje que contenga la frase clave
   if (!m.quoted || !m.quoted.text || !m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y"))
     return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga '乂  Y O U T U B E  -  P L A Y'."));
 
-  // Extraer link de YouTube del mensaje citado
   const linkMatch = m.quoted.text.match(ytLinkRegex);
   if (!linkMatch) return m.reply(toSansSerifPlain("✦ No se encontró un enlace de YouTube en el mensaje citado."));
 
   const videoUrl = linkMatch[0];
-
   conn.sendMessage(m.chat, { react: { text: "🚀", key: m.key } });
 
   try {
-    // Llamar API para video (mp4)
-    const apiUrl = `https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(videoUrl)}`;
+    const apiUrl = `https://api.neoxr.eu/api/youtube?url=${encodeURIComponent(videoUrl)}&type=video&quality=360p&apikey=GataDios`;
     const res = await fetch(apiUrl);
     const json = await res.json();
 
-    if (!json || !json.result || !json.result.url) throw "video no disponible";
+    if (!json || !json.url) throw "video no disponible";
 
-    // Descargar buffer del video
-    const videoBuffer = await fetch(json.result.url).then(r => r.buffer());
+    const videoBuffer = await fetch(json.url).then(r => r.buffer());
 
     await conn.sendMessage(m.chat, {
       video: videoBuffer,
       fileName: `video.mp4`,
       mimetype: 'video/mp4',
-      caption: `乂  Y O U T U B E  -  V I D E O\n\nTítulo: ${json.result.title || "Desconocido"}`,
+      caption: `乂  Y O U T U B E  -  V I D E O\n\nTítulo: ${json.title || "Desconocido"}`,
     }, { quoted: m });
 
     conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
