@@ -46,15 +46,15 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
   const { title, timestamp, views, url, thumbnail, author } = video;
 
-  const msg = `
-╭┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╮
-┃✦ Título: ${toSansSerifPlain(title)}
-┃✦ Canal: ${toSansSerifPlain(author.name)}
-┃✦ Duración: ${toSansSerifPlain(timestamp)}
-┃✦ Vistas: ${toSansSerifPlain(formatViews(views))}
-┃✦ Enlace: ${url}
-╰┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╯
-`;
+  const msg = `╭── ⋅ʚ♡ɞ⋅ ──╮
+➪ 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗡𝗗𝗢 › *${title}*
+
+> ✩ 𝗖𝗔𝗡𝗔𝗟 › *${author.name}*
+> ⴵ 𝗗𝗨𝗥𝗔𝗖𝗜𝗢́𝗡 › *${timestamp}*
+> ☄︎ 𝗩𝗜𝗦𝗧𝗔𝗦 › *${views}*
+> ☁︎ 𝗣𝗨𝗕𝗟𝗜𝗖𝗔𝗗𝗢 › *${ago}*
+> ❑ 𝗘𝗡𝗟𝗔𝗖𝗘 › *${url}*
+╰── ⋅ʚ♡ɞ⋅ ──╯`;
 
   await conn.sendMessage(m.chat, {
     image: { url: thumbnail },
