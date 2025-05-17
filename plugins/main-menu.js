@@ -16,7 +16,8 @@ let handler = async (m, { conn, args }) => {
 ╭┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╮
 ┃✦ Cliente: @${userId.split('@')[0]}
 ┃✦ Modo: ⟬ Privado ⟭
-┃✦ Canal ☕︎︎: https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f
+┃✦ Info Canal Oficial ☕︎︎: 
+┃https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f
 ┃✦ Activado: ${uptime}
 ┃✦ Usuarios ☃︎: ${totalreg}
 ┃✦ Comandos ☂︎: ${totalCommands}
