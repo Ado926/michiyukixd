@@ -19,7 +19,7 @@ const toSansSerifPlain = (text = "") =>
 
 const handler = async (m, { conn }) => {
   if (!m.quoted || !m.quoted.text || !m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y"))
-    return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga '乂  Y O U T U B E  -  P L A Y'."));
+    return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga 乂  Y O U T U B E  -  P L A Y."));
 
   const match = m.quoted.text.match(ytIdRegex);
   if (!match) return m.reply(toSansSerifPlain("✦ No se detectó un enlace de YouTube."));
