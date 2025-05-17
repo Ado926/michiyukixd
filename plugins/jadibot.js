@@ -98,12 +98,18 @@ resultado += segundos + " segundos";
 return resultado;
 }
 // Individual bot listing kept as is (already has symbols)
-const message = users.map((v, index) => `• 「 ${index + 1} 」\n📎 Wa.me/${v.user.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado\n👤 ${toSansSerifPlain('Usuario')}: ${toSansSerifPlain(v.user.name || 'Sub-Bot')}\n🕑 ${toSansSerifPlain('Online')}: ${ v.uptime ? convertirMsADiasHorasMinutosSegundos(Date.now() - v.uptime) : toSansSerifPlain('Desconocido')}`).join('\n\n__________________________\n\n');
+const message = users.map((v, i) =>
+`╭━━━ ✦ Sub-Bot #${i + 1} ✦ ━━━╮
+┃ 🧙 Nombre: *${toSansSerifPlain(v.user.name || 'Sub-Bot')}*
+┃ ⏱️ Online: *${v.uptime ? convertirMsADiasHorasMinutosSegundos(Date.now() - v.uptime) : 'Desconocido'}*
+┃ ✉️ Link: wa.me/${v.user.jid.replace(/[^0-9]/g, '')}?text=${usedPrefix}estado
+╰━━━━━━━━━━━━━━━━━━━━╯`).join('\n\n');
 
-// Added emojis to the main response message headers and fallback
-const replyMessage = message.length === 0 ? `😔 ${toSansSerifPlain('No hay Sub-Bots disponible por el momento, verifique mas tarde.')}` : message; // Added 😔 emoji
-const totalUsers = users.length;
-const responseMessage = `📊 ${emoji} ${toSansSerifPlain('LISTA DE SUB-BOTS ACTIVOS')}\n\n🤝 ${emoji2} ${toSansSerifPlain('PUEDES PEDIR PERMISO PARA QUE TE DEJEN UNIR EL BOT A TÚ GRUPO')}\n\n⚠️ \`\`\`${toSansSerifPlain('CADA USUARIO SUB-BOT USA SUS FUNCIONES COMO QUIERA, EL NÚMERO PRINCIPAL NO SE HACE RESPONSABLE DEL USO DEL MAL USO DE ELLA')}\`\`\`\n\n🟢 ${toSansSerifPlain('SUB-BOT CONECTADOS')}: ${totalUsers || '0'}\n\n${replyMessage.trim()}`.trim(); // Added 📊, 🤝, ⚠️, 🟢 emojis
+const responseMessage = `
+⚔️ *Sub-Bots Conectados: ${users.length}*
+
+${message}
+`.trim(); // Added 📊, 🤝, ⚠️, 🟢 emojis
 
 await _envio.sendMessage(m.chat, {text: responseMessage, mentions: _envio.parseMention(responseMessage)}, {quoted: m})
 break
