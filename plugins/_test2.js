@@ -1,5 +1,4 @@
 import fetch from "node-fetch";
-import yts from "yt-search";
 
 const ytIdRegex = /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
@@ -19,28 +18,27 @@ const toSansSerifPlain = (text = "") =>
 
 const handler = async (m, { conn }) => {
   if (!m.quoted || !m.quoted.text || !m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y"))
-    return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga 乂  Y O U T U B E  -  P L A Y."));
+    return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga '乂  Y O U T U B E  -  P L A Y'."));
 
-  const match = m.quoted.text.match(ytIdRegex);
-  if (!match) return m.reply(toSansSerifPlain("✦ No se detectó un enlace de YouTube."));
+  // Extraer link de YouTube del mensaje citado
+  const linkMatch = m.quoted.text.match(/https?:\/\/(www\.)?youtu(\.be|be\.com)\/[^\s]+/);
+  if (!linkMatch) return m.reply(toSansSerifPlain("✦ No se encontró un enlace de YouTube en el mensaje citado."));
+
+  const videoUrl = linkMatch[0];
 
   conn.sendMessage(m.chat, { react: { text: "🚀", key: m.key } });
 
-  const videoUrl = `https://youtu.be/${match[1]}`;
-  const res = await yts(videoUrl);
-  const video = res.videos[0];
-  if (!video) return m.reply(toSansSerifPlain("✦ No se encontró el video."));
-
   try {
-    const json = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(video.url)}`).then(r => r.json());
+    // Solicitar descarga mp3 con link directo
+    const json = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`).then(r => r.json());
     if (!json.result?.download?.url) throw "audio no disponible";
 
-    // Descargar directamente como buffer
+    // Descargar buffer del audio
     const audioBuffer = await fetch(json.result.download.url).then(res => res.buffer());
 
     await conn.sendMessage(m.chat, {
       audio: audioBuffer,
-      fileName: `${video.title}.mp3`,
+      fileName: `audio.mp3`,
       mimetype: 'audio/mpeg',
       ptt: false
     }, { quoted: m });
