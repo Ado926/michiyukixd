@@ -26,22 +26,29 @@ let handler = async (m, { conn, args }) => {
     let perfil = await conn.profilePictureUrl(userId, 'image').catch(_ => 'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745522645448.jpeg');
 
     let profileText = `
-「✿」 *Perfil* ◢@${userId.split('@')[0]}◤
-${description}
+✧･ﾟ: *Profile de* ◤ @${userId.split('@')[0]} ◢ *･ﾟ✧
 
-✦ Edad » ${user.age || 'Desconocida'}
-♛ *Cumpleaños* » ${cumpleanos}
-⚥ *Género* » ${genero}
-♡ *Casado con* » ${pareja}
+${description || 'No hay descripción por aquí...'}
 
-☆ *Experiencia* » ${exp.toLocaleString()}
-❖ *Nivel* » ${nivel}
-✎ Rango » ${role}
+┏━─━─━─━─━─━─━┓
+┃ ✦ Edad: ${user.age || 'Desconocida'}
+┃ ♛ Cumpleaños: ${cumpleanos || 'No especificado'}
+┃ ⚥ Género: ${genero || 'No definido'}
+┃ ♡ Casado con: ${pareja || 'Nadie'}
+┗━─━─━─━─━─━─━┛
 
-⛁ *Coins Cartera* » ${coins.toLocaleString()} ${moneda}
-⛃ *Coins Banco* » ${bankCoins.toLocaleString()} ${moneda}
-❁ *Premium* » ${user.premium ? '✅' : '❌'}
-  `.trim();
+┏━━━★ Experiencia y Nivel ★━━━┓
+┃ ☆ Experiencia: ${exp.toLocaleString()}
+┃ ❖ Nivel: ${nivel}
+┃ ✎ Rango: ${role}
+┗━━━━━━━━━━━━━━━━┛
+
+┏━━━★ Economía ★━━━┓
+┃ ⛁ Coins Cartera: ${coins.toLocaleString()} ${moneda}
+┃ ⛃ Coins Banco: ${bankCoins.toLocaleString()} ${moneda}
+┃ ❁ Premium: ${user.premium ? '✅ Activado' : '❌ No activo'}
+┗━━━━━━━━━━━━━━┛
+`.trim();
 
     await conn.sendMessage(m.chat, { 
         text: profileText,
