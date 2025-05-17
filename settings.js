@@ -43,7 +43,7 @@ global.yukiJadibts = true
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.packname = '⪛✰ 𝐌𝐢𝐜𝐡𝐢-𝐀𝐢-𝐁𝐨𝐭 ✰⪜'
-global.botname = 'mιᴄʜι-aι-ʙᴏᴛ'
+global.botname = '🜲 𝗠𝗶𝗰𝗵𝗶-𝗔𝗶-𝗕𝗼𝘁 ✰'
 global.wm = 'ৎ୭࠭͢Michi_Ai-Botⷭ𓆪͟͞ '
 global.author = 'Made By Wirk'
 global.dev = '© Powered By Wirk'
