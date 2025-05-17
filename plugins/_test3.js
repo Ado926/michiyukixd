@@ -30,26 +30,22 @@ async function tryDownloadVideo(url) {
       const res = await fetch(apiUrl);
       const json = await res.json();
 
-      // Según API, busca la URL del video (ajusta si cambia el formato)
-      // Para cada API puede ser distinto:
-      // siputzx: json.result.url
-      // zenkey: json.result.video
-      // axeel: json.result.url
-      // delirius: json.result.url
+      console.log("Respuesta de API:", apiUrl);
+      console.log(JSON.stringify(json, null, 2));
 
+      // Buscar url de video en JSON:
       let videoUrl = null;
 
       if (json.result?.url) videoUrl = json.result.url;
       else if (json.result?.video) videoUrl = json.result.video;
-      else if (json.url) videoUrl = json.url; // fallback
+      else if (json.url) videoUrl = json.url;
       else if (json.result?.downloadUrl) videoUrl = json.result.downloadUrl;
 
       if (videoUrl) {
         return { videoUrl, title: json.result?.title || json.title || "Video" };
       }
-
     } catch (e) {
-      // continúa al siguiente API si error
+      console.log("Error en API:", e);
     }
   }
   throw new Error("Video no disponible en ninguna API");
