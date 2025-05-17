@@ -34,15 +34,20 @@ let handler = async (m, { conn }) => {
         let sortedLevel = users.sort((a, b) => (b.level || 0) - (a.level || 0));
         let rank = sortedLevel.findIndex(u => u.jid === who) + 1;
 
-        let txt = `*「✿」Usuario* ◢ ${name} ◤\n\n`;
-        txt += `✦ Nivel » *${user.level}*\n`;
-        txt += `✰ Experiencia » *${user.exp}*\n`;
-        txt += `❖ Rango » ${user.role}\n`;
-        txt += `➨ Progreso » *${user.exp - min} => ${xp}* _(${Math.floor(((user.exp - min) / xp) * 100)}%)_\n`;
-        txt += `# Puesto » *${rank}* de *${sortedLevel.length}*\n`;
-        txt += `❒ Comandos totales » *${user.commands || 0}*`;
+        let txt = `
+*「✿ Usuario*  
+◢ *${name}* ◤
 
-        await conn.sendMessage(m.chat, { text: txt }, { quoted: m });
+✦ *Nivel:* ${user.level}  
+✰ *Experiencia:* ${user.exp}  
+❖ *Rango:* ${user.role}  
+➨ *Progreso:* ${user.exp - min} / ${xp} (_${Math.floor(((user.exp - min) / xp) * 100)}%_)  
+
+#️⃣ *Puesto:* ${rank} de ${sortedLevel.length}  
+❒ *Comandos usados:* ${user.commands || 0}
+`.trim();
+
+await conn.sendMessage(m.chat, { text: txt }, { quoted: m });
     }
 }
 
