@@ -487,7 +487,7 @@ await plugin.after.call(this, m, extra)
 console.error(e)
 }}
 if (m.coin)
-conn.reply(m.chat, `❮✦❯ Utilizaste ${+m.coin} ${moneda}`, m)
+conn.reply(m.chat, `⭐ Usaste ${+m.coin} ${moneda}`, m)
 }
 break
 }}
@@ -559,16 +559,16 @@ let user2 = m.pushName || 'Anónimo'
 let verifyaleatorio = ['registrar', 'reg', 'verificar', 'verify', 'register'].getRandom()
 
 const msg = {
-rowner: `『✦』El comando *${comando}* solo puede ser usado por los creadores del bot.`, 
-owner: `『✦』El comando *${comando}* solo puede ser usado por los desarrolladores del bot.`, 
-mods: `『✦』El comando *${comando}* solo puede ser usado por los moderadores del bot.`, 
-premium: `『✦』El comando *${comando}* solo puede ser usado por los usuarios premium.`, 
-group: `『✦』El comando *${comando}* solo puede ser usado en grupos.`,
-private: `『✦』El comando *${comando}* solo puede ser usado al chat privado del bot.`,
-admin: `『✦』El comando *${comando}* solo puede ser usado por los administradores del grupo.`, 
-botAdmin: `『✦』Para ejecutar el comando *${comando}* debo ser administrador del grupo.`,
-unreg: `『✦』El comando *${comando}* solo puede ser usado por los usuarios registrado, registrate usando:\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
-restrict: `『✦』Esta caracteristica está desactivada.`
+  rowner: `『✦』Solo los *creadores del bot* pueden usar el comando *${comando}*.`,
+  owner: `『✦』El comando *${comando}* está reservado para los *desarrolladores del bot*.`,
+  mods: `『✦』Este comando (*${comando}*) solo puede ser usado por *moderadores*.`,
+  premium: `『✦』El comando *${comando}* es exclusivo para *usuarios premium*.`,
+  group: `『✦』El comando *${comando}* solo se puede usar en *grupos*.`,
+  private: `『✦』El comando *${comando}* solo se puede usar en *chat privado*.`,
+  admin: `『✦』Debes ser *administrador del grupo* para usar el comando *${comando}*.`,
+  botAdmin: `『✦』Necesito ser *administrador del grupo* para ejecutar el comando *${comando}*.`,
+  unreg: `『✦』Debes estar *registrado* para usar el comando *${comando}*.\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
+  restrict: `『✦』Esta función está *desactivada* por el creador del bot.`
 }[type];
 if (msg) return m.reply(msg).then(_ => m.react('✖️'))}
 
