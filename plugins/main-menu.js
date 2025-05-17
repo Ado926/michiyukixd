@@ -9,7 +9,7 @@ let handler = async (m, { conn, args }) => {
 
     let txt = ` > 𝙷𝚘𝚕𝚊! 𝚋𝚒𝚎𝚗𝚟𝚎𝚗𝚒𝚍@ 𝚊𝚕 𝚖𝚎𝚗𝚞 𝚍𝚎 *${botname}*
 
-╭─〔🌿 Info del Bot 🌿〕─╮
+╭─〔🪴 Info del Bot 🪴〕─╮
 │🌿 Usuario: @${userId.split('@')[0]}
 │🌱 Modo: Público
 │🌸 Bot: ${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Prem Bot 🅑')}
@@ -18,8 +18,8 @@ let handler = async (m, { conn, args }) => {
 │🌼 Comandos disponibles: ${totalCommands}
 ╰───────────────────╯
 
-🌳 Puedes tener tu *Sub Bot*
-⌁ Usa *#code* o *#qr* para empezar.
+> 🌳 Puedes tener tu *Sub Bot*
+⌁ Usa *#code* o *#qr* para vincular.
 
 ✦⭒ MENÚ DE COMANDOS ⭒✦
 
