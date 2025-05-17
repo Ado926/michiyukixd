@@ -15,7 +15,7 @@ let handler = async (m, { conn, args }) => {
 *│➬ᩚ Cliente »* @${userId.split('@')[0]}
 *│✰ Modo »* Publico
 *│❒ Bot »* ${(conn.user.jid == global.conn.user.jid ? '`🍄 Principal 🍄`' : '`☁️ Prem Bot ☁️`')}
-*│✎ Activada »* ${uptime}
+*│✎ Activado »* ${uptime}
 *│✰ Usuarios »* ${totalreg}
 *│➪ Comandos »* ${totalCommands}
 *│⌦ Baileys »* Multi Device
