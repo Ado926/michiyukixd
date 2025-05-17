@@ -2,7 +2,7 @@ let handler = async (m, { usedPrefix, command }) => {
 let uptime = await process.uptime()
 let runtime = `${packname}
 
-✰ Tiempo activo: ${rTime(uptime)}`
+🍄 Tiempo activo: ${rTime(uptime)}`
 conn.reply(m.chat, runtime, m)
 }
 handler.help = ['runtime']
