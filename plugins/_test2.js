@@ -25,9 +25,9 @@ const handler = async (m, { conn }) => {
   const match = quotedText.match(ytIdRegex);
   if (!match) return m.reply(toSansSerifPlain("✦ No se detectó un enlace de YouTube en el mensaje citado."));
 
-  const videoId = match[1];
-  const res = await yts({ videoId });
-  const video = res.video;
+  const videoUrl = `https://youtu.be/${match[1]}`;
+  const res = await yts(videoUrl);
+  const video = res.videos[0];
 
   if (!video) return m.reply(toSansSerifPlain("✦ No se encontró el video."));
 
