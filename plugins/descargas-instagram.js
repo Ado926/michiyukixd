@@ -11,7 +11,7 @@ const handler = async (m, { args, conn }) => {
     const data = res.data;
 
     for (let media of data) {
-      await conn.sendFile(m.chat, media.url, 'instagram.mp4', `${emoji} Aqui tienes ฅ^•ﻌ•^ฅ.`, m);
+      await conn.sendFile(m.chat, media.url, 'instagram.mp4', `${emoji} Tu vídeo de ig 👻`, m);
     await m.react(done);
     }
   } catch (e) {
