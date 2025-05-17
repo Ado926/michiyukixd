@@ -45,13 +45,13 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
   const sn = createHash('md5').update(m.sender).digest('hex').slice(0, 20)
 
   const regbot = `
-┏━━꒰🌸 Registro Válido 🌸꒱━━━┓
+┏━꒰🌸 Registro Válido 🌸꒱━┓
 ┃  
-┃ ＊Nombre: ❥ ${name}*
-┃ ＊Edad: ❥ ${age} añitos*
-┃ ＊ID: ❥ ${sn}*
+┃ ＊Nombre:* ❥ ${name}
+┃ ＊Edad:* ❥ ${age} añitos
+┃ ＊ID:* ❥ ${sn}
 ┃  
-┃ ＊Premios entregados:*
+┃ \`Premios entregados:\`
 ┃ ┣ 🪙 +46 Moneditas
 ┃ ┣ ✨ +310 de Exp
 ┃ ┗ 🎟️ +25 Tokens
@@ -60,7 +60,7 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 ┃ Registros aquí:
 ┃🌵https://chat.whatsapp.com/HXsoXHoKEIe4OhrPjYroX2
 ┃  
-┗━━━━━━━━━━━━━━━━━━━━━━━┛
+┗━━━━━━━━━━━━━━━━━━━┛
 `.trim()
 
   await m.react('☁️')
