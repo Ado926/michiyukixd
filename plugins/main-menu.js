@@ -556,30 +556,24 @@ let handler = async (m, { conn, args }) => {
 > ✿ Crea una sala de juego.\n> ✧･ﾟ: *Michi* by Wirk ･ﾟ✧
   `.trim()
 
-  await conn.sendMessage(m.chat, { 
-      text: txt,
-      contextInfo: {
-          mentionedJid: [m.sender, userId],
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-              newsletterJid: channelRD.id,
-              newsletterName: channelRD.name,
-              serverMessageId: -1,
-          },
-          forwardingScore: 0,
-          externalAdReply: {
-              title: botname,
-              body: textbot,
-              thumbnailUrl: banner,
-              sourceUrl: redes,
-              mediaType: 1,
-              showAdAttribution: true,
-              renderLargerThumbnail: true,
-          },
-      },
-  }, { quoted: m })
-
-}
+  await conn.sendMessage(m.chat, {
+  text: txt,
+  contextInfo: {
+    mentionedJid: [m.sender, userId],
+    isForwarded: true,
+    // Se elimina forwardedNewsletterMessageInfo para no mostrar el canal
+    forwardingScore: 0,
+    externalAdReply: {
+      title: botname,
+      body: textbot,
+      thumbnailUrl: banner,
+      sourceUrl: redes,
+      mediaType: 1,
+      showAdAttribution: true,
+      renderLargerThumbnail: true,
+    },
+  },
+}, { quoted: m })
 
 handler.help = ['menu']
 handler.tags = ['main']
