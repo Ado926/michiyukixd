@@ -12,13 +12,13 @@ let handler = async (m, { conn, args }) => {
      *✧(｡•̀ᴗ-)✧*
 \`Aquí tienes la lista de comandos.\`
 *╭┈ ᙏ̤̫͚*
-*│➬ᩚ Cliente »* @${userId.split('@')[0]}
-*│✰ Modo »* Priv
-*│❒ Bot »* ${(conn.user.jid == global.conn.user.jid ? '🍄 Principal 𝗩 🍄' : '🌵 Sub Bot 𝗦 🌴')}
-*│✎ Runtime »* ${uptime}
-*│✰ Usuarios »* ${totalreg}
-*│➪ Comandos »* ${totalCommands}
-*│⌦ Baileys »* Multi Device
+*│➬ᩚ Cliente:* @${userId.split('@')[0]}
+*│✰ Modo:* Privado
+*│❒ Bot:* ${(conn.user.jid == global.conn.user.jid ? '🍄 Principal 𝗩 🍄' : '🌵 Sub Bot 𝗦 🌴')}
+*│✎ Runtime:* ${uptime}
+*│✰ Usuarios:* ${totalreg}
+*│➪ Comandos:* ${totalCommands}
+*│⌦ Baileys:* Multi Device
 *╰─────────────────*
 
 ═ೋ❀๑୨۝୧๑❀ೋ═
