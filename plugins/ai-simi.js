@@ -4,13 +4,13 @@ import fetch from 'node-fetch';
 
 const handler = async (m, {conn, text, command, args, usedPrefix}) => {
 
-if (!text) conn.reply(m.chat, `${emoji} Te faltó el texto para hablar con la *Bot*`, m);
+if (!text) conn.reply(m.chat, `${emoji} іᥒgrᥱsᥲ ᥙᥒ 𝗍ᥱ᥊𝗍᥆ ⍴ᥲrᥲ һᥲᑲᥣᥲr ᥴ᥆ᥒmіg᥆`, m);
 try {
 // await m.react(emojis)
 const resSimi = await simitalk(text);
 conn.sendMessage(m.chat, { text: resSimi.resultado.simsimi }, { quoted: m });
 } catch {
-throw `${msm} Ocurrió un error.`;
+throw `${msm} һᥲᥡ ᥙᥒ ᥱrr᥆r.`;
 }};
 
 handler.help = ['simi', 'bot'];
