@@ -574,6 +574,7 @@ let handler = async (m, { conn, args }) => {
     },
   },
 }, { quoted: m })
+}
 
 handler.help = ['menu']
 handler.tags = ['main']
