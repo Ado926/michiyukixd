@@ -13,8 +13,8 @@ let handler = async (m, { conn, args }) => {
 \`Aquí tienes la lista de comandos.\`
 *╭┈ ᙏ̤̫͚*
 *│➬ᩚ Cliente »* @${userId.split('@')[0]}
-*│✰ Modo »* Publico
-*│❒ Bot »* ${(conn.user.jid == global.conn.user.jid ? '🍄 Principal 🍄' : '☁️ Prem Bot ☁️')}
+*│✰ Modo »* Priv
+*│❒ Bot »* ${(conn.user.jid == global.conn.user.jid ? '🍄 Principal 𝗩 🍄' : '🌵 Sub Bot 𝗦 🌴')}
 *│✎ Runtime »* ${uptime}
 *│✰ Usuarios »* ${totalreg}
 *│➪ Comandos »* ${totalCommands}
