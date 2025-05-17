@@ -1,114 +1,129 @@
-const handler = async (m, { conn, command, text, usedPrefix }) => {
-  if (!text) return conn.reply(m.chat, `❀ Por favor, mensiona a un Usuario para comprobar su test.`, m);
-  const percentages = (500).getRandom();
+const handler = async (m, { conn, command, text }) => {
+  if (!text) return conn.reply(m.chat, `❗ Por favor, menciona a alguien para hacer el test.`, m);
+
+  const percentages = Math.floor(Math.random() * 501);
   let emoji = '';
   let description = '';
+
   switch (command) {
     case 'gay':
-      emoji = '🏳️‍🌈';
+      emoji = '🌈✨';
       if (percentages < 50) {
-        description = `💙 Los calculos han arrojado que ${text.toUpperCase()} es *${percentages}%* Gay ${emoji}\n> ✰ Eso es bajo, ¡Tu eres Joto, no Gay!`;
+        description = `😎 *${text.toUpperCase()}* tiene un *${percentages}%* de onda gay.\n> 🕶️ ¡Casi nada, puro estilo straight!`;
       } else if (percentages > 100) {
-        description = `💜 Los calculos han arrojado que ${text.toUpperCase()} es *${percentages}%* Gay ${emoji}\n> ✰ ¡Incluso más gay de lo que pensábamos!`;
+        description = `🌟 *${text.toUpperCase()}* es un *${percentages}%* arcoíris ambulante ${emoji}.\n> 🌈 ¡Brillando con todo el poder gay!`;
       } else {
-        description = `🖤 Los calculos han arrojado que ${text.toUpperCase()} es *${percentages}%* Gay ${emoji}\n> ✰ Lo tuyo, lo tuyo es que eres Gay.`;
+        description = `🔥 *${text.toUpperCase()}* marca un *${percentages}%* en el termómetro gay.\n> 💥 Sin duda, el orgullo está presente.`;
       }
       break;
+
     case 'lesbiana':
-      emoji = '🏳️‍🌈';
+      emoji = '💜🎀';
       if (percentages < 50) {
-        description = `👻 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n✰ Quizás necesites más películas románticas en tu vida.`;
+        description = `🌸 *${text.toUpperCase()}* tiene un *${percentages}%* de vibes lesbianas.\n> 🌷 ¡Un poco tímida en el amor!`;
       } else if (percentages > 100) {
-        description = `❣️ Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ ¡Eso es un amor extremo por las Chicas!`;
+        description = `💃 *${text.toUpperCase()}* es un *${percentages}%* huracán lesbiano ${emoji}.\n> 💜 ¡Pura pasión y poder femenino!`;
       } else {
-        description = `💗 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Mantén el amor floreciendo!`;
+        description = `🌺 *${text.toUpperCase()}* muestra un *${percentages}%* de amor entre chicas.\n> 🌼 ¡Sigue floreciendo el romance!`;
       }
       break;
+
     case 'pajero':
     case 'pajera':
-      emoji = '😏💦';
+      emoji = '😈🔥';
       if (percentages < 50) {
-        description = `🧡 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Tal vez necesites más hobbies!`;
+        description = `😏 *${text.toUpperCase()}* tiene un *${percentages}%* de nivel fiestero solo.\n> 🕹️ Mejor encuentra otro hobby, ¡hay vida más allá!`;
       } else if (percentages > 100) {
-        description = `💕 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Eso es una resistencia admirable!`;
+        description = `💦 *${text.toUpperCase()}* es un *${percentages}%* campeón del solo play ${emoji}.\n> 🎮 ¡Experiencia de sobra en solitario!`;
       } else {
-        description = `💞 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Mantén el buen trabajo (en solitario).`;
+        description = `🔥 *${text.toUpperCase()}* alcanza un *${percentages}%* en la escala del placer.\n> 😈 ¡Sigamos en la jugada!`;
       }
       break;
+
     case 'puto':
     case 'puta':
-      emoji = '🔥🥵';
+      emoji = '💥💋';
       if (percentages < 50) {
-        description = `😼 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✧ ¡Más suerte en tu próxima conquista!`;
+        description = `😉 *${text.toUpperCase()}* marca un *${percentages}%* en el ranking de seducción.\n> 💌 ¡Sigue intentando conquistar corazones!`;
       } else if (percentages > 100) {
-        description = `😻 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command}. ${emoji}\n> ✰ ¡Estás en llamas!`;
+        description = `🔥 *${text.toUpperCase()}* es un *${percentages}%* imán irresistible ${emoji}.\n> 💋 ¡La atracción en su máxima expresión!`;
       } else {
-        description = `😺 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Mantén ese encanto ardiente!`;
+        description = `😘 *${text.toUpperCase()}* tiene un *${percentages}%* de encanto arrollador.\n> 💫 ¡No pares de brillar!`;
       }
       break;
+
     case 'manco':
     case 'manca':
-      emoji = '💩';
+      emoji = '🦶💨';
       if (percentages < 50) {
-        description = `🌟 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ ¡No eres el único en ese club!`;
+        description = `🤡 *${text.toUpperCase()}* tiene un *${percentages}%* de manos flojas.\n> 🛋️ ¡Hora de practicar un poco más!`;
       } else if (percentages > 100) {
-        description = `💌 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ ¡Tienes un talento muy especial!`;
+        description = `⚡ *${text.toUpperCase()}* es un *${percentages}%* experto inesperado ${emoji}.\n> 🥷 ¡Dominio en el arte del manco!`;
       } else {
-        description = `🥷 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Mantén esa actitud valiente!`;
+        description = `💪 *${text.toUpperCase()}* se defiende con un *${percentages}%* en destreza.\n> 🦾 ¡Sigue mejorando!`;
       }
       break;
+
     case 'rata':
-      emoji = '🐁';
+      emoji = '🧀🐭';
       if (percentages < 50) {
-        description = `💥 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Nada de malo en disfrutar del queso!`;
+        description = `🐀 *${text.toUpperCase()}* solo tiene un *${percentages}%* de instinto ratonil.\n> 🧀 ¡Nada mal para robar un pedazo de queso!`;
       } else if (percentages > 100) {
-        description = `💖 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Un auténtico ratón de lujo!`;
+        description = `👑 *${text.toUpperCase()}* es un *${percentages}%* rey de las ratas ${emoji}.\n> 🏆 ¡Maestro en escaparse sin dejar rastro!`;
       } else {
-        description = `👑 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Come queso con responsabilidad!`;
+        description = `🧹 *${text.toUpperCase()}* tiene un *${percentages}%* en el club de las ratas.\n> 🐾 ¡Siguiendo con el buen queso!`;
       }
       break;
+
     case 'prostituto':
     case 'prostituta':
-      emoji = '🫦👅';
+      emoji = '💋🤑';
       if (percentages < 50) {
-        description = `❀ Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ El mercado está en auge!`;
+        description = `💼 *${text.toUpperCase()}* tiene un *${percentages}%* en el negocio más antiguo.\n> 💸 ¡A seguir perfeccionando el arte!`;
       } else if (percentages > 100) {
-        description = `💖 Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Un/a verdadero/a profesional!`;
+        description = `💃 *${text.toUpperCase()}* es un *${percentages}%* maestro/a del trueque ${emoji}.\n> 🏅 ¡Un/a profesional indiscutible!`;
       } else {
-        description = `✨️ Los cálculos han arrojado que ${text.toUpperCase()} es *${percentages}%* ${command} ${emoji}\n> ✰ Siempre es hora de negocios!`;
+        description = `🎉 *${text.toUpperCase()}* muestra un *${percentages}%* de experiencia en el rubro.\n> 🔥 ¡Nunca es tarde para los negocios!`;
       }
       break;
-      default:
-      m.reply(`🍭 Comando inválido.`);
+
+    default:
+      return m.reply(`🚫 Comando desconocido. Usa un comando válido.`);
   }
+
   const responses = [
-    "El universo ha hablado.",
-    "Los científicos lo confirman.",
-    "¡Sorpresa!"
+    "🎲 El destino ha decidido.",
+    "🔮 El oráculo habló.",
+    "✨ Resultados inesperados."
   ];
+
   const response = responses[Math.floor(Math.random() * responses.length)];
-  const cal = `💫 *CALCULADORA*
+
+  const cal = `🌟 *RESULTADOS DEL TEST* 🌟
 
 ${description}
 
-➤ ${response}`.trim()  
-  async function loading() {
-var hawemod = [
-"《 █▒▒▒▒▒▒▒▒▒▒▒》10%",
-"《 ████▒▒▒▒▒▒▒▒》30%",
-"《 ███████▒▒▒▒▒》50%",
-"《 ██████████▒▒》80%",
-"《 ████████████》100%"
-]
-   let { key } = await conn.sendMessage(m.chat, {text: `🤍 ¡Calculando Porcentaje!`, mentions: conn.parseMention(cal)}, {quoted: fkontak})
- for (let i = 0; i < hawemod.length; i++) {
-   await new Promise(resolve => setTimeout(resolve, 1000)); 
-   await conn.sendMessage(m.chat, {text: hawemod[i], edit: key, mentions: conn.parseMention(cal)}, {quoted: fkontak}); 
+➡️ ${response}`;
+
+  const loadingSteps = [
+    "⌛ Calculando... 10%",
+    "⏳ Procesando... 30%",
+    "⏱️ Casi listo... 60%",
+    "⚡ Finalizando... 90%",
+    "✅ ¡Listo! 100%"
+  ];
+
+  // Envío animación de carga
+  const sentMsg = await conn.sendMessage(m.chat, { text: `🚀 Preparando resultados...` }, { quoted: m });
+
+  for (const step of loadingSteps) {
+    await new Promise(r => setTimeout(r, 1200));
+    await conn.sendMessage(m.chat, { text: step, edit: sentMsg.key, mentions: conn.parseMention(cal) }, { quoted: m });
   }
-  await conn.sendMessage(m.chat, {text: cal, edit: key, mentions: conn.parseMention(cal)}, {quoted: fkontak});         
- }
-loading()    
+
+  await conn.sendMessage(m.chat, { text: cal, mentions: conn.parseMention(cal) }, { quoted: m });
 };
+
 handler.help = ['gay <@tag> | <nombre>', 'lesbiana <@tag> | <nombre>', 'pajero <@tag> | <nombre>', 'pajera <@tag> | <nombre>', 'puto <@tag> | <nombre>', 'puta <@tag> | <nombre>', 'manco <@tag> | <nombre>', 'manca <@tag> | <nombre>', 'rata <@tag> | <nombre>', 'prostituta <@tag> | <nombre>', 'prostituto <@tag> | <nombre>'];
 handler.tags = ['fun'];
 handler.register = true;
