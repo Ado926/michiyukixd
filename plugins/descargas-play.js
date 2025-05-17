@@ -32,6 +32,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
   let video;
   const ytId = ytIdRegex.exec(text);
+
   if (ytId) {
     const url = `https://youtu.be/${ytId[1]}`;
     const res = await yts({ videoId: ytId[1] });
@@ -43,29 +44,18 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
   if (!video) return m.reply(`${toSansSerifPlain("✦ No se encontró el video.")}`);
 
-  const { title, timestamp, views, ago, url, thumbnail, author } = video;
+  const { title, timestamp, views, url, thumbnail, author } = video;
 
   const msg = `「✨」${toSansSerifPlain("Descargando")}\n\n` +
     `> 🎧 ${toSansSerifPlain("Título")}: ${toSansSerifPlain(title)}\n` +
     `> 📺 ${toSansSerifPlain("Canal")}: ${toSansSerifPlain(author.name)}\n` +
     `> ⏱️ ${toSansSerifPlain("Duración")}: ${toSansSerifPlain(timestamp)}\n` +
     `> 👀 ${toSansSerifPlain("Vistas")}: ${toSansSerifPlain(formatViews(views))}\n` +
-    `> 📆 ${toSansSerifPlain("Publicado")}: ${toSansSerifPlain(ago)}\n` +
     `> 🔗 ${toSansSerifPlain("Enlace")}: ${url}`;
 
   await conn.sendMessage(m.chat, {
     image: { url: thumbnail },
-    caption: msg,
-    contextInfo: {
-      externalAdReply: {
-        title: title,
-        body: "Video encontrado",
-        thumbnailUrl: thumbnail,
-        sourceUrl: url,
-        mediaType: 1,
-        renderLargerThumbnail: true
-      }
-    }
+    caption: msg
   }, { quoted: m });
 
   try {
@@ -79,7 +69,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         audio: file.data,
         fileName: `${toSansSerifPlain(title)}.mp3`,
         mimetype: 'audio/mpeg',
-        ptt: false
+        ptt: true
       }, { quoted: m });
     }
 
@@ -103,9 +93,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 handler.command = [
   "play", "play2", "ytmp3", "ytmp4", "yta", "ytv", "mp4", "playaudio"
 ];
-handler.help = [
-  "play", "play2", "ytmp3", "ytmp4", "yta", "ytv", "mp4", "playaudio"
-];
+handler.help = handler.command;
 handler.tags = ["downloader"];
 
 export default handler;
