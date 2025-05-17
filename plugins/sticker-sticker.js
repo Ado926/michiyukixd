@@ -3,60 +3,73 @@ import uploadFile from '../lib/uploadFile.js'
 import uploadImage from '../lib/uploadImage.js'
 import { webp2png } from '../lib/webp2mp4.js'
 
-let handler = async (m, { conn, args, usedPrefix, command }) => {
-  let stiker = false
+const handler = async (m, { conn, args }) => {
+  const quoted = m.quoted || m
+  const mime = (quoted.msg || quoted).mimetype || quoted.mediaType || ''
+  const userId = m.sender
+  const userPack = global.db.data.users[userId] || {}
+  const texto1 = userPack.text1 || global.packsticker
+  const texto2 = userPack.text2 || global.packsticker2
+
+  let stickerBuffer = null
+
   try {
-    let q = m.quoted ? m.quoted : m
-    let mime = (q.msg || q).mimetype || q.mediaType || ''
-    if (/webp|image|video/g.test(mime)) {
-      if (/video/g.test(mime) && (q.msg || q).seconds > 15) {
-        return m.reply(`✧ ¡El video no puede durar más de 15 segundos!...`)
-      }
-      let img = await q.download?.()
+    // Procesar imagen, video o sticker webp
+    if (/webp|image|video/.test(mime)) {
+      if (/video/.test(mime) && (quoted.msg || quoted).seconds > 20)
+        return m.reply('✧ El video no puede durar más de *20 segundos*.')
+      
+      const media = await quoted.download?.()
+      if (!media) return conn.reply(m.chat, '❀ Envía una imagen o video para crear el sticker.', m)
 
-      if (!img) {
-        return conn.reply(m.chat, `❀ Por favor, envía una imagen o video para hacer un sticker.`, m)
-      }
-
-      let out
-      try {
-        let userId = m.sender
-        let packstickers = global.db.data.users[userId] || {}
-        let texto1 = packstickers.text1 || global.packsticker
-        let texto2 = packstickers.text2 || global.packsticker2
-
-        stiker = await sticker(img, false, texto1, texto2)
-      } finally {
-        if (!stiker) {
-          if (/webp/g.test(mime)) out = await webp2png(img)
-          else if (/image/g.test(mime)) out = await uploadImage(img)
-          else if (/video/g.test(mime)) out = await uploadFile(img)
-          if (typeof out !== 'string') out = await uploadImage(img)
-          stiker = await sticker(false, out, global.packsticker, global.packsticker2)
-        }
-      }
-    } else if (args[0]) {
-      if (isUrl(args[0])) {
-        stiker = await sticker(false, args[0], global.packsticker, global.packsticker2)
-      } else {
-        return m.reply(`⚠︎ El URL es incorrecto...`)
-      }
+      stickerBuffer = await crearSticker(media, mime, texto1, texto2)
     }
-  } finally {
-    if (stiker) {
-      conn.sendFile(m.chat, stiker, 'sticker.webp', '', m)
+
+    // Procesar URL
+    else if (args[0]) {
+      if (!isUrl(args[0])) return m.reply('⚠︎ El URL proporcionado no es válido.')
+      stickerBuffer = await sticker(false, args[0], texto1, texto2)
+    }
+
+    // Ningún contenido válido
+    else {
+      return conn.reply(m.chat, '❀ Por favor, envía una imagen, video o URL para crear el sticker.', m)
+    }
+
+    if (stickerBuffer) {
+      await conn.sendFile(m.chat, stickerBuffer, 'sticker.webp', '', m)
     } else {
-      return conn.reply(m.chat, `❀ Por favor, envía una imagen o video para hacer un sticker.`, m)
+      throw new Error('No se pudo generar el sticker.')
     }
+
+  } catch (err) {
+    console.error(err)
+    m.reply('⚠︎ Ocurrió un error al intentar crear el sticker.')
   }
 }
 
-handler.help = ['stiker <img>', 'sticker <url>']
+handler.help = ['sticker <imagen|video|url>']
 handler.tags = ['sticker']
 handler.command = ['s', 'sticker', 'stiker']
 
 export default handler
 
-const isUrl = (text) => {
-  return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png)/, 'gi'))
+// Función que crea el sticker desde media y mime
+async function crearSticker(media, mime, texto1, texto2) {
+  try {
+    return await sticker(media, false, texto1, texto2)
+  } catch {
+    let url = null
+    if (/webp/.test(mime)) url = await webp2png(media)
+    else if (/image/.test(mime)) url = await uploadImage(media)
+    else if (/video/.test(mime)) url = await uploadFile(media)
+
+    if (typeof url !== 'string') url = await uploadImage(media)
+    return await sticker(false, url, texto1, texto2)
+  }
+}
+
+// Validador simple de URLs de imagen
+function isUrl(text) {
+  return /^https?:\/\/.*\.(jpe?g|png|gif|webp)$/i.test(text)
 }
