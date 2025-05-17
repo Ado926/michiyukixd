@@ -1,150 +1,78 @@
 import yts from 'yt-search';
 import fetch from 'node-fetch';
-import { prepareWAMessageMedia, generateWAMessageFromContent } from '@whiskeysockets/baileys';
 
-const handler = async (m, { conn, args, usedPrefix }) => {
-    if (!args[0]) return conn.reply(m.chat, '*`Por favor ingresa un término de búsqueda`*', m);
+const ytIdRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([a-zA-Z0-9_-]{11})/;
 
-    await m.react('🕓');
+const handler = async (m, { conn, text, command }) => {
+  const lower = m.text?.toLowerCase();
+  const isAudio = lower === 'audio';
+  const isVideo = lower === 'video';
+
+  // Cuando se usa .play
+  if (command === 'play') {
+    if (!text) return m.reply('✦ Ingresa el nombre o link del video.');
+
+    const res = await yts(text);
+    const video = res?.all?.[0];
+    if (!video) return m.reply('✦ No se encontró el video.');
+
+    const info = `
+*《 DESCARGANDO 》*
+*• Título:* ${video.title}
+*• Canal:* ${video.author.name}
+*• Duración:* ${video.timestamp}
+*• Vistas:* ${video.views.toLocaleString()}
+*• Publicado:* ${video.ago}
+*• Enlace:* ${video.url}
+
+✦ Responde este mensaje con *audio* para obtener el mp3  
+✦ O responde con *video* para obtener el mp4
+`.trim();
+
+    return await conn.sendMessage(m.chat, {
+      image: { url: video.thumbnail },
+      caption: info
+    }, { quoted: m });
+  }
+
+  // Cuando alguien responde con "audio" o "video"
+  if ((isAudio || isVideo) && m.quoted) {
+    const quotedText = m.quoted?.text || m.quoted?.caption || '';
+    const match = ytIdRegex.exec(quotedText);
+    if (!match) return;
+
+    const videoUrl = `https://www.youtube.com/watch?v=${match[1]}`;
+    m.reply(`⏳ Descargando ${isAudio ? 'audio' : 'video'}...`);
+
     try {
-        let searchResults = await searchVideos(args.join(" "));
-        let spotifyResults = await searchSpotify(args.join(" "));
-        
-        if (!searchResults.length && !spotifyResults.length) throw new Error('No se encontraron resultados.');
+      if (isAudio) {
+        // API de Vreden
+        const res = await fetch(`https://api.vredenx.com/api/dl/ytmp3?url=${videoUrl}`);
+        const json = await res.json();
+        if (!json?.url) throw 'No se pudo descargar el audio con Vreden.';
 
-        let video = searchResults[0];
-        let thumbnail = await (await fetch(video.miniatura)).buffer();
-
-        let messageText = `> *𝖸𝗈𝗎𝖳𝗎𝖻𝖾 𝖯𝗅𝖺𝗒 🧇.*\n\n`;
-        messageText += `${video.titulo}\n\n`;
-        messageText += `• *𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇:* ${video.duracion || 'No disponible'}\n`;
-        messageText += `• *𝖠𝗎𝗍𝗈𝗋:* ${video.canal || 'Desconocido'}\n`;
-        messageText += `• *𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈:* ${convertTimeToSpanish(video.publicado)}\n`;
-        messageText += `• *𝖫𝗂𝗇𝗄:* ${video.url}\n`;
-
-        let ytSections = searchResults.slice(1, 11).map((v, index) => ({
-            title: `${index + 1}┃ ${v.titulo}`,
-            rows: [
-                {
-                    title: `🎶 Descargar MP3`,
-                    description: `Duración: ${v.duracion || 'No disponible'}`, 
-                    id: `${usedPrefix}ytmp3 ${v.url}`
-                },
-                {
-                    title: `🎥 Descargar MP4`,
-                    description: `Duración: ${v.duracion || 'No disponible'}`, 
-                    id: `${usedPrefix}ytmp4 ${v.url}`
-                }
-            ]
-        }));
-
-        let spotifySections = spotifyResults.slice(0, 10).map((s, index) => ({
-            title: `${index + 1}┃ ${s.titulo}`,
-            rows: [
-                {
-                    title: `🎶 Descargar Audio`,
-                    description: `Duración: ${s.duracion || 'No disponible'}`, 
-                    id: `${usedPrefix}spotify ${s.url}`
-                }
-            ]
-        }));
-
-        await conn.sendMessage(m.chat, {
-            image: thumbnail,
-            caption: messageText,
-            footer: 'ᴘʀᴇꜱɪᴏɴᴀ ᴇʟ ʙᴏᴛᴏɴ ᴘᴀʀᴀ ᴇʟ ᴛɪᴘᴏ ᴅᴇ ᴅᴇꜱᴄᴀʀɢᴀ.',
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true
-            },
-            buttons: [
-                {
-                    buttonId: `${usedPrefix}ytmp3 ${video.url}`,
-                    buttonText: { displayText: '🎧 𝖠𝗎𝖽𝗂𝗈' },
-                    type: 1,
-                },
-                {
-                    buttonId: `${usedPrefix}ytmp4 ${video.url}`,
-                    buttonText: { displayText: '𝖵𝗂𝖽𝖾𝗈 🎥' },
-                    type: 1,
-                },
-                {
-                    type: 4,
-                    nativeFlowInfo: {
-                        name: 'single_select',
-                        paramsJson: JSON.stringify({
-                            title: '𝖱𝖾𝗌𝗎𝗅𝗍𝖺𝖽𝗈𝗌  𝖸𝗈𝗎𝖳𝗎𝖻𝖾 🔍',
-                            sections: ytSections,
-                        }),
-                    },
-                },
-                {
-                    type: 4,
-                    nativeFlowInfo: {
-                        name: 'single_select',
-                        paramsJson: JSON.stringify({
-                            title: '𝖱𝖾𝗌𝗎𝗅𝗍𝖺𝖽𝗈𝗌  𝖲𝗉𝗈𝗍𝗂𝖿𝗒 🔍',
-                            sections: spotifySections,
-                        }),
-                    },
-                },
-            ],
-            headerType: 1,
-            viewOnce: true
+        return await conn.sendMessage(m.chat, {
+          audio: { url: json.url },
+          mimetype: 'audio/mpeg',
+          ptt: true,
+          fileName: '.ytmp3'
         }, { quoted: m });
+      } else {
+        // API genérica para video
+        const res = await fetch(`https://api.neoxr.eu/api/youtube?url=${videoUrl}&type=video&quality=360p&apikey=GataDios`);
+        const json = await res.json();
+        if (!json?.data?.url) throw 'No se pudo descargar el video.';
 
-        await m.react('✅');
+        return await conn.sendMessage(m.chat, {
+          video: { url: json.data.url },
+          caption: '.ytmp4'
+        }, { quoted: m });
+      }
     } catch (e) {
-        console.error(e);
-        await m.react('✖️');
-        conn.reply(m.chat, '*`Error al buscar el video.`*', m);
+      m.reply('❌ Error: ' + e);
     }
+  }
 };
 
-handler.help = ['play *<texto>*'];
-handler.tags = ['dl'];
 handler.command = ['playt'];
 export default handler;
-
-async function searchVideos(query) {
-    try {
-        const res = await yts(query);
-        return res.videos.slice(0, 10).map(video => ({
-            titulo: video.title,
-            url: video.url,
-            miniatura: video.thumbnail,
-            canal: video.author.name,
-            publicado: video.timestamp || 'No disponible',
-            vistas: video.views || 'No disponible',
-            duracion: video.duration.timestamp || 'No disponible'
-        }));
-    } catch (error) {
-        console.error('Error en yt-search:', error.message);
-        return [];
-    }
-}
-
-async function searchSpotify(query) {
-    try {
-        const res = await fetch(`https://delirius-apiofc.vercel.app/search/spotify?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        return data.data.slice(0, 10).map(track => ({
-            titulo: track.title,
-            url: track.url,
-            duracion: track.duration || 'No disponible'
-        }));
-    } catch (error) {
-        console.error('Error en Spotify API:', error.message);
-        return [];
-    }
-}
-
-function convertTimeToSpanish(timeText) {
-    return timeText
-        .replace(/year/, 'año').replace(/years/, 'años')
-        .replace(/month/, 'mes').replace(/months/, 'meses')
-        .replace(/day/, 'día').replace(/days/, 'días')
-        .replace(/hour/, 'hora').replace(/hours/, 'horas')
-        .replace(/minute/, 'minuto').replace(/minutes/, 'minutos');
-}
