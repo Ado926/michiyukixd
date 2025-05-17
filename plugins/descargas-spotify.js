@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
 
-    if (!text) return conn.reply(m.chat, `❀ Por favor, proporciona el nombre de una canción o artista.`, m)
+    if (!text) return conn.reply(m.chat, `🌴 Por favor, proporciona el nombre de una canción o artista.`, m)
 
     try {
         let songInfo = await spotifyxv(text)
@@ -19,7 +19,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
         })
 
         if (!data.data.dl_url) throw "No se pudo obtener el enlace de descarga."
-        const info = `「✦」Descargando *<${data.data.title}>*\n\n> ✧ Artista » *${data.data.artist}*\n> ✰ Album » *${data.data.album}*\n> ⴵ Duracion » *${data.data.duration}*\n> 🜸 Link » ${song.url}`
+        const info = `【★】Descargando *<${data.data.title}>*\n\n▶️ Artista » *${data.data.artist}*\n🎵 Album » *${data.data.album}*\n⏳ Duración » *${data.data.duration}*\n🔗 Link » ${song.url}`
 
         await conn.sendMessage(m.chat, { text: info, contextInfo: { forwardingScore: 9999999, isForwarded: false, 
         externalAdReply: {
