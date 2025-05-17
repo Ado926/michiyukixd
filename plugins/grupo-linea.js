@@ -25,7 +25,7 @@ let handler = async (m, { conn, args }) => {
     await conn.sendMessage(
       m.chat,
       {
-        text: `*❀ Lista de usuarios en línea:*\n\n${listaEnLinea}\n\n> ${dev}`,
+        text: `*🪴 Lista de usuarios en línea ahora mismo:*\n\n${listaEnLinea}\n\n> ${dev}`,
         contextInfo: { mentionedJid: participantesOrdenados },
       },
       { quoted: m }
