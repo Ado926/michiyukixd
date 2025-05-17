@@ -8,22 +8,17 @@ let handler = async (m, { conn, args }) => {
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
     let txt = `
-─〔 こんにちは！ 〕─╮
-│ 🍄‍🟫 Hola, soy
-│${botname}
-│ Bot ➤ ${(conn.user.jid == global.conn.user.jid ? '*Principal 🅥*' : '*Sub Bot 🅑*')}
-╰─〔 ☀︎ Info Principal ☀︎ 〕─╯
-
-*╭┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╮*
-┃✦ *Cliente:* @${userId.split('@')[0]}
-┃✦ *Modo:* ⟬ Privado ⟭
-┃✦ *URL OFC ☕︎︎:*\n┃ https://play-youtubedescargas.vercel.app/
-┃✦ *Activado:* ${uptime}
-┃✦ *Usuarios ☃︎:* ${totalreg}
-┃✦ *Comandos ☂︎:* ${totalCommands}
-┃✦ *Motor ➮:* Baileys Multi Device
-*╰┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╯*
-
+Hola! Soy  *${botname}*
+Aquí tienes la lista de comandos
+╭┈ ↷
+│ᰔᩚ Cliente » @${userId.split('@')[0]}
+│❀ Modo » Publico
+│✦ Bot » ${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Prem Bot 🅑')}
+│ⴵ Activado » ${uptime}
+│✰ Usuarios » ${totalreg}
+│✧ Comandos » ${totalCommands}
+│🜸 Baileys » Multi Device
+╰─────────────────
 🌳 Puedes tener tu *Sub Bot*
 ⌁ Usa *#code* o *#qr* para empezar.
 
