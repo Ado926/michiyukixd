@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const handler = async (m, { conn, args }) => {
     if (!args[0]) {
-        await conn.reply(m.chat, `${emoji} Por favor, proporciona una descripción para generar la imagen.`, m);
+        await conn.reply(m.chat, `${emoji} ⍴᥆r 𝖿ᥲ᥎᥆r, ძіmᥱ ᥣᥲ ძᥱsᥴrі⍴ᥴі᥆́ᥒ ძᥱ ᥣᥲ іmᥲgᥱᥒ 𝗊ᥙᥱ 𝗊ᥙіᥱrᥱs 𝗊ᥙᥱ gᥱᥒᥱrᥱ.`, m);
         return;
     }
 
