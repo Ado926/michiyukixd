@@ -7,14 +7,14 @@ let handler = async (m, { conn: star, command, args, text, usedPrefix }) => {
     try {
     let res = await search(args.join(" "))
     let img = await (await fetch(`${res[0].image}`)).buffer()
-    let txt = '`乂  Y O U T U B E  -  P L A Y`\n\n'
-       txt += `\t\t*» Título* : ${res[0].title}\n`
-       txt += `\t\t*» Duración* : ${secondString(res[0].duration.seconds)}\n`
-       txt += `\t\t*» Publicado* : ${eYear(res[0].ago)}\n`
-       txt += `\t\t*» Canal* : ${res[0].author.name || 'Desconocido'}\n`
-       txt += `\t\t*» ID* : ${res[0].videoId}\n`
-       txt += `\t\t*» Url* : ${'https://youtu.be/' + res[0].videoId}\n\n`
-       txt += `> *-* Para descargar responde a este mensaje con *Video* o *Audio*.`
+   let txt = `乂  Y O U T U B E  -  P L A Y\n\n`
+txt += `➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › *${title}*\n\n`
+txt += `> ✰ 𝖢𝖺𝗇𝖺𝗅 › *${author.name}*\n`
+txt += `> ✰ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇 › *${timestamp}*\n`
+txt += `> ✰ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*\n`
+txt += `> ✰ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 › *${ago || 'desconocido'}*\n`
+txt += `> ✰ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n\n`
+txt += `✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋.`
 await star.sendFile(m.chat, img, 'thumbnail.jpg', txt, m)
 await m.react('✅')
 } catch {
