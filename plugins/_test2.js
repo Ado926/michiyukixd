@@ -28,7 +28,7 @@ let handler = async (m, { conn }) => {
   
   try {
     console.log(`Intentando descargar audio para videoId: ${videoId}`)
-    let res = await fetch(`https://api.vreden.my.id/api/ytmp3?url=https://www.youtube.com/watch?v=${videoId}`)
+    let res = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`)
     let json = await res.json()
     if (!json.result) throw new Error('API no devolvió resultado')
     
