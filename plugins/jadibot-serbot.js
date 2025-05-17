@@ -30,8 +30,55 @@ let crm3 = "SBpbmZvLWRvbmFyLmpz"
 let crm4 = "IF9hdXRvcmVzcG9uZGVyLmpzIGluZm8tYm90Lmpz"
 let drm1 = ""
 let drm2 = ""
-let rtx = "*⪛✰ ↫ Yυƙι  -  Sυσυ  -  Bσƚ ↬ ✰⪜*\n\n✐ Cσɳҽxισɳ SυႦ-Bσƚ Mσԃҽ QR\n\n✰ Con otro celular o en la PC escanea este QR para convertirte en un *Sub-Bot* Temporal.\n\n\`1\` » Haga clic en los tres puntos en la esquina superior derecha\n\n\`2\` » Toque dispositivos vinculados\n\n\`3\` » Escanee este codigo QR para iniciar sesion con el bot\n\n✧ ¡Este código QR expira en 45 segundos!."
-let rtx2 = "*⪛✰ ↫ Yυƙι  -  Sυσυ  -  Bσƚ ↬ ✰⪜*\n\n✐ Cσɳҽxισɳ SυႦ-Bσƚ Mσԃҽ Cσԃҽ\n\n✰ Usa este Código para convertirte en un *Sub-Bot* Temporal.\n\n\`1\` » Haga clic en los tres puntos en la esquina superior derecha\n\n\`2\` » Toque dispositivos vinculados\n\n\`3\` » Selecciona Vincular con el número de teléfono\n\n\`4\` » Escriba el Código para iniciar sesion con el bot\n\n✧ No es recomendable usar tu cuenta principal."
+// Helper function to convert text to sans-serif plain (keeping this from the previous turn)
+function toSansSerifPlain(text) {
+    const plainMap = {
+        'a': '𝖺', 'b': '𝖻', 'c': '𝖼', 'd': '𝖽', 'e': '𝖾', 'f': '𝖿', 'g': '𝗀', 'h': '𝗁', 'i': '𝗂', 'j': '𝗃', 'k': '𝗄', 'l': '𝗅', 'm': '𝗆',
+        'n': '𝗇', 'o': '𝗈', 'p': '𝗉', 'q': '𝗊', 'r': '𝗋', 's': '𝗌', 't': '𝗍', 'u': '𝗎', 'v': '𝗏', 'w': '𝗐', 'x': '𝗑', 'y': '𝗒', 'z': '𝗓',
+        'A': '𝖠', 'B': '𝖡', 'C': '𝖢', 'D': '𝖣', 'E': '𝖤', 'F': '𝖥', 'G': '𝖦', 'H': '𝖧', 'I': '𝖨', 'J': '𝖩', 'K': '𝖪', 'L': '𝖫', 'M': '𝖬',
+        'N': '𝖭', 'O': '𝖮', 'P': '𝖯', 'Q': '𝖰', 'R': '𝖱', 'S': '𝖲', 'T': '𝖳', 'U': '𝖴', 'V': '𝖵', 'W': '𝖶', 'X': '𝖷', 'Y': '𝖸', 'Z': '𝖹',
+        '0': '𝟢', '1': '𝟣', '2': '𝟤', '3': '𝟥', '4': '𝟦', '5': '𝟧', '6': '𝟨', '7': '𝟩', '8': '𝟪', '9': '𝟫',
+        'á': '𝖺́', 'é': '𝖾́', 'í': '𝗂́', 'ó': '𝗈́', 'ú': '𝗎́', 'ñ': '𝗇̃',
+        'Á': '𝖠́', 'É': '𝖤́', 'Í': '𝖨́', 'Ó': '𝖮́', 'Ú': '𝖴́', 'Ñ': '𝖭̃',
+        'ü': '𝗎̈', 'Ü': '𝖴̈',
+        ',': ',', '.': '.', '?': '?', '!': '!', ':': ':', ';': ';', '(': '(', ')': ')', '-': '-', '/': '/', '&': '&', '#': '#', '@': '@', '+': '+', '=': '=', '%': '%', '$': '$', '€': '€', '"': '"', "'": "'", '`': '`', '~': '~', '^': '^', '<': '<', '>': '>' // Added common punctuation and symbols
+    };
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        result += plainMap[char] || char; // Use mapped char or original if not in map
+    }
+    return result;
+}
+
+let rtx = `🌸🍃 ${toSansSerifPlain('Michi Ai Bot')} 🍃🌸
+
+🌱 ${toSansSerifPlain('Conexion Sub-Bot Modo QR')}
+
+✰ ${toSansSerifPlain('Con otro celular o en la PC escanea este QR para convertirte en un Sub-Bot Temporal.')} 🌿
+
+\`1\` » ${toSansSerifPlain('Haga clic en los tres puntos en la esquina superior derecha')}
+\`2\` » ${toSansSerifPlain('Toque dispositivos vinculados')}
+\`3\` » ${toSansSerifPlain('Escanee este codigo QR para iniciar sesion con el bot')}
+
+✧ ${toSansSerifPlain('¡Este código QR expira en 45 segundos!.')} 🌸`;
+
+let rtx2 = `🌸🍃 ${toSansSerifPlain('Michi Ai Bot')} 🍃🌸
+
+🌱 ${toSansSerifPlain('Conexion Sub-Bot Modo Code')}
+
+✰ ${toSansSerifPlain('Usa este Código para convertirte en un Sub-Bot Temporal.')} 🌿
+
+\`1\` » ${toSansSerifPlain('Haga clic en los tres puntos en la esquina superior derecha')}
+\`2\` » ${toSansSerifPlain('Toque dispositivos vinculados')}
+\`3\` » ${toSansSerifPlain('Selecciona Vincular con el número de teléfono')}
+\`4\` » ${toSansSerifPlain('Escriba el Código para iniciar sesion con el bot')}
+
+✧ ${toSansSerifPlain('No es recomendable usar tu cuenta principal.')} ✨`;
+
+// Note: The toSansSerifPlain function needs to be defined and available in the same scope
+// where rtx and rtx2 are used, likely outside any specific handler function if these variables
+// are used globally or in multiple places.
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
