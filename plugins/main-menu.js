@@ -18,7 +18,7 @@ let handler = async (m, { conn, args }) => {
 │🌼 Comandos disponibles ➩ ${totalCommands}
 ╰───────────────────╯
 
-> 🌳 Puedes tener tu *Sub Bot* Usa *#code* o *#qr* para vincular.
+> 🌳 Puedes tener tu *Sub Bot* usa *#code* o *#qr* para vincular.
 
 ✦⭒ MENÚ DE COMANDOS ⭒✦
 
