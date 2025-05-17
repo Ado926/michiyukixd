@@ -1,61 +1,68 @@
-import fetch from 'node-fetch'
+import fetch from "node-fetch";
+import yts from "yt-search";
 
-const limit = 200 // MB
+const ytIdRegex = /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
-function extractVideoID(url) {
-  // Extrae el ID del video de diferentes formatos de URL de YouTube
-  let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/)
-  return match ? match[1] : null
-}
+const toSansSerifPlain = (text = "") =>
+  text.split("").map((char) => {
+    const map = {
+      a: "𝖺", b: "𝖻", c: "𝖼", d: "𝖽", e: "𝖾", f: "𝖿", g: "𝗀", h: "𝗁", i: "𝗂",
+      j: "𝗃", k: "𝗄", l: "𝗅", m: "𝗆", n: "𝗇", o: "𝗈", p: "𝗉", q: "𝗊", r: "𝗋",
+      s: "𝗌", t: "𝗍", u: "𝗎", v: "𝗏", w: "𝗐", x: "𝗑", y: "𝗒", z: "𝗓",
+      A: "𝖠", B: "𝖡", C: "𝖢", D: "𝖣", E: "𝖤", F: "𝖥", G: "𝖦", H: "𝖧", I: "𝖨",
+      J: "𝖩", K: "𝖪", L: "𝖫", M: "𝖬", N: "𝖭", O: "𝖮", P: "𝖯", Q: "𝖰", R: "𝖱",
+      S: "𝖲", T: "𝖳", U: "𝖴", V: "𝖵", W: "𝖶", X: "𝖷", Y: "𝖸", Z: "𝖹",
+      0: "𝟢", 1: "𝟣", 2: "𝟤", 3: "𝟥", 4: "𝟦", 5: "𝟧", 6: "𝟨", 7: "𝟩", 8: "𝟪", 9: "𝟫"
+    };
+    return map[char] || char;
+  }).join("");
 
-let handler = async (m, { conn }) => {
-  if (!m.quoted) 
-    return conn.reply(m.chat, `[ ✰ ] Etiqueta el mensaje que contenga el resultado de YouTube Play.`, m).then(() => m.react('✖️'))
-  
-  if (!m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y")) 
-    return conn.reply(m.chat, `[ ✰ ] Etiqueta el mensaje que contenga el resultado de YouTube Play.`, m).then(() => m.react('✖️'))
-  
-  let urls = m.quoted.text.match(/https?:\/\/[^\s]+/g)
-  if (!urls) 
-    return conn.reply(m.chat, `Resultado no Encontrado.`, m).then(() => m.react('✖️'))
-  
-  let url = urls[0]
-  let videoId = extractVideoID(url)
-  if (!videoId) 
-    return conn.reply(m.chat, 'No pude extraer el ID del video.', m).then(() => m.react('✖️'))
-  
-  await m.react('🕓')
-  
-  try {
-    console.log(`Intentando descargar audio para videoId: ${videoId}`)
-    let res = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`)
-    let json = await res.json()
-    if (!json.result) throw new Error('API no devolvió resultado')
-    
-    let sizeMB = parseFloat(json.result.size.replace(' MB', '').trim())
-    if (sizeMB > limit) {
-      await conn.reply(m.chat, `El archivo pesa más de ${limit} MB, se canceló la descarga.`, m)
-      return m.react('✖️')
-    }
-    
-    await conn.sendMessage(m.chat, { 
-      audio: { url: json.result.download.url },
-      mimetype: 'audio/mpeg',
-      fileName: json.result.title + '.mp3',
-      contextInfo: { externalAdReply: { title: json.result.title, mediaType: 2, sourceUrl: `https://youtu.be/${videoId}` } }
-    }, { quoted: m })
-    
-    await m.react('✅')
-  } catch (e) {
-    console.error('Error al descargar audio:', e)
-    await m.react('✖️')
-    await conn.reply(m.chat, 'Error al descargar el audio. Intenta de nuevo.', m)
+const handler = async (m, { conn, text, command }) => {
+  // Verificar que el mensaje sea respuesta y el texto del mensaje respondido contenga la frase requerida
+  if (!m.quoted || !m.quoted.text || !m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y")) {
+    return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga '乂  Y O U T U B E  -  P L A Y'."));
   }
-}
 
-handler.help = ['audio']
-handler.tags = ['downloader']
+  if (!text) return m.reply(toSansSerifPlain("✦ Ingresa el nombre o link de un video."));
+
+  let video;
+  const ytId = ytIdRegex.exec(text);
+  if (ytId) {
+    const res = await yts({ videoId: ytId[1] });
+    video = res.video || (await yts(`https://youtu.be/${ytId[1]}`)).all[0];
+  } else {
+    const res = await yts(text);
+    video = res.all[0];
+  }
+
+  if (!video) return m.reply(toSansSerifPlain("✦ No se encontró el video."));
+
+  const { title, url, thumbnail } = video;
+
+  await conn.sendMessage(m.chat, {
+    image: { url: thumbnail }
+  }, { quoted: m });
+
+  try {
+    const json = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(url)}`).then(r => r.json());
+    if (!json.result?.download?.url) throw 'audio no disponible';
+
+    const { data } = await conn.getFile(json.result.download.url);
+    conn.sendMessage(m.chat, {
+      audio: data,
+      fileName: `${title}.mp3`,
+      mimetype: 'audio/mpeg',
+      ptt: false
+    }, { quoted: m });
+
+  } catch (e) {
+    return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e);
+  }
+};
+
 handler.customPrefix = /^(audio|Audio)$/i
-handler.command = new RegExp
+handler.command = new RegExp;
+handler.help = ["audio"];
+handler.tags = ["downloader"];
 
-export default handler
+export default handler;
