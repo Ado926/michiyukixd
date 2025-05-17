@@ -44,12 +44,11 @@ global.yukiJadibts = true
 
 global.packname = '⪛✰ 𝐌𝐢𝐜𝐡𝐢-𝐀𝐢-𝐁𝐨𝐭 ✰⪜'
 global.botname = '☁️ 𓃠 𝗠𝗶𝗰𝗵𝗶・𝗔𝗜・𝗕𝗼𝘁 ✩'
-global.wm = 'ৎ୭࠭͢Michi_Ai-Botⷭ𓆪͟͞ '
-global.author = 'Made By Wirk'
-global.dev = '© Powered By Wirk'
-global.textbot = 'Mιᴄʜι-Aι-ʙᴏᴛ • ☁️ Powered By Wirk'
-global.etiqueta = 'Wirk'
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
+global.wm = 'ৎ୭࠭͢ Michi_Ai-Bot ⷭ𓆪͟͞ '
+global.author = 'Made by Wirk'
+global.dev = '© Powered by Wirk'
+global.textbot = 'Mιᴄʜι-Aι-ʙᴏᴛ • ☁️ Powered by Wirk'
+global.etiqueta = 'Wirk'//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.moneda = '🍄 MichiCoins ☁️'
 global.welcom1 = '❍ Edita Con El Comando setwelcome'
