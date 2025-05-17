@@ -9,7 +9,8 @@ let handler = async (m, { conn, args }) => {
     
     let txt = `
 ─〔 こんにちは！ 〕─╮
-│ Hola, soy *${botname}* 
+│ Hola, soy *${botname}*
+│        🍄
 │ Bot ➤ ${(conn.user.jid == global.conn.user.jid ? '*Principal 🅥*' : '*Sub Bot 🅑*')}
 ╰─〔 ☀︎ Info Principal ☀︎ 〕─╯
 
