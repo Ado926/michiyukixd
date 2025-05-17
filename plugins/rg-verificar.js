@@ -47,20 +47,20 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
   const regbot = `
 ┏━꒰🌸 Registro Válido 🌸꒱━┓
 ┃  
-┃ ＊Nombre:* ❥ ${name}
-┃ ＊Edad:* ❥ ${age} añitos
-┃ ＊ID:* ❥ ${sn}
+┃ 𝗡𝗼𝗺𝗯𝗿𝗲: ❥ ${name}
+┃ 𝗘𝗱𝗮𝗱: ❥ ${age} añitos
+┃ 𝗜𝗗: ❥ ${sn}
 ┃  
 ┃ \`Premios entregados:\`
-┃ ┣ 🪙 +46 Moneditas
-┃ ┣ ✨ +310 de Exp
-┃ ┗ 🎟️ +25 Tokens
+┃ ┣ 🪙 +46 𝖬𝗂𝖼𝗁𝗂𝖢𝗈𝗂𝗇𝗌
+┃ ┣ ✨ +310 𝖽𝖾 𝖤𝗑𝗉
+┃ ┗ 🎟️ +25 𝖳𝗈𝗄𝖾𝗇𝗌
 ┃  
 ┃ ꒰ Bienvenido/a ꒱
-┃ Registros aquí:
+┃ 𝖱𝖾𝗀𝗂𝗌𝗍𝗋𝗈𝗌 𝖺𝗊𝗎𝗂́:
 ┃🌵https://chat.whatsapp.com/HXsoXHoKEIe4OhrPjYroX2
 ┃  
-┗━━━━━━━━━━━━━━━━━━━┛
+┗━━━━━━━━━━━━━━━━━━┛
 `.trim()
 
   await m.react('☁️')
