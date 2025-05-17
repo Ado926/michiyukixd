@@ -16,7 +16,7 @@ let handler = async (m, { conn, args }) => {
 ╭┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╮
 ┃✦ Cliente: @${userId.split('@')[0]}
 ┃✦ Modo: ⟬ Privado ⟭
-┃✦ URL ☕︎︎:\nhttps://play-youtubedescargas.vercel.app/
+┃✦ URL OFC ☕︎︎:\n┃ https://play-youtubedescargas.vercel.app/
 ┃✦ Activado: ${uptime}
 ┃✦ Usuarios ☃︎: ${totalreg}
 ┃✦ Comandos ☂︎: ${totalCommands}
