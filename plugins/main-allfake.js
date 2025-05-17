@@ -54,7 +54,7 @@ global.done = '✅'
 global.error = '✖️'
 global.msm = '⚠︎'
 
-global.emoji = '૮₍ ´• ˕ •` ₎ა'
+global.emoji = '☁️'
 global.emoji2 = '♡'
 global.emoji3 = '꒰⑅ᵕ༚ᵕ꒱˖♡'
 global.emoji4 = '୨୧'
@@ -90,10 +90,10 @@ global.taguser = '@' + m.sender.split("@s.whatsapp.net")
 var more = String.fromCharCode(8206)
 global.readMore = more.repeat(850)
 
-global.packsticker = `┊ ૮₍｡•́︿•̀｡₎ა *Mai Stickers*  
+global.packsticker = `┊ ૮₍｡•́︿•̀｡₎ა *Michi Stickers*  
 ╰┈➤ ୨୧ https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f ✿
 ┊ ℹ️ *Info:*  
-╰┈➤ 𖥻 Mai By Wirk 🪴`;
+╰┈➤ 𖥻 By Wirk 🪴`;
 
 global.packsticker2 = `\n┊🌸 Bot: ${botname}
 ┊🌷 Usuario: ${nombre}
@@ -106,7 +106,7 @@ global.fake = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo
 }}, { quoted: m }
 
 global.icono = [
-'https://tinyurl.com/285a5ejf',
+'https://qu.ax/HKtQj.jpg',
 ].getRandom()
 
 global.rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: 100, newsletterName: channelRD.name, }, externalAdReply: { showAdAttribution: true, title: packname, body: dev, mediaUrl: null, description: null, previewType: "PHOTO", thumbnailUrl: icono, sourceUrl: redes, mediaType: 1, renderLargerThumbnail: false }, }, }}
