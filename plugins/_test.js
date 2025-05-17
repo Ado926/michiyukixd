@@ -1,114 +1,93 @@
-import fetch from 'node-fetch'
-import yts from 'yt-search'
+import fetch from "node-fetch";
+import yts from "yt-search";
 
-let handler = async (m, { conn: star, command, args, text, usedPrefix }) => {
-  if (!text) return m.reply('[ ✰ ] Ingresa el título de un video o canción de *YouTube*.\n\n`Ejemplo:`\n' + `> *${usedPrefix + command}* Mc Davo - Debes De Saber`)
-    await m.react('🕓')
-    try {
-    let res = await search(args.join(" "))
-    let img = await (await fetch(`${res[0].image}`)).buffer()
-   let txt = `乂  Y O U T U B E  -  P L A Y\n\n`
-txt += `➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › *${title}*\n\n`
-txt += `> ✰ 𝖢𝖺𝗇𝖺𝗅 › *${author.name}*\n`
-txt += `> ✰ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇 › *${timestamp}*\n`
-txt += `> ✰ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*\n`
-txt += `> ✰ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 › *${ago || 'desconocido'}*\n`
-txt += `> ✰ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n\n`
-txt += `✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋.`
-await star.sendFile(m.chat, img, 'thumbnail.jpg', txt, m)
-await m.react('✅')
-} catch {
-await m.react('✖️')
-}}
-handler.help = ['play *<búsqueda>*']
-handler.tags = ['downloader']
-handler.command = ['playt']
-handler.register = true 
-export default handler
+const ytIdRegex = /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 
-async function search(query, options = {}) {
-  let search = await yts.search({ query, hl: "es", gl: "ES", ...options })
-  return search.videos
-}
+const toSansSerifPlain = (text = "") =>
+  text.split("").map((char) => {
+    const map = {
+      a: "𝖺", b: "𝖻", c: "𝖼", d: "𝖽", e: "𝖾", f: "𝖿", g: "𝗀", h: "𝗁", i: "𝗂",
+      j: "𝗃", k: "𝗄", l: "𝗅", m: "𝗆", n: "𝗇", o: "𝗈", p: "𝗉", q: "𝗊", r: "𝗋",
+      s: "𝗌", t: "𝗍", u: "𝗎", v: "𝗏", w: "𝗐", x: "𝗑", y: "𝗒", z: "𝗓",
+      A: "𝖠", B: "𝖡", C: "𝖢", D: "𝖣", E: "𝖤", F: "𝖥", G: "𝖦", H: "𝖧", I: "𝖨",
+      J: "𝖩", K: "𝖪", L: "𝖫", M: "𝖬", N: "𝖭", O: "𝖮", P: "𝖯", Q: "𝖰", R: "𝖱",
+      S: "𝖲", T: "𝖳", U: "𝖴", V: "𝖵", W: "𝖶", X: "𝖷", Y: "𝖸", Z: "𝖹",
+      0: "𝟢", 1: "𝟣", 2: "𝟤", 3: "𝟥", 4: "𝟦", 5: "𝟧", 6: "𝟨", 7: "𝟩", 8: "𝟪", 9: "𝟫"
+    };
+    return map[char] || char;
+  }).join("");
 
-function MilesNumber(number) {
-  let exp = /(\d)(?=(\d{3})+(?!\d))/g
-  let rep = "$1."
-  let arr = number.toString().split(".")
-  arr[0] = arr[0].replace(exp, rep)
-  return arr[1] ? arr.join(".") : arr[0]
-}
+const formatViews = (views) => {
+  if (!views) return "Desconocido";
+  if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B`;
+  if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M`;
+  if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k`;
+  return views.toString();
+};
 
-function secondString(seconds) {
-  seconds = Number(seconds);
-  const d = Math.floor(seconds / (3600 * 24));
-  const h = Math.floor((seconds % (3600 * 24)) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  const dDisplay = d > 0 ? d + (d == 1 ? ' Día, ' : ' Días, ') : '';
-  const hDisplay = h > 0 ? h + (h == 1 ? ' Hora, ' : ' Horas, ') : '';
-  const mDisplay = m > 0 ? m + (m == 1 ? ' Minuto, ' : ' Minutos, ') : '';
-  const sDisplay = s > 0 ? s + (s == 1 ? ' Segundo' : ' Segundos') : '';
-  return dDisplay + hDisplay + mDisplay + sDisplay;
-}
+const handler = async (m, { conn, text, command }) => {
+  if (!text) return m.reply(toSansSerifPlain("✦ Ingresa el nombre o link de un video."));
 
-function sNum(num) {
-    return new Intl.NumberFormat('en-GB', { notation: "compact", compactDisplay: "short" }).format(num)
-}
+  let video;
+  const ytId = ytIdRegex.exec(text);
+  if (ytId) {
+    const res = await yts({ videoId: ytId[1] });
+    video = res.video || (await yts(`https://youtu.be/${ytId[1]}`)).all[0];
+  } else {
+    const res = await yts(text);
+    video = res.all[0];
+  }
 
-function eYear(txt) {
-    if (!txt) {
-        return '×'
+  if (!video) return m.reply(toSansSerifPlain("✦ No se encontró el video."));
+
+  const { title, timestamp, views, url, thumbnail, author, ago } = video;
+
+  let txt = `乂  Y O U T U B E  -  P L A Y\n\n`;
+  txt += `➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › *${title}*\n\n`;
+  txt += `> ✰ 𝖢𝖺𝗇𝖺𝗅 › *${author.name}*\n`;
+  txt += `> ✰ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇 › *${timestamp}*\n`;
+  txt += `> ✰ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*\n`;
+  txt += `> ✰ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 › *${ago || 'desconocido'}*\n`;
+  txt += `> ✰ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n\n`;
+  txt += `✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋.`;
+
+  await conn.sendMessage(m.chat, {
+    image: { url: thumbnail },
+    caption: txt
+  }, { quoted: m });
+
+  try {
+    if (['playt', 'yta', 'ytmp3', 'playaudio'].includes(command)) {
+      const json = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${url}`).then(r => r.json());
+      if (!json.result?.download?.url) throw 'audio no disponible';
+
+      const { data } = await conn.getFile(json.result.download.url);
+      conn.sendMessage(m.chat, {
+        audio: data,
+        fileName: `${title}.mp3`,
+        mimetype: 'audio/mpeg',
+        ptt: false
+      }, { quoted: m });
     }
-    if (txt.includes('month ago')) {
-        var T = txt.replace("month ago", "").trim()
-        var L = 'hace '  + T + ' mes'
-        return L
+
+    if (['play2', 'ytv', 'ytmp4', 'mp4'].includes(command)) {
+      const json = await fetch(`https://api.neoxr.eu/api/youtube?url=${url}&type=video&quality=360p&apikey=GataDios`).then(r => r.json());
+      if (!json.data?.url) throw 'video no disponible';
+
+      const { data } = await conn.getFile(json.data.url);
+      conn.sendMessage(m.chat, {
+        video: data,
+        fileName: `${title}.mp4`,
+        caption: title
+      }, { quoted: m });
     }
-    if (txt.includes('months ago')) {
-        var T = txt.replace("months ago", "").trim()
-        var L = 'hace ' + T + ' meses'
-        return L
-    }
-    if (txt.includes('year ago')) {
-        var T = txt.replace("year ago", "").trim()
-        var L = 'hace ' + T + ' año'
-        return L
-    }
-    if (txt.includes('years ago')) {
-        var T = txt.replace("years ago", "").trim()
-        var L = 'hace ' + T + ' años'
-        return L
-    }
-    if (txt.includes('hour ago')) {
-        var T = txt.replace("hour ago", "").trim()
-        var L = 'hace ' + T + ' hora'
-        return L
-    }
-    if (txt.includes('hours ago')) {
-        var T = txt.replace("hours ago", "").trim()
-        var L = 'hace ' + T + ' horas'
-        return L
-    }
-    if (txt.includes('minute ago')) {
-        var T = txt.replace("minute ago", "").trim()
-        var L = 'hace ' + T + ' minuto'
-        return L
-    }
-    if (txt.includes('minutes ago')) {
-        var T = txt.replace("minutes ago", "").trim()
-        var L = 'hace ' + T + ' minutos'
-        return L
-    }
-    if (txt.includes('day ago')) {
-        var T = txt.replace("day ago", "").trim()
-        var L = 'hace ' + T + ' dia'
-        return L
-    }
-    if (txt.includes('days ago')) {
-        var T = txt.replace("days ago", "").trim()
-        var L = 'hace ' + T + ' dias'
-        return L
-    }
-    return txt
-}
+  } catch (e) {
+    return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e);
+  }
+};
+
+handler.command = ["playt"];
+handler.help = handler.command;
+handler.tags = ["downloader"];
+
+export default handler;
