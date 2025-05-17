@@ -46,12 +46,15 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
   const { title, timestamp, views, url, thumbnail, author } = video;
 
-  const msg = `「✨」${toSansSerifPlain("Descargando")}\n\n` +
-    `> 🎧 ${toSansSerifPlain("Título")}: ${toSansSerifPlain(title)}\n` +
-    `> 📺 ${toSansSerifPlain("Canal")}: ${toSansSerifPlain(author.name)}\n` +
-    `> ⏱️ ${toSansSerifPlain("Duración")}: ${toSansSerifPlain(timestamp)}\n` +
-    `> 👀 ${toSansSerifPlain("Vistas")}: ${toSansSerifPlain(formatViews(views))}\n` +
-    `> 🔗 ${toSansSerifPlain("Enlace")}: ${url}`;
+  const msg = `
+╭┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╮
+┃✦ Título: ${toSansSerifPlain(title)}
+┃✦ Canal: ${toSansSerifPlain(author.name)}
+┃✦ Duración: ${toSansSerifPlain(timestamp)}
+┃✦ Vistas: ${toSansSerifPlain(formatViews(views))}
+┃✦ Enlace: ${url}
+╰┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╯
+`;
 
   await conn.sendMessage(m.chat, {
     image: { url: thumbnail },
@@ -69,7 +72,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         audio: file.data,
         fileName: `${toSansSerifPlain(title)}.mp3`,
         mimetype: 'audio/mpeg',
-        ptt: true
+        ptt: false
       }, { quoted: m });
     }
 
