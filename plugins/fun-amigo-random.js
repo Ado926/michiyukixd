@@ -5,7 +5,7 @@ let a = ps.getRandom()
 let b
 do b = ps.getRandom()
 while (b === a)
-m.reply(`${emoji} Vamos a hacer algunas amistades.\n\n*Oye ${toM(a)} hablale al privado a ${toM(b)} para que jueguen y se haga una amistad 🙆*\n\n*Las mejores amistades empiezan con un juego 😉.*`, null, {
+m.reply(`${emoji} ¡Listos para la partida! 🎮🔥\n\n*Hey ${toM(a)}, escríbele en privado a ${toM(b)} y formen equipo para ganar juntos 🕹️💥*\n\n*¡Las mejores alianzas nacen en el juego! ⚔️🚀.*`, null, {
 mentions: [a, b]
 })}
 handler.help = ['amistad']
