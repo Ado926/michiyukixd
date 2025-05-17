@@ -18,8 +18,8 @@ const handler = async (m, { conn, args }) => {
 
         await conn.sendMessage(m.chat, { image: Buffer.from(response.data) }, { quoted: m });
     } catch (error) {
-        console.error('Error al generar la imagen:', error);
-        await conn.reply(m.chat, `${msm} No se pudo generar la imagen, intenta nuevamente mas tarde.`, m);
+        console.error('ᥱrr᥆r ᥲᥣ gᥱᥒᥱrᥲr ᥣᥲ іmᥲgᥱᥒ:', error);
+        await conn.reply(m.chat, `${msm} ᥒ᥆ ⍴ᥙძᥱ gᥱᥒᥱrᥲr ᥣᥲ іmᥲgᥱᥒ іᥒ𝗍ᥱᥒ𝗍ᥱᥣ᥆ mᥲ́s 𝗍ᥲrძᥱ.`, m);
     }
 };
 
