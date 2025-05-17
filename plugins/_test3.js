@@ -16,6 +16,45 @@ const toSansSerifPlain = (text = "") =>
 
 const ytLinkRegex = /https?:\/\/(?:www\.)?youtu(?:be\.com|\.be)\/[^\s]+/;
 
+const apis = [
+  (url) => `https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(url)}`,
+  (url) => `https://api.zenkey.my.id/api/download/ytmp4?apikey=zenkey&url=${encodeURIComponent(url)}`,
+  (url) => `https://axeel.my.id/api/download/video?url=${encodeURIComponent(url)}`,
+  (url) => `https://delirius-apiofc.vercel.app/download/ytmp4?url=${encodeURIComponent(url)}`
+];
+
+async function tryDownloadVideo(url) {
+  for (const getApiUrl of apis) {
+    try {
+      const apiUrl = getApiUrl(url);
+      const res = await fetch(apiUrl);
+      const json = await res.json();
+
+      // Según API, busca la URL del video (ajusta si cambia el formato)
+      // Para cada API puede ser distinto:
+      // siputzx: json.result.url
+      // zenkey: json.result.video
+      // axeel: json.result.url
+      // delirius: json.result.url
+
+      let videoUrl = null;
+
+      if (json.result?.url) videoUrl = json.result.url;
+      else if (json.result?.video) videoUrl = json.result.video;
+      else if (json.url) videoUrl = json.url; // fallback
+      else if (json.result?.downloadUrl) videoUrl = json.result.downloadUrl;
+
+      if (videoUrl) {
+        return { videoUrl, title: json.result?.title || json.title || "Video" };
+      }
+
+    } catch (e) {
+      // continúa al siguiente API si error
+    }
+  }
+  throw new Error("Video no disponible en ninguna API");
+}
+
 const handler = async (m, { conn }) => {
   if (!m.quoted || !m.quoted.text || !m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y"))
     return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga '乂  Y O U T U B E  -  P L A Y'."));
@@ -27,25 +66,21 @@ const handler = async (m, { conn }) => {
   conn.sendMessage(m.chat, { react: { text: "🚀", key: m.key } });
 
   try {
-    const apiUrl = `https://api.neoxr.eu/api/youtube?url=${encodeURIComponent(videoUrl)}&type=video&quality=360p&apikey=GataDios`;
-    const res = await fetch(apiUrl);
-    const json = await res.json();
+    const { videoUrl: directUrl, title } = await tryDownloadVideo(videoUrl);
 
-    if (!json || !json.url) throw "video no disponible";
-
-    const videoBuffer = await fetch(json.url).then(r => r.buffer());
+    const videoBuffer = await fetch(directUrl).then(r => r.buffer());
 
     await conn.sendMessage(m.chat, {
       video: videoBuffer,
       fileName: `video.mp4`,
       mimetype: 'video/mp4',
-      caption: `乂  Y O U T U B E  -  V I D E O\n\nTítulo: ${json.title || "Desconocido"}`,
+      caption: `乂  Y O U T U B E  -  V I D E O\n\nTítulo: ${title}`,
     }, { quoted: m });
 
     conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (e) {
-    return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e);
+    return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e.message);
   }
 };
 
