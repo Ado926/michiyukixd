@@ -7,8 +7,7 @@ let handler = async (m, { conn, args }) => {
     let totalreg = Object.keys(global.db.data.users).length
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
-    let txt = ` > 
-𝙷𝚘𝚕𝚊! 𝚋𝚒𝚎𝚗𝚟𝚎𝚗𝚒𝚍@ 𝚊𝚕 𝚖𝚎𝚗𝚞 𝚍𝚎 *${botname}*
+    let txt = ` > 𝙷𝚘𝚕𝚊! 𝚋𝚒𝚎𝚗𝚟𝚎𝚗𝚒𝚍@ 𝚊𝚕 𝚖𝚎𝚗𝚞 𝚍𝚎 *${botname}*
 
 ╭─〔🌿 Información del Bot 🌿〕─╮
 │🌿 Usuario: @${userId.split('@')[0]}
