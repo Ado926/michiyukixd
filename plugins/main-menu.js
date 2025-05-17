@@ -8,21 +8,19 @@ let handler = async (m, { conn, args }) => {
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
     
     let txt = `
-╭─────〔 こんにちは！ 〕─────╮
+─〔 こんにちは！ 〕─╮
 │ Hola, soy *${botname}* 
 │ Bot ☁︎ ➤ ${(conn.user.jid == global.conn.user.jid ? '*Principal 🅥*' : '*Sub Bot 🅑*')}
-╰─────〔 ☀︎ Info Principal ☀︎ 〕─────╯
+╰─〔 ☀︎ Info Principal ☀︎ 〕─╯
 
-╭━━━━━ ❖ ⋆⋅☆⋅⋆ ❖ ━━━━━╮
+╭┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╮
 ┃✦ Cliente: @${userId.split('@')[0]}
 ┃✦ Modo: ⟬ Privado ⟭
-┃✦ Canal ☕︎︎:
-┃    https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f
 ┃✦ Activado: ${uptime}
 ┃✦ Usuarios ☃︎: ${totalreg}
 ┃✦ Comandos ☂︎: ${totalCommands}
 ┃✦ Motor ➮ Baileys Multi Device
-╰━━━━━ ❖ ⋆⋅☆⋅⋆ ❖ ━━━━━╯
+╰┈ ❖ ⋆⋅☆⋅⋆ ❖ ┈╯
 
 🌳 Puedes tener tu *Sub Bot*  
 ⌁ Usa *#code* o *#qr* para empezar.
