@@ -2,43 +2,42 @@ import fetch from 'node-fetch'
 
 const limit = 200 // MB
 
-let handler = async (m, { conn, text }) => {
+function extractVideoID(url) {
+  // Extrae el ID del video de diferentes formatos de URL de YouTube
+  let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/)
+  return match ? match[1] : null
+}
+
+let handler = async (m, { conn }) => {
   if (!m.quoted) 
     return conn.reply(m.chat, `[ ✰ ] Etiqueta el mensaje que contenga el resultado de YouTube Play.`, m).then(() => m.react('✖️'))
   
   if (!m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y")) 
     return conn.reply(m.chat, `[ ✰ ] Etiqueta el mensaje que contenga el resultado de YouTube Play.`, m).then(() => m.react('✖️'))
   
-  // Extraer URLs de Youtube del texto citado
-  let urls = m.quoted.text.match(/(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed|shorts)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]+)/gi)
+  let urls = m.quoted.text.match(/https?:\/\/[^\s]+/g)
   if (!urls) 
     return conn.reply(m.chat, `Resultado no Encontrado.`, m).then(() => m.react('✖️'))
   
-  // Solo toma el primer URL
   let url = urls[0]
+  let videoId = extractVideoID(url)
+  if (!videoId) 
+    return conn.reply(m.chat, 'No pude extraer el ID del video.', m).then(() => m.react('✖️'))
   
   await m.react('🕓')
   
   try {
-    // Extraer el video ID
-    let videoIdMatch = url.match(/(?:v=|\/)([a-zA-Z0-9\-_]{11})(?:&|$)/)
-    let videoId = videoIdMatch ? videoIdMatch[1] : null
-    if (!videoId) throw new Error("No pude extraer el ID del video.")
-    
-    // Llamar API vreden para ytmp3
+    console.log(`Intentando descargar audio para videoId: ${videoId}`)
     let res = await fetch(`https://api.vreden.my.id/api/ytmp3?url=https://www.youtube.com/watch?v=${videoId}`)
     let json = await res.json()
+    if (!json.result) throw new Error('API no devolvió resultado')
     
-    if (!json.result || !json.result.download || !json.result.download.url) throw new Error("Error al obtener URL de descarga.")
-    
-    // Validar tamaño (en MB)
     let sizeMB = parseFloat(json.result.size.replace(' MB', '').trim())
     if (sizeMB > limit) {
       await conn.reply(m.chat, `El archivo pesa más de ${limit} MB, se canceló la descarga.`, m)
       return m.react('✖️')
     }
     
-    // Enviar archivo mp3
     await conn.sendMessage(m.chat, { 
       audio: { url: json.result.download.url },
       mimetype: 'audio/mpeg',
@@ -48,7 +47,7 @@ let handler = async (m, { conn, text }) => {
     
     await m.react('✅')
   } catch (e) {
-    console.error(e)
+    console.error('Error al descargar audio:', e)
     await m.react('✖️')
     await conn.reply(m.chat, 'Error al descargar el audio. Intenta de nuevo.', m)
   }
