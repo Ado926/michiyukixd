@@ -5,7 +5,7 @@
 import axios from "axios";
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
-  if (!text) return conn.reply(m.chat, `${emoji} Por favor, ingresé un termino para generar una imagen.`, m)
+  if (!text) return conn.reply(m.chat, `${emoji} іᥒgrᥱsᥲ ᥣᥲ ძᥱsᥴrі⍴ᥴі᥆́ᥒ ⍴ᥲrᥲ gᥱᥒᥱrᥲr sᥙ іmᥲgᥱᥒ.`, m)
   await m.react('🕓')
 
   try {
@@ -21,13 +21,13 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
         { quoted: m }
       );
     } else {
-      throw new Error("No se pudo crear la imagen. Intentar otra vez.");
+      throw new Error("ᥒ᥆ ⍴ᥙძᥱ ᥴrᥱᥲr sᥙ іmᥲgᥱᥒ. іᥒ𝗍ᥱᥒ𝗍ᥲᥣ᥆ mᥲ́s 𝗍ᥲrძᥱ.");
     }
   } catch (error) {
     console.error(error);
     conn.reply(
       m.chat,
-      "Se produjo un error al crear la imagen.",
+      "sᥱ ⍴r᥆ძᥙȷ᥆ ᥙᥒ ᥱrr᥆r ᥲᥣ ᥴrᥱᥲr sᥙ іmᥲgᥱᥒ.",
       m
     );
   }
