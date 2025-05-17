@@ -21,31 +21,31 @@ const handler = async (m, { conn }) => {
   if (!m.quoted || !m.quoted.text || !m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y"))
     return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga '乂  Y O U T U B E  -  P L A Y'."));
 
-  const quotedText = m.quoted.text;
-  const match = quotedText.match(ytIdRegex);
-  if (!match) return m.reply(toSansSerifPlain("✦ No se detectó un enlace de YouTube en el mensaje citado."));
+  const match = m.quoted.text.match(ytIdRegex);
+  if (!match) return m.reply(toSansSerifPlain("✦ No se detectó un enlace de YouTube."));
 
-  await conn.sendMessage(m.chat, { react: { text: "🕓", key: m.key } });
+  conn.sendMessage(m.chat, { react: { text: "🚀", key: m.key } });
 
   const videoUrl = `https://youtu.be/${match[1]}`;
   const res = await yts(videoUrl);
   const video = res.videos[0];
-
   if (!video) return m.reply(toSansSerifPlain("✦ No se encontró el video."));
 
   try {
     const json = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(video.url)}`).then(r => r.json());
     if (!json.result?.download?.url) throw "audio no disponible";
 
-    const { data } = await conn.getFile(json.result.download.url);
+    // Descargar directamente como buffer
+    const audioBuffer = await fetch(json.result.download.url).then(res => res.buffer());
+
     await conn.sendMessage(m.chat, {
-      audio: data,
+      audio: audioBuffer,
       fileName: `${video.title}.mp3`,
       mimetype: 'audio/mpeg',
       ptt: false
     }, { quoted: m });
 
-    await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
+    conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (e) {
     return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e);
