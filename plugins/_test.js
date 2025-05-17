@@ -9,7 +9,7 @@ const handler = async (m, { conn, text, command }) => {
   const isVideo = lower === 'video';
 
   // Cuando se usa .play
-  if (command === 'play') {
+  if (command === 'playt') {
     if (!text) return m.reply('✦ Ingresa el nombre o link del video.');
 
     const res = await yts(text);
