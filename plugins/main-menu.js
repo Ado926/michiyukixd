@@ -30,9 +30,6 @@ let handler = async (m, { conn, args }) => {
 > ➮ Ver la lista de comandos de la Bot.
 • ✎ *#uptime • #runtime*
 > ➮ Ver tiempo activo o en linea de la Bot.
-• ✎ *#sc • #script*
-> ➮ Link del repositorio oficial de la Bot
-• ✎ *#staff • #colaboradores*
 > ➮ Ver la lista de desarrolladores de la Bot.
 • ✎ *#serbot • #serbot code*
 > ➮ Crea una sesión de Sub-Bot.
