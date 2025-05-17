@@ -1,73 +1,51 @@
-import fetch from "node-fetch";
-
-const toSansSerifPlain = (text = "") =>
-  text.split("").map((char) => {
-    const map = {
-      a: "𝖺", b: "𝖻", c: "𝖼", d: "𝖽", e: "𝖾", f: "𝖿", g: "𝗀", h: "𝗁", i: "𝗂",
-      j: "𝗃", k: "𝗄", l: "𝗅", m: "𝗆", n: "𝗇", o: "𝗈", p: "𝗉", q: "𝗊", r: "𝗋",
-      s: "𝗌", t: "𝗍", u: "𝗎", v: "𝗏", w: "𝗐", x: "𝗑", y: "𝗒", z: "𝗓",
-      A: "𝖠", B: "𝖡", C: "𝖢", D: "𝖣", E: "𝖤", F: "𝖥", G: "𝖦", H: "𝖧", I: "𝖨",
-      J: "𝖩", K: "𝖪", L: "𝖫", M: "𝖬", N: "𝖭", O: "𝖮", P: "𝖯", Q: "𝖰", R: "𝖱",
-      S: "𝖲", T: "𝖳", U: "𝖴", V: "𝖵", W: "𝖶", X: "𝖷", Y: "𝖸", Z: "𝖹",
-      0: "𝟢", 1: "𝟣", 2: "𝟤", 3: "𝟥", 4: "𝟦", 5: "𝟧", 6: "𝟨", 7: "𝟩", 8: "𝟪", 9: "𝟫"
-    };
-    return map[char] || char;
-  }).join("");
-
-const ytLinkRegex = /https?:\/\/(?:www\.)?youtu(?:be\.com|\.be)\/[^\s]+/;
-
-async function tryDownloadVideoNeoxr(url) {
-  const apiUrl = `https://api.neoxr.eu/api/youtube?url=${encodeURIComponent(url)}&type=video&quality=360p&apikey=GataDios`;
-
-  const res = await fetch(apiUrl);
-  if (!res.ok) throw new Error(`Error en la API Neoxr: ${res.status}`);
-  const json = await res.json();
-
-  console.log("Respuesta Neoxr:", JSON.stringify(json, null, 2));
-
-  const videoUrl = json.data?.url;
-  const title = json.data?.title;
-
-  if (!videoUrl) throw new Error("No se encontró la URL del video en la respuesta.");
-
-  return { videoUrl, title };
-}
+import yt from 'yt-search';
+import fetch from 'node-fetch';
 
 const handler = async (m, { conn }) => {
-  if (!m.quoted || !m.quoted.text || !m.quoted.text.includes("乂  Y O U T U B E  -  P L A Y"))
-    return m.reply(toSansSerifPlain("✦ Debes responder a un mensaje que contenga '乂  Y O U T U B E  -  P L A Y'."));
+  if (!m.quoted || !m.quoted.text) {
+    return m.reply("✦ Responde al mensaje que diga:\n➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › título del video");
+  }
 
-  const linkMatch = m.quoted.text.match(ytLinkRegex);
-  if (!linkMatch) return m.reply(toSansSerifPlain("✦ No se encontró un enlace de YouTube en el mensaje citado."));
+  // Extraer el título del mensaje citado
+  const match = m.quoted.text.match(/➪\s*𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈\s*›\s*(.+)/i);
+  if (!match) return m.reply("✦ No se pudo detectar el título del video.");
+  const query = match[1].trim();
 
-  const videoUrlOriginal = linkMatch[0];
-  await conn.sendMessage(m.chat, { react: { text: "🚀", key: m.key } });
+  await conn.sendMessage(m.chat, { react: { text: "🔎", key: m.key } });
+  await m.reply(`⏳ Buscando en YouTube: *${query}*`);
 
   try {
-    const { videoUrl, title } = await tryDownloadVideoNeoxr(videoUrlOriginal);
+    // Buscar con yt-search
+    const result = await yt.search(query);
+    if (!result.videos.length) throw 'No se encontró ningún video';
 
-    await conn.sendMessage(
-      m.chat,
-      {
-        video: { url: videoUrl },
-        fileName: `${title || "video"}.mp4`,
-        mimetype: 'video/mp4',
-        caption: `乂  Y O U T U B E  -  V I D E O\n\n🎵 Título: ${title || "Desconocido"}`,
-      },
-      { quoted: m }
-    );
+    const video = result.videos[0];
+    const videoUrl = video.url;
+
+    // Descargar video con Neoxr API
+    const api = `https://api.neoxr.eu/api/youtube?url=${encodeURIComponent(videoUrl)}&type=video&quality=360p&apikey=GataDios`;
+    const res = await fetch(api).then(res => res.json());
+
+    if (!res.result?.url) throw 'No se pudo obtener el link de descarga';
+
+    await conn.sendMessage(m.chat, {
+      video: { url: res.result.url },
+      mimetype: 'video/mp4',
+      fileName: `${res.result.title}.mp4`,
+      caption: `🎬 *${res.result.title}*`,
+    }, { quoted: m });
 
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (e) {
-    console.log("Error:", e);
-    return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e.message);
+    console.error(e);
+    m.reply(`❌ Ocurrió un error:\n${e.message || e}`);
   }
 };
 
-handler.customPrefix = /^(video|Video|mp4|Mp4)$/i;
+handler.customPrefix = /^\.?mp4$/i;
 handler.command = new RegExp;
-handler.help = ["video"];
-handler.tags = ["downloader"];
+handler.help = ["mp4"];
+handler.tags = ["descargas"];
 
 export default handler;
