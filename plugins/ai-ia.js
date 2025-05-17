@@ -10,7 +10,7 @@ const q = m.quoted
 const img = await q.download?.()
 if (!img) {
 console.error(`${msm} Error: No image buffer available`)
-return conn.reply(m.chat, '✘ ChatGpT no pudo descargar la imagen.', m)}
+return conn.reply(m.chat, '✘ ᥒ᥆ ⍴ᥙძᥱ ძᥱsᥴᥲrgᥲr ᥱs𝗍ᥲ іmᥲgᥱᥒ.', m)}
 const content = `${emoji} ¿Qué se observa en la imagen?`
 try {
 const imageAnalysis = await fetchImageBuffer(content, img)
