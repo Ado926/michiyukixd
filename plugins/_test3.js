@@ -1,51 +1,51 @@
-import yt from 'yt-search';
 import fetch from 'node-fetch';
+import yt from 'yt-search';
 
 const handler = async (m, { conn }) => {
-  if (!m.quoted || !m.quoted.text) {
-    return m.reply("✦ Responde al mensaje que diga:\n➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › título del video");
-  }
-
-  // Extraer el título del mensaje citado
-  const match = m.quoted.text.match(/➪\s*𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈\s*›\s*(.+)/i);
-  if (!match) return m.reply("✦ No se pudo detectar el título del video.");
-  const query = match[1].trim();
-
-  await conn.sendMessage(m.chat, { react: { text: "🔎", key: m.key } });
-  await m.reply(`⏳ Buscando en YouTube: *${query}*`);
-
   try {
-    // Buscar con yt-search
-    const result = await yt.search(query);
-    if (!result.videos.length) throw 'No se encontró ningún video';
+    // Solo si el texto es "Video" o "video"
+    if (!/^video$/i.test(m.text)) return;
 
-    const video = result.videos[0];
-    const videoUrl = video.url;
+    if (!m.quoted || !m.quoted.text) {
+      return m.reply('✦ Responde a un mensaje que diga:\n➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › título del video');
+    }
 
-    // Descargar video con Neoxr API
-    const api = `https://api.neoxr.eu/api/youtube?url=${encodeURIComponent(videoUrl)}&type=video&quality=360p&apikey=GataDios`;
-    const res = await fetch(api).then(res => res.json());
+    const texto = m.quoted.text;
+    const match = texto.match(/➪\s*𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈\s*›\s*(.*)/i);
+    if (!match) return m.reply('✦ No se pudo extraer el título del video.');
 
-    if (!res.result?.url) throw 'No se pudo obtener el link de descarga';
+    const title = match[1].trim();
+    await conn.sendMessage(m.chat, { react: { text: "🎥", key: m.key } });
+
+    const search = await yt.search(title);
+    const video = search.videos[0];
+    if (!video) throw '✦ No se encontró el video.';
+
+    const api = `https://api.neoxr.eu/api/youtube?url=${encodeURIComponent(video.url)}&type=video&quality=360p&apikey=GataDios`;
+    const res = await fetch(api);
+    const json = await res.json();
+
+    if (!json.result?.url) throw '✦ No se encontró la URL del video.';
 
     await conn.sendMessage(m.chat, {
-      video: { url: res.result.url },
+      video: { url: json.result.url },
       mimetype: 'video/mp4',
-      fileName: `${res.result.title}.mp4`,
-      caption: `🎬 *${res.result.title}*`,
+      fileName: `${json.result.title}.mp4`,
+      caption: `🎬 *${json.result.title}*`,
     }, { quoted: m });
 
     await conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (e) {
     console.error(e);
-    m.reply(`❌ Ocurrió un error:\n${e.message || e}`);
+    m.reply(`✦ Error:\n${e.message || e}`);
   }
 };
 
-handler.customPrefix = /^\.?mp4$/i;
-handler.command = new RegExp;
-handler.help = ["mp4"];
-handler.tags = ["descargas"];
+handler.customPrefix = /^video$/i;
+handler.command = new RegExp; // sin prefijo
+handler.register = true;
+handler.fail = null;
+handler.exp = 0;
 
 export default handler;
