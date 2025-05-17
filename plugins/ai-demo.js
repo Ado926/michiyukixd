@@ -2,7 +2,7 @@ import { randomBytes } from "crypto"
 import axios from "axios"
 
 let handler = async (m, { conn, text }) => {
-    if (!text) throw `${emoji} ¿Cómo puedo ayudarte hoy?`;
+    if (!text) throw `${emoji} ¿ᥴ᥆m᥆ 𝗍ᥱ ᥲᥡᥙძ᥆́ һ᥆ᥡ?`;
     try {
         conn.reply(m.chat, m);
         let data = await chatGpt(text);
