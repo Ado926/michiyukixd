@@ -36,11 +36,11 @@ export async function before(m) {
     user.commands += 1;
   } else {
     const comando = m.text.trim().split(' ')[0];
-    await m.reply(`\`\`\`
-✦ Comando inválido: ${comando}
+    //await m.reply(`\`\`\`
+//✦ Comando inválido: ${comando}
 
-Para ver todos los comandos, escribe:
-#help
-\`\`\``);
+//Para ver todos los comandos, escribe:
+//#help
+//\`\`\``);
   }
 }
