@@ -28,7 +28,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
   if (chat.welcome && m.messageStubType == 27) {
     const texto = `*─「 𓆩✦ Bienvenid@ ✦𓆪 」─*\n\n` +
       `✧ Hola @${username}, ¡bienvenid@ a *${groupMetadata.subject}*!\n` +
-      `${global.welcom1}\n` +
+      `${welcomeText}\n` +
       `✦ Ahora somos *${total}* miembros.\n\n` +
       `> Puedes usar *#help* para ver mis comandos.`
 
@@ -42,7 +42,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
   if (chat.welcome && (m.messageStubType == 28 || m.messageStubType == 32)) {
     const texto = `*─「 𓆩✦ Despedida ✦𓆪 」─*\n\n` +
       `✧ @${username} ha salido de *${groupMetadata.subject}*.\n` +
-      `${global.welcom2}\n` +
+      `${byeText}\n` +
       `✦ Ahora somos *${total}* miembros.\n\n` +
       `> Esperamos verte pronto.`
 
