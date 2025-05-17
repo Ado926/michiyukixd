@@ -12,12 +12,12 @@ let handler = async (m) => {
   let isTele = /image\/(png|jpe?g|gif)|video\/mp4/.test(mime)
   let link = await (isTele ? uploadImage : uploadFile)(media)
   let img = await (await fetch(`${link}`)).buffer()
-  let txt = `乂  *L I N K - E N L A C E*  乂\n\n`
-      txt += `*» Enlace* : ${link}\n`
-      txt += `*» Acortado* : ${await shortUrl(link)}\n`
-      txt += `*» Tamaño* : ${formatBytes(media.length)}\n`
-      txt += `*» Expiración* : ${isTele ? 'No expira' : 'Desconocido'}\n\n`
-      txt += `> *${dev}*`
+  let txt = `📎 *L I N K  D E S C A R G A* 📎\n\n`
+txt += `🔗 *Enlace:* ${link}\n`
+txt += `🧩 *Acortado:* ${await shortUrl(link)}\n`
+txt += `📦 *Tamaño:* ${formatBytes(media.length)}\n`
+txt += `⏳ *Expira:* ${isTele ? 'No expira' : 'Desconocido'}\n\n`
+txt += `👤 *Generado por:* ${botname}`
 
 await conn.sendFile(m.chat, img, 'thumbnail.jpg', txt, m, fkontak)
 await m.react(done)
