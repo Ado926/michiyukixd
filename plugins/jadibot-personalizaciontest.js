@@ -37,7 +37,7 @@ let handler = async (m, { conn }) => {
   m.reply('Banner actualizado para tu sub-bot.');
 };
 
-handler.command = ['setbanner'];
+handler.command = ['banner'];
 handler.help = ['setbanner (responde a una imagen)'];
 handler.tags = ['subbot'];
 export default handler;
