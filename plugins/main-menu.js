@@ -384,7 +384,6 @@ let handler = async (m, { conn, args }) => {
 > ✿ Elimine a usuario por el prefijo de país.
 ➜ *#bot on*
 > ✿ Enciende el bot en un grupo.
-➜ *#bot off*
 > ✿ Apaga el bot en un grupo.
 ➜ *#mute* [mension / etiquetar]
 > ✿ El bot elimina los mensajes del usuario.
@@ -542,21 +541,9 @@ let handler = async (m, { conn, args }) => {
   `.trim()
 
     await conn.sendMessage(m.chat, {
-  image: Buffer.from(banner, 'base64'),
-  caption: txt, // Set the caption to the full text content
-  contextInfo: {
-    mentionedJid: [m.sender, userId],
-    externalAdReply: {
-      // Removed title: botname,
-      // Removed body: textbot,
-      thumbnailUrl: null, // opcional, se ignora si ya hay imagen
-      // Removed sourceUrl: redes,
-      mediaType: 1,
-      showAdAttribution: true,
-      // Removed renderLargerThumbnail: true,
-    },
-  },
-}, {  }); // Removed the { quoted: m } option
+        image: Buffer.from(banner, 'base64'),
+        caption: txt
+    }); // Removed contextInfo and the quoted message option
 
 handler.help = ['menu']
 handler.tags = ['main']
