@@ -542,7 +542,8 @@ let handler = async (m, { conn, args }) => {
 
     await conn.sendMessage(m.chat, {
         image: Buffer.from(banner, 'base64'),
-        caption: txt
+        caption: txt,
+        mentions: [m.sender, userId] // Include mentions directly in the message options
     }); // Removed contextInfo and the quoted message option
 
 handler.help = ['menu']
