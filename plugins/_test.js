@@ -28,35 +28,41 @@ const formatViews = (views) => {
 const handler = async (m, { conn, text }) => {
   if (!text) return m.reply(toSansSerifPlain("✦ Ingresa el nombre o link de un video."));
 
+  // Respuesta rápida decorativa mientras busca el video
+  await conn.sendMessage(m.chat, {
+    react: { text: "🎵", key: m.key }
+  });
+  await m.reply(toSansSerifPlain("✦ 𝖡𝗎𝗌𝖼𝖺𝗇𝖽𝗈 𝗍𝗎 𝗏𝗂𝖽𝖾𝗈, 𝗎𝗇 𝗆𝗈𝗆𝖾𝗇𝗍𝗂𝗍𝗈..."));
+
   let video;
-  const ytId = ytIdRegex.exec(text);
-  if (ytId) {
-    const res = await yts({ videoId: ytId[1] });
-    video = res.video || (await yts(`https://youtu.be/${ytId[1]}`)).all[0];
-  } else {
-    const res = await yts(text);
-    video = res.all[0];
+  try {
+    const ytId = ytIdRegex.exec(text);
+    const search = ytId ? await yts({ videoId: ytId[1] }) : await yts(text);
+    video = ytId ? search.video : search.all[0];
+  } catch {
+    return m.reply(toSansSerifPlain("✦ Error al buscar el video."));
   }
 
   if (!video) return m.reply(toSansSerifPlain("✦ No se encontró el video."));
 
   const { title, timestamp, views, url, thumbnail, author, ago } = video;
 
-  let txt = `乂  Y O U T U B E  -  P L A Y\n\n`;
-  txt += `➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › *${title}*\n\n`;
-  txt += `> ✰ 𝖢𝖺𝗇𝖺𝗅 › *${author.name}*\n`;
-  txt += `> ✰ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇 › *${timestamp}*\n`;
-  txt += `> ✰ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*\n`;
-  txt += `> ✰ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 › *${ago || 'desconocido'}*\n`;
-  txt += `> ✰ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n\n`;
-  txt += `✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋.`;
+  const caption = [
+    "乂  Y O U T U B E  -  P L A Y\n",
+    `➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › *${title}*\n`,
+    `> ✰ 𝖢𝖺𝗇𝖺𝗅 › *${author.name}*`,
+    `> ✰ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇 › *${timestamp}*`,
+    `> ✰ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*`,
+    `> ✰ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 › *${ago || 'desconocido'}*`,
+    `> ✰ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n`,
+    "✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋."
+  ].join("\n");
 
+  // Enviar respuesta final con imagen
   await conn.sendMessage(m.chat, {
     image: { url: thumbnail },
-    caption: txt
+    caption
   }, { quoted: m });
-
-  // Lógica de descarga eliminada
 };
 
 handler.command = ["play"];
