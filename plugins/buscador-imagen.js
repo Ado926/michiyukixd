@@ -41,10 +41,10 @@ async function sendAlbumMessage(jid, medias, options = {}) {
 }
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
-    if (!text) return conn.reply(m.chat, `*❀ Por favor, ingrese un texto para buscar una Imagen.`, m);
+    if (!text) return conn.reply(m.chat, `*🍀 іᥒgrᥱsᥲ ᥱᥣ 𝗍ᥱ᥊𝗍᥆ ⍴ᥲrᥲ ᑲᥙsᥴᥲr sᥙ іmᥲgᥱᥒ.`, m);
 
     await m.react('🕒');
-    conn.reply(m.chat, '✧ *Descargando su imagen...*', m, {
+    conn.reply(m.chat, '✧ *ძᥱsᥴᥲrgᥲᥒძ᥆ sᥙ іmᥲgᥱᥒ...*', m, {
 contextInfo: { externalAdReply :{ mediaUrl: null, mediaType: 1, showAdAttribution: true,
 title: packname,
 body: dev,
@@ -60,15 +60,15 @@ sourceUrl: redes }}})
             if (image) images.push({ type: "image", data: { url: image } });
         }
 
-        if (images.length < 2) return conn.reply(m.chat, '✧ No se encontraron suficientes imágenes para un álbum.', m);
+        if (images.length < 2) return conn.reply(m.chat, '✧ ᥒ᥆sᥱ ᥱᥒᥴ᥆ᥒ𝗍r᥆ sᥙ𝖿іᥴіᥱᥒ𝗍ᥱs іmᥲ́gᥱᥒᥱs.', m);
 
-        const caption = `❀ *Resultados de búsqueda para:* ${text}`;
+        const caption = `🌹 *rᥱsᥙᥣ𝗍ᥲძ᥆s ძᥱ ᑲᥙ́s𝗊ᥙᥱძᥲ ⍴ᥲrᥲ:* ${text}`;
         await sendAlbumMessage(m.chat, images, { caption, quoted: m });
 
         await m.react('✅');
     } catch (error) {
         await m.react('❌');
-        conn.reply(m.chat, '⚠︎ Hubo un error al obtener las imágenes.', m);
+        conn.reply(m.chat, 'ᥱrr᥆r ᥲᥣ ᥆ᑲ𝗍ᥱᥒᥱr ᥣᥲs іmᥲ́gᥱᥒᥱs.', m);
     }
 };
 
