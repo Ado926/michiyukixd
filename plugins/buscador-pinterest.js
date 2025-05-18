@@ -41,10 +41,10 @@ async function sendAlbumMessage(jid, medias, options = {}) {
 }
 
 const pinterest = async (m, { conn, text, usedPrefix, command }) => {
-    if (!text) return conn.reply(m.chat, `❀ Por favor, ingresa lo que deseas buscar por Pinterest.`, m);
+    if (!text) return conn.reply(m.chat, `❀ іᥒgrᥱsᥲ ᥣ᥆ 𝗊ᥙᥱ ძᥱsᥱᥲs ᑲᥙsᥴᥲr ⍴᥆r ⍴іᥒ𝗍ᥱrᥱs𝗍.`, m);
 
     await m.react('🕒');
-    conn.reply(m.chat, '✧ *Descargando imágenes de Pinterest...*', m, {
+    conn.reply(m.chat, '✧ *ძᥱsᥴᥲrgᥲᥒძ᥆ sᥙ іmᥲgᥱᥒ...*', m, {
         contextInfo: {
             externalAdReply: {
                 mediaUrl: null,
@@ -64,18 +64,18 @@ const pinterest = async (m, { conn, text, usedPrefix, command }) => {
         const data = await res.json();
 
         if (!Array.isArray(data) || data.length < 2) {
-            return conn.reply(m.chat, '✧ No se encontraron suficientes imágenes para un álbum.', m);
+            return conn.reply(m.chat, '🌷 ᥒ᥆sᥱ ᥱᥒᥴ᥆ᥒ𝗍rᥲr᥆ᥒ sᥙ𝖿іᥴіᥱᥒ𝗍ᥱs іmᥲgᥱᥒᥱs.', m);
         }
 
         const images = data.slice(0, 10).map(img => ({ type: "image", data: { url: img.image_large_url } }));
 
-        const caption = `❀ *Resultados de búsqueda para:* ${text}`;
+        const caption = `❀ *rᥱsᥙᥣ𝗍ᥲძ᥆ ძᥱ 𝗍ᥙ ᑲᥙs𝗊ᥙᥱძᥲ:* ${text}`;
         await sendAlbumMessage(m.chat, images, { caption, quoted: m });
 
         await m.react('✅');
     } catch (error) {
         await m.react('❌');
-        conn.reply(m.chat, '⚠︎ Hubo un error al obtener las imágenes de Pinterest.', m);
+        conn.reply(m.chat, '⚠︎ ᥆ᥴᥙrrі᥆ ᥙᥒ. ᥱrr᥆r.', m);
     }
 };
 
