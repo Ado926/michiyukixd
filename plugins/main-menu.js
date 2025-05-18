@@ -551,7 +551,7 @@ handler.tags = ['main']
 handler.command = ['menu', 'menú', 'help']
 
 // Changed export default handler to module.exports
-module.exports = handler
+export default handler
 
 function clockString(ms) {
     let seconds = Math.floor((ms / 1000) % 60)
