@@ -5,11 +5,11 @@ import axios from 'axios';
 
 let handler = async (m, { conn, args, command, usedPrefix }) => {
   if (!db.data.chats[m.chat].nsfw && m.isGroup) {
-    return conn.reply(m.chat, `${emoji} El contenido *NSFW* está desactivado en este grupo.\n> Un administrador puede activarlo con el comando » *#nsfw on*`, m);
+    return conn.reply(m.chat, `${emoji} ᥱᥣ ᥴ᥆ᥒ𝗍ᥱᥒіძ᥆ *ᥒs𝖿ᥕ* ᥱs𝗍ᥲ ძᥱsᥲᥴ𝗍і᥎ᥲძ᥆ ᥱᥒ ᥱs𝗍ᥱ grupo.\n> ᥙᥒ ᥲძmіᥒіs𝗍rᥲძ᥆r ⍴ᥙᥱძᥱ ᥲᥴ𝗍і᥎ᥲrᥣ᥆ ᥴ᥆ᥒ ᥱᥣ ᥴ᥆mᥲᥒძ᥆ » *#nsfw on*`, m);
   } 
 
   if (!args[0]) {
-    return conn.reply(m.chat, `${emoji} Por favor, ingresé la búsqueda que desea realizar en Pornhub.\nEjemplo: ${usedPrefix + command} con mi prima`, m);
+    return conn.reply(m.chat, `${emoji} іᥒgrᥱsᥲ ᥣ᥆ 𝗊ᥙᥱ ძᥱsᥱᥲs ᑲᥙsᥴᥲr.\nEjemplo: ${usedPrefix + command} con mi prima`, m);
   }
 
   try {
@@ -23,12 +23,12 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
 ---------------------------------------------------\n`).join('\n\n');
 
     if (searchResults.result.length === 0) {
-      teks = `${emoji2} No se encontraron resultados...`;
+      teks = `${emoji2} ᥒ᥆ ᥱᥒᥴ᥆ᥒ𝗍rᥱ́ rᥱsᥙᥣ𝗍ᥲძ᥆s...`;
     }
 
     conn.reply(m.chat, teks, m);
   } catch (e) {
-    return conn.reply(m.chat, `${msm} Ocurrió un error: ${e.message}`, m);
+    return conn.reply(m.chat, `${msm} ᥆ᥴᥙrrі᥆ ᥙᥒ ᥱrr᥆r: ${e.message}`, m);
   }
 };
 
@@ -55,7 +55,7 @@ async function searchPornhub(search) {
     
     return { result };
   } catch (error) {
-    console.error(`${msm} Ocurrió un error al buscar en Pornhub:`, error);
+    console.error(`${msm} ᥆ᥴᥙrrі᥆ ᥙᥒ ᥱrr᥆r ᥲᥣ ᑲᥙsᥴᥲr:`, error);
     return { result: [] };
   }
 }
