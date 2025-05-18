@@ -543,20 +543,13 @@ let handler = async (m, { conn, args }) => {
 
     await conn.sendMessage(m.chat, {
   image: Buffer.from(banner, 'base64'),
-  caption: '', // Puedes poner un texto si quieres o dejarlo vacío
+  caption: '', // Puedes poner texto si deseas
   contextInfo: {
     mentionedJid: [m.sender, userId],
-    isForwarded: true,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: channelRD.id,
-      newsletterName: channelRD.name,
-      serverMessageId: -1,
-    },
-    forwardingScore: 0,
     externalAdReply: {
       title: botname,
       body: textbot,
-      thumbnailUrl: null, // Se ignora si envías imagen directa
+      thumbnailUrl: null, // opcional, se ignora si ya hay imagen
       sourceUrl: redes,
       mediaType: 1,
       showAdAttribution: true,
