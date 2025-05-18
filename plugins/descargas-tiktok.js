@@ -17,7 +17,7 @@ var handler = async (m, { conn, args, usedPrefix, command }) => {
         const videoURL = tiktokData.data.play;
 
         if (videoURL) {
-            await conn.sendFile(m.chat, videoURL, "tiktok.mp4", `> ${emoji} Tiktok Downloader`, m);
+            await conn.sendFile(m.chat, videoURL, "tiktok.mp4", `> ${emoji} Tiktok Downloader`, m, rcanal);
         } else {
             return conn.reply(m.chat, "No se pudo descargar.", m);
         }
