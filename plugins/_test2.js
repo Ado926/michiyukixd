@@ -26,7 +26,7 @@ const handler = async (m, { conn }) => {
 
   const videoUrl = linkMatch[0];
 
-  conn.sendMessage(m.chat, { react: { text: "🚀", key: m.key } });
+  conn.sendMessage(m.chat, { react: { text: "🕓", key: m.key } });
 
   try {
     // Solicitar descarga mp3 con link directo
