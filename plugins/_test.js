@@ -61,7 +61,8 @@ const handler = async (m, { conn, text }) => {
   // Enviar respuesta final con imagen
   await conn.sendMessage(m.chat, {
     image: { url: thumbnail },
-    caption, m, rcanal
+    caption, 
+     rcanal
   }, { quoted: m });
 };
 
