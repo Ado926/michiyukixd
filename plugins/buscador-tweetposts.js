@@ -5,10 +5,10 @@ import axios from 'axios';
 const { proto, generateWAMessageFromContent, generateWAMessageContent } = (await import('@whiskeysockets/baileys')).default;
 
 let handler = async (m, { conn, text }) => {
-if (!text) { return conn.reply(m.chat, `${emoji} Por favor, ingresa el texto de Lo que quieres buscar en Twitter.`, m); }
+if (!text) { return conn.reply(m.chat, `${emoji} іᥒgrᥱsᥲ ᥱᥣ 𝗍ᥱ᥊𝗍᥆ 𝗊ᥙᥱ 𝗊ᥙіᥱrᥱs ᑲᥙsᥴᥲr ᥱᥒ 𝗍ᥕі𝗍ᥱr.`, m); }
 
 await message.react(rwait)
-conn.reply(message.chat, `${emoji} Descargando Su Video, espere un momento...`, message)
+conn.reply(message.chat, `${emoji} ᥱs⍴ᥱrᥲ ᥙᥒ m᥆mᥱᥒ𝗍᥆...`, message)
 
 async function createImage(url) {
 const { imageMessage } = await generateWAMessageContent({image: { url }}, { upload: conn.waUploadToServer });
