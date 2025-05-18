@@ -62,7 +62,7 @@ const handler = async (m, { conn, text }) => {
   await conn.sendMessage(m.chat, {
     image: { url: thumbnail },
     caption, 
-     rcanal );
+     rcanal 
   }, { quoted: m });
 };
 
