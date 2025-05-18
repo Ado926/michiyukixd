@@ -26,4 +26,4 @@ handler.customPrefix = /^(Video|video|vídeo|Vídeo)/
 handler.command = new RegExp
 //handler.limit = 1
 
-export default handlerq
+export default handler
