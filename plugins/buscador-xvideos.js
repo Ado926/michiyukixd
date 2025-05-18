@@ -4,16 +4,16 @@ import cheerio from 'cheerio';
 
 const handler = async (m, { conn, args, command, usedPrefix }) => {
     if (!db.data.chats[m.chat].nsfw && m.isGroup) {
-    return m.reply(`${emoji} El contenido *NSFW* está desactivado en este grupo.\n> Un administrador puede activarlo con el comando » *#nsfw on*`);
+        return conn.reply(m.chat, `${emoji} ᥱᥣ ᥴ᥆ᥒ𝗍ᥱᥒіძ᥆ *ᥒs𝖿ᥕ* ᥱs𝗍ᥲ ძᥱsᥲᥴ𝗍і᥎ᥲძ᥆ ᥱᥒ ᥱs𝗍ᥱ grup᥆.\n> ᥙᥒ ᥲძmіᥒіs𝗍rᥲძ᥆r puedᥱ ᥲᥴ𝗍і᥎ᥲrᥣ᥆ ᥴ᥆ᥒ ᥱᥣ ᥴ᥆mᥲᥒძ᥆ » *#nsfw on*`, m);
     }
     if (!args[0]) {
-        return conn.reply(m.chat, `${emoji} Por favor, ingresé la búsqueda que desea realizar en Xvideos.\nEjemplo: ${usedPrefix + command} zorritas.`, m);
+        return conn.reply(m.chat, `${emoji} іᥒgrᥱsᥲ ᥣ᥆ 𝗊ᥙᥱ 𝗊ᥙіᥱrᥱs ᑲᥙsᥴᥲr.\nEjemplo: ${usedPrefix + command} zorritas.`, m);
     }
 
     try {
         const results = await xvideosSearch(args.join(' '));
         if (results.length === 0) {
-            return conn.reply(m.chat, `${emoji2} No se encontraron resultados para: *${args.join(' ')}*`, m);
+            return conn.reply(m.chat, `${emoji2} ᥒ᥆sᥱ ᥱᥒᥴ᥆ᥒ𝗍rᥲr᥆ᥒ rᥱsᥙᥣ𝗍ᥲძ᥆s ⍴ᥲrᥲ: *${args.join(' ')}*`, m);
         }
 
         let responseMessage = `${emoji} *Resultados de búsqueda para:* *${args.join(' ')}*\n\n`;
@@ -27,7 +27,7 @@ const handler = async (m, { conn, args, command, usedPrefix }) => {
         conn.reply(m.chat, responseMessage, m);
     } catch (e) {
         console.error(e);
-        return conn.reply(m.chat, `${msm} Ocurrió un error al buscar videos. Por favor, intenta de nuevo más tarde.`, m);
+        return conn.reply(m.chat, `${msm} ᥆ᥴᥙrrі᥆ ᥙᥒ ᥱrr᥆r ᥲᥣ ᑲᥙsᥴᥲr ᥎іძᥱ᥆s`, m);
     }
 };
 
