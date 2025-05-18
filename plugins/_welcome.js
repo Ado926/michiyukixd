@@ -25,6 +25,9 @@ export async function before(m, { conn, participants, groupMetadata }) {
     )
   )).buffer()
 
+  const welcomeText = `Esperamos que disfrutes tu estancia y participes con respeto. ¡Lee las reglas y diviértete!`
+  const byeText = `Se va una gran persona. ¡Buena suerte en todo lo que hagas!`
+
   if (chat.welcome && m.messageStubType == 27) {
     const texto = `*─「 𓆩✦ Bienvenid@ ✦𓆪 」─*\n\n` +
       `✧ Hola @${username}, ¡bienvenid@ a *${groupMetadata.subject}*!\n` +
