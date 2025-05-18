@@ -540,11 +540,30 @@ let handler = async (m, { conn, args }) => {
 > ✿ Tomate un cafecito con alguien.
   `.trim()
 
-    await conn.sendMessage(m.chat, {
-        image: Buffer.from(banner, 'base64'),
-        caption: txt,
-        mentions: [m.sender, userId] // Include mentions directly in the message options
-    }); // Removed contextInfo and the quoted message option
+      await conn.sendMessage(m.chat, { 
+      text: txt,
+      contextInfo: {
+          mentionedJid: [m.sender, userId],
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+              newsletterJid: channelRD.id,
+              newsletterName: channelRD.name,
+              serverMessageId: -1,
+          },
+          forwardingScore: 999,
+          externalAdReply: {
+              title: botname,
+              body: textbot,
+              thumbnailUrl: banner,
+              sourceUrl: redes,
+              mediaType: 1,
+              showAdAttribution: true,
+              renderLargerThumbnail: true,
+          },
+      },
+  }, { quoted: m })
+
+}
 
 handler.help = ['menu']
 handler.tags = ['main']
