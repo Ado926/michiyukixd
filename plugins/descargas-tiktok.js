@@ -1,43 +1,30 @@
-import fetch from 'node-fetch';
+import Starlights from '@StarlightsTeam/Scraper'
 
-var handler = async (m, { conn, args, usedPrefix, command }) => {
-    if (!args[0]) {
-        return conn.reply(m.chat, `${emoji} Por favor, ingresa un enlace de TikTok.`, m);
-    }
+let handler = async (m, { conn, args, usedPrefix, command }) => {
+if (!args || !args[0]) return conn.reply(m.chat, '🚩 Ingresa un enlace del vídeo de TikTok junto al comando.\n\n`Ejemplo:`\n' + `> *${usedPrefix + command}* https://vm.tiktok.com/ZMrFCX5jf/`, m, rcanal)
+    if (!args[0].match(/tiktok/gi)) return conn.reply(m.chat, `Verifica que el link sea de TikTok`, m, rcanal).then(_ => m.react('✖️'))
+  await m.react('🕓')
+try {
+let { title, author, duration, views, likes, comment, share, published, downloads, dl_url } = await Starlights.tiktokdl(args[0])
+let txt = '`乂  T I K T O K  -  D O W N L O A D`\n\n'
+    txt += `        ✩  *Título* : ${title}\n`
+    txt += `        ✩  *Autor* : ${author}\n`
+    txt += `        ✩  *Duración* : ${duration} segundos\n`
+    txt += `        ✩  *Vistas* : ${views}\n`
+    txt += `        ✩  *Likes* : ${likes}\n`
+    txt += `        ✩  *Comentarios* : ${comment}\n`
+    txt += `        ✩  *Compartidos* : ${share}\n`
+    txt += `        ✩  *Publicado* : ${published}\n`
+    txt += `        ✩  *Descargas* : ${downloads}\n\n`
+    txt += `> 🚩 *${textbot}*`
+await conn.sendFile(m.chat, dl_url, 'tiktok.mp4', txt, m, null, rcanal)
+await m.react('✅')
+} catch {
+await m.react('✖️')
+}}
+handler.help = ['tiktok o tt *<url>*']
+handler.tags = ['downloader']
+handler.command = /^(tiktok|tt|tiktokdl|tiktoknowm)$/i
+handler.register = true
 
-    try {
-        await conn.reply(m.chat, `${emoji} Espere un momento, estoy descargando su video...`, m);
-
-        const tiktokData = await tiktokdl(args[0]);
-
-        if (!tiktokData || !tiktokData.data || !tiktokData.data.play) {
-            return conn.reply(m.chat, "Error: No se pudo obtener el video.", m);
-        }
-
-        const videoURL = tiktokData.data.play;
-
-        if (videoURL) {
-            await conn.sendFile(m.chat, videoURL, "tiktok.mp4", `> ${emoji} Tiktok Downloader`, m, rcanal);
-        } else {
-            return conn.reply(m.chat, "No se pudo descargar.", m);
-        }
-    } catch (error1) {
-        return conn.reply(m.chat, `Error: ${error1.message}`, m);
-    }
-};
-
-handler.help = ['tiktok'].map((v) => v + ' *<link>*');
-handler.tags = ['descargas'];
-handler.command = ['tiktok', 'tt'];
-handler.group = true;
-handler.register = true;
-handler.coin = 2;
-handler.limit = true;
-
-export default handler;
-
-async function tiktokdl(url) {
-    let tikwm = `https://www.tikwm.com/api/?url=${url}?hd=1`;
-    let response = await (await fetch(tikwm)).json();
-    return response;
-}
+export default handler
