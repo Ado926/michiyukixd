@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 let handler = async (m, { text }) => {
   if (!text) {
-    m.reply(`${emoji} Por favor, proporciona el termino de búsqueda que deseas realizar a *Google*.`);
+    m.reply(`${emoji} ⍴r᥆⍴᥆rᥴі᥆ᥒᥲ ᥱᥣ 𝗍ᥱrmіᥒ᥆ ძᥱ ᑲᥙ́s𝗊ᥙᥱძᥲ 𝗊ᥙᥱ ძᥱsᥱᥲs rᥱᥲᥣіzᥲr ᥲ *g᥆᥆gᥣᥱ*.`);
     return;
   }
 
@@ -13,7 +13,7 @@ let handler = async (m, { text }) => {
     const result = await response.json();
 
     if (!result.status) {
-      m.reply('Error al realizar la búsqueda.');
+      m.reply('ᥱrr᥆r ᥲᥣ rᥱᥲᥣіzᥲr 𝗍ᥙ ᑲᥙ́s𝗊ᥙᥱძᥲ.');
       return;
     }
 
@@ -28,8 +28,8 @@ m.react('✅')
 
     m.reply(replyMessage);
   } catch (error) {
-    console.error(`${msm} Error al realizar la solicitud a la API:`, error);
-    m.reply(`${msm} Ocurrió un error al obtener los resultados.`);
+    console.error(`${msm} ᥱrr᥆r ᥲᥣ rᥱᥲᥣіzᥲr ᥣᥲ s᥆ᥣіᥴі𝗍ᥙძ ᥲ ᥣᥲ ᥲ⍴і:`, error);
+    m.reply(`${msm} ᥆ᥴᥙrrі᥆ ᥙᥒ ᥱrr᥆r ᥲᥣ іᥒ𝗍ᥱᥒ𝗍ᥲr mᥲᥒძᥲr 𝗍ᥙs ძᥲ𝗍᥆s.`);
   }
 };
 
