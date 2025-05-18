@@ -3,11 +3,11 @@ import cheerio from 'cheerio';
 
 const handler = async (m, {text, usedPrefix, command}) => {
   if (!db.data.chats[m.chat].nsfw && m.isGroup) {
-    return conn.reply(m.chat, `${emoji} El contenido *NSFW* está desactivado en este grupo.\n> Un administrador puede activarlo con el comando » *#nsfw on*`, m);
+    return conn.reply(m.chat, `${emoji} ᥱᥣ ᥴ᥆ᥒ𝗍ᥱᥒіძ᥆ *ᥒs𝖿ᥕ* ᥱs𝗍ᥲ ძᥱsᥲᥴ𝗍і᥎ᥲძ᥆ ᥱᥒ ᥱs𝗍ᥱ grup᥆.\n> ᥙᥒ ᥲძmіᥒіs𝗍rᥲძ᥆r puedᥱ ᥲᥴ𝗍і᥎ᥲrᥣ᥆ ᥴ᥆ᥒ ᥱᥣ ᥴ᥆mᥲᥒძ᥆ » *#nsfw on*`, m);
   }
   
   if (!text) {
-    return conn.reply(m.chat, `${emoji} Por favor, ingrese la búsqueda.\n> Ejemplo de uso: ${usedPrefix + command} Con mi prima`, m);
+    return conn.reply(m.chat, `${emoji} іᥒgrᥱsᥲ ᥣ᥆ 𝗊ᥙᥱ 𝗊ᥙіᥱrᥱs ᑲᥙsᥴᥲr.\n> ᥱȷᥱm⍴ᥣ᥆ ძᥱᥣ ᥙs᥆: ${usedPrefix + command} Con mi prima`, m);
   }
 
   try {
@@ -40,7 +40,7 @@ const handler = async (m, {text, usedPrefix, command}) => {
     conn.reply(m.chat, cap, m);
     global.videoListXXX.push(vids_);
   } catch (e) {
-    return conn.reply(m.chat, `${msm} Ocurrió un error: ${e.message}`, m);
+    return conn.reply(m.chat, `${msm} ᥆ᥴᥙrrі᥆ ᥙᥒ ᥱrr᥆r: ${e.message}`, m);
   }
 };
 
