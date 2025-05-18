@@ -542,29 +542,28 @@ let handler = async (m, { conn, args }) => {
   `.trim()
 
     await conn.sendMessage(m.chat, {
-      text: txt,
-      contextInfo: {
-          mentionedJid: [m.sender, userId],
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-              newsletterJid: channelRD.id,
-              newsletterName: channelRD.name,
-              serverMessageId: -1,
-          },
-          forwardingScore: 0,
-          externalAdReply: {
-              title: botname,
-              body: textbot,
-              thumbnailUrl: banner,
-              sourceUrl: redes,
-              mediaType: 1,
-              showAdAttribution: true,
-              renderLargerThumbnail: true,
-          },
-      },
-  }, { quoted: m })
-
-}
+  image: Buffer.from(banner, 'base64'),
+  caption: '', // Puedes poner un texto si quieres o dejarlo vacío
+  contextInfo: {
+    mentionedJid: [m.sender, userId],
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: channelRD.id,
+      newsletterName: channelRD.name,
+      serverMessageId: -1,
+    },
+    forwardingScore: 0,
+    externalAdReply: {
+      title: botname,
+      body: textbot,
+      thumbnailUrl: null, // Se ignora si envías imagen directa
+      sourceUrl: redes,
+      mediaType: 1,
+      showAdAttribution: true,
+      renderLargerThumbnail: true,
+    },
+  },
+}, { quoted: m });
 
 handler.help = ['menu']
 handler.tags = ['main']
