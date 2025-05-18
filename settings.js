@@ -50,7 +50,7 @@ global.etiqueta = 'Wirk'//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ�
 global.moneda = '🍄 MichiCoins ☁️'
 global.welcom1 = '❍ Edita Con El Comando setwelcome'
 global.welcom2 = '❍ Edita Con El Comando setbye'
-global.banner = 'https://qu.ax/uVsuJ.jpg'
+global.banner = 'https://qu.ax/EbklL.jpg'
 global.avatar = 'https://qu.ax/WanWb.jpg'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
