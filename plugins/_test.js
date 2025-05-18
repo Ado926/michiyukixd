@@ -59,7 +59,7 @@ const handler = async (m, { conn, text }) => {
   // Lógica de descarga eliminada
 };
 
-handler.command = ["playt"];
+handler.command = ["play"];
 handler.help = handler.command;
 handler.tags = ["downloader"];
 
