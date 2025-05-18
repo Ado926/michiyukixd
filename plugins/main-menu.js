@@ -9,13 +9,13 @@ let handler = async (m, { conn, args }) => {
 
     let txt = ` > 𝙷𝚘𝚕𝚊! 𝚋𝚒𝚎𝚗𝚟𝚎𝚗𝚒𝚍@ 𝚊𝚕 𝚖𝚎𝚗𝚞 𝚍𝚎 *${botname}*
 
-╭─〔🪴 Info del Bot 🪴〕─╮
-│🌿 Usuario ➩ @${userId.split('@')[0]}
-│🌱 Modo ➩ Público
-│🌸 Bot ➩ ${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Prem Bot 🅑')}
-│🌺 Encendido ➩ ${uptime}
-│🌻 Usuarios totales ➩ ${totalreg}
-│🌼 Comandos disponibles ➩ ${totalCommands}
+╭─〔🪴 𝗜𝗻𝗳𝗼 𝗱𝗲𝗹 𝗕𝗼𝘁 🪴〕─╮
+│🌿 𝖴𝗌𝗎𝖺𝗋𝗂𝗈 *➩* @${userId.split('@')[0]}
+│🌱 M𝗈do *➩* Público
+│🌸 𝖡𝗈𝗍 *➩* ${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Prem Bot 🅑')}
+│🌺 𝖤𝗇𝖼𝖾𝗇𝖽𝗂𝖽𝗈 *➩* ${uptime}
+│🌻 𝖴𝗌𝗎𝖺𝗋𝗂𝗈𝗌 𝗍𝗈𝗍𝖺𝗅𝖾𝗌 *➩* ${totalreg}
+│🌼 𝖢𝗈𝗆𝖺𝗇𝖽𝗈𝗌 𝖽𝗂𝗌𝗉𝗈𝗇𝗂𝖻𝗅𝖾𝗌 *➩* ${totalCommands}
 ╰───────────────────╯
 
 > 🌳 Puedes tener tu *Sub Bot* usa *#code* o *#qr* para vincular.
