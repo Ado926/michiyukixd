@@ -77,7 +77,7 @@ let handler = async (m, { conn, args }) => {
 ➜ *#setbirth • #setnacimiento*
 > ✿ Establece tu fecha de nacimiento en el perfil del bot.
 ➜ *#delbirth • #delnacimiento*
-> ✿ Elimina tu fecha de nacimiento del perfil del bot.
+> ✿ Elimina la fecha de nacimiento del perfil del bot.
 ➜ *#setdescription • #setdesc*
 > ✿ Establece una descripción en tu perfil del bot.
 ➜ *#deldescription • #deldesc*
@@ -543,20 +543,20 @@ let handler = async (m, { conn, args }) => {
 
     await conn.sendMessage(m.chat, {
   image: Buffer.from(banner, 'base64'),
-  caption: '', // Puedes poner texto si deseas
+  caption: txt, // Set the caption to the full text content
   contextInfo: {
     mentionedJid: [m.sender, userId],
     externalAdReply: {
-      title: botname,
-      body: textbot,
+      // Removed title: botname,
+      // Removed body: textbot,
       thumbnailUrl: null, // opcional, se ignora si ya hay imagen
-      sourceUrl: redes,
+      // Removed sourceUrl: redes,
       mediaType: 1,
       showAdAttribution: true,
-      renderLargerThumbnail: true,
+      // Removed renderLargerThumbnail: true,
     },
   },
-}, { quoted: m });
+}, {  }); // Removed the { quoted: m } option
 
 handler.help = ['menu']
 handler.tags = ['main']
