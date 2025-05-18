@@ -30,7 +30,7 @@ const handler = async (m, { conn, text }) => {
 
   // Respuesta rápida decorativa mientras busca el video
   await conn.sendMessage(m.chat, {
-    react: { text: "🎵", key: m.key }
+    react: { text: "🕐", key: m.key }
   });
   await m.reply(toSansSerifPlain("✦ 𝖡𝗎𝗌𝖼𝖺𝗇𝖽𝗈 𝗍𝗎 𝗏𝗂𝖽𝖾𝗈, 𝗎𝗇 𝗆𝗈𝗆𝖾𝗇𝗍𝗂𝗍𝗈..."));
 
@@ -55,7 +55,7 @@ const handler = async (m, { conn, text }) => {
     `> ✰ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*`,
     `> ✰ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 › *${ago || 'desconocido'}*`,
     `> ✰ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n`,
-    "✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋."
+    "✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖺 𝖾𝗌𝗍𝖾 𝗆𝖾𝗇𝗌𝖺𝗃𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋."
   ].join("\n");
 
   // Enviar respuesta final con imagen
