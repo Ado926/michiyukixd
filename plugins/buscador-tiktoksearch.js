@@ -9,7 +9,7 @@ const {
 
 let handler = async (message, { conn, text, usedPrefix, command }) => {
   if (!text) {
-    return conn.reply(message.chat, "❀ Por favor, ingrese un texto para realizar una búsqueda en tiktok.", message, rcanal);
+    return conn.reply(message.chat, "🌸 ⍴᥆r 𝖿ᥲ᥎᥆r, іᥒgrᥱsᥱ ᥙᥒ 𝗍ᥱ᥊𝗍᥆ ⍴ᥲrᥲ rᥱᥲᥣіzᥲr ᥙᥒᥲ ᑲᥙ́s𝗊ᥙᥱძᥲ ᥱᥒ 𝗍іk𝗍᥆k.", message, rcanal);
   }
 
   async function createVideoMessage(url) {
@@ -29,7 +29,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
   }
 
   try {
-    conn.reply(message.chat, '✧ *ENVIANDO SUS RESULTADOS..*', message, {
+    conn.reply(message.chat, '✧ *ᥱᥒ᥎іᥲᥒძ᥆ sᥙs rᥱsᥙᥣ𝗍ᥲძ᥆s..*', message, {
       contextInfo: { 
         externalAdReply: { 
           mediaUrl: null, 
@@ -94,7 +94,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
       messageId: messageContent.key.id
     });
   } catch (error) {
-    conn.reply(message.chat, `⚠︎ *OCURRIÓ UN ERROR:* ${error.message}`, message);
+    conn.reply(message.chat, `⚠︎ *᥆ᥴᥙrrі᥆ ᥙᥒ ᥱrr᥆r:* ${error.message}`, message);
   }
 };
 
