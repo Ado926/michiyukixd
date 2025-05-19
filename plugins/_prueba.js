@@ -1,14 +1,15 @@
-// Importación corregida para módulos CommonJS en entorno ESM
-import pkg from '@whiskeysockets/baileys';
+// Importación ajustada
+import baileys from '@whiskeysockets/baileys'; // Importamos el export default
 const {
-  proto,
+  proto, // Intentamos obtener proto directamente de ese export default
   generateWAMessageFromContent,
   prepareWAMessageMedia,
   generateWAMessageContent,
   getDevice
-} = pkg;
+} = baileys; // Y también las otras funciones necesarias
 
-// import { proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice } from "@whiskeysockets/baileys"; // Línea original que causaba el error
+// import pkg from '@whiskeysockets/baileys'; // Línea anterior comentada
+// const { proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice } = pkg; // Líneas anteriores comentadas
 
 // No need for axios in this specific menu implementation unless you add images from URLs.
 // import axios from 'axios';
@@ -95,6 +96,10 @@ let handler = async (m, { conn, args }) => {
 > ✿ Establece tu fecha de nacimiento en el perfil del bot.
 ➜ *#delbirth • #delnacimiento*
 > ✿ Elimina la fecha de nacimiento del perfil del bot.
+➜ *#setdescription • #setdesc*
+> ✿ Establece una descripción en tu perfil del bot.
+➜ *#deldescription • #deldesc*
+> ✿ Elimina la descripción de tu perfil del bot.
 ➜ *#comprarpremium • #premium*
 > ✿ Compra un pase premium para usar el bot sin límites.
 ➜ *#confesiones • #confesar*
@@ -144,7 +149,7 @@ let handler = async (m, { conn, args }) => {
 > ✿ Ver tus ${moneda} en la cartera.
 ➜ *#banco • #bank*
 > ✿ Ver tus ${moneda} en el banco.
-➜ *#deposit • #depositar • #d*
+> *#deposit • #depositar • #d*
 > ✿ Deposita tus ${moneda} al banco.
 ➜ *#with • #retirar • #withdraw*
 > ✿ Retira tus ${moneda} del banco.
@@ -590,6 +595,7 @@ let handler = async (m, { conn, args }) => {
                 // Add line to the current section's commands
                  // Check if the line contains command info before adding
                  // A simple check: does it contain "➜ *" or "> ✿"? Adjust if needed.
+                 // Also include descriptive lines starting with ❢ or ❣ and empty lines for formatting
                  if (line.includes('➜ *') || line.includes('> ✿') || trimmedLine === '' || trimmedLine.startsWith('❣') || trimmedLine.startsWith('❢')) {
                      currentSection.commands.push(line);
                  }
