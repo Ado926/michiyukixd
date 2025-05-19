@@ -1,13 +1,6 @@
-// Usamos la sintaxis de importación de tu código de ejemplo que funciona
-const {
-  proto,
-  generateWAMessageFromContent,
-  prepareWAMessageMedia,
-  generateWAMessageContent,
-  getDevice
-} = (await import("@whiskeysockets/baileys")).default;
-
-// No need for axios in this specific menu implementation unless you add images from URLs.
+// No necesitamos las importaciones complejas de proto para este método
+// import { proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice } from "@whiskeysockets/baileys";
+// No necesitamos axios tampoco
 // import axios from 'axios';
 
 let handler = async (m, { conn, args }) => {
@@ -90,7 +83,7 @@ let handler = async (m, { conn, args }) => {
 > ✿ Elimina tu género del perfil del bot.
 ➜ *#setbirth • #setnacimiento*
 > ✿ Establece tu fecha de nacimiento en el perfil del bot.
-➜ *#delbirth • #delnacimiento*
+> *#delbirth • #delnacimiento*
 > ✿ Elimina la fecha de nacimiento del perfil del bot.
 ➜ *#setdescription • #setdesc*
 > ✿ Establece una descripción en tu perfil del bot.
@@ -589,9 +582,7 @@ let handler = async (m, { conn, args }) => {
                 };
             } else if (currentSection) {
                 // Add line to the current section's commands
-                 // Check if the line contains command info before adding
-                 // A simple check: does it contain "➜ *" or "> ✿"? Adjust if needed.
-                 // Also include descriptive lines starting with ❢ or ❣ and empty lines for formatting
+                 // Include descriptive lines starting with ❢ or ❣, command lines, and empty lines for formatting
                  if (line.includes('➜ *') || line.includes('> ✿') || trimmedLine === '' || trimmedLine.startsWith('❣') || trimmedLine.startsWith('❢')) {
                      currentSection.commands.push(line);
                  }
@@ -608,89 +599,46 @@ let handler = async (m, { conn, args }) => {
     const validSections = sections.filter(section => section.commands.length > 0);
 
 
-    // --- Create Carousel Cards ---
-    const carouselCards = [];
+    // --- Send Introduction Message ---
+    // This uses the basic sendMessage which should be more stable
+    await conn.sendMessage(m.chat, {
+        text: introText.trim(),
+        contextInfo: { // Keep the contextInfo/externalAdReply on the first message
+            mentionedJid: [m.sender, userId],
+            isForwarded: true,
+            // channelRD might need proper JID format, assuming it's correct from your setup
+            forwardedNewsletterMessageInfo: channelRD ? {
+                 newsletterJid: channelRD.id, // Assuming channelRD has .id and .name
+                 newsletterName: channelRD.name,
+                 serverMessageId: -1, // Placeholder
+            } : undefined, // Only include if channelRD is valid
+            forwardingScore: 999, // High score for prominence
+            externalAdReply: {
+                title: botname,
+                body: textbot,
+                thumbnailUrl: banner, // Use your banner URL
+                sourceUrl: redes,
+                mediaType: 1, // 1 for image
+                renderLargerThumbnail: true,
+                showAdAttribution: true,
+            },
+        },
+    }, { quoted: m });
+
+    // Add a small delay before sending sections to make it cleaner in chat
+    // await new Promise(resolve => setTimeout(resolve, 1000)); // Optional delay
+
+
+    // --- Send Sections as Separate Messages ---
     for (const section of validSections) {
-        const commandsBody = section.commands.join('\n').trim();
+        const sectionText = `*${section.title}*\n\n${section.commands.join('\n').trim()}`;
 
-        // Skip sections with no commands after trimming (like the main menu title section if it were mistakenly captured)
-        if (!commandsBody) continue;
+        // Send each section as a plain text message
+        await conn.sendMessage(m.chat, { text: sectionText }, { quoted: m });
 
-        const cardHeaderTitle = section.title; // e.g., "INFO BOT"
-
-        // Create the card object
-        carouselCards.push(proto.Message.InteractiveMessage.CarouselMessage.CarouselCard.fromObject({
-            body: proto.Message.InteractiveMessage.Body.fromObject({ text: commandsBody }),
-            footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: dev || 'Developer Info' }), // Use dev or a default
-            header: proto.Message.InteractiveMessage.Header.fromObject({
-                title: cardHeaderTitle,
-                hasMediaAttachment: false // No media in card headers as per your original menu structure
-            }),
-            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [] }) // No buttons as per your example structure
-        }));
+        // Optional: Add a small delay between sending sections
+        // await new Promise(resolve => setTimeout(resolve, 500));
     }
-
-
-    // --- Create Main Interactive Message ---
-    // Prepare the main header media (banner image)
-    // Use try-catch for media preparation in case banner URL is invalid or upload fails
-    let mainHeaderMedia = null;
-    try {
-        mainHeaderMedia = await prepareWAMessageMedia({ image: { url: banner || 'https://via.placeholder.com/300x150?text=Bot+Menu' } }, { upload: conn.waUploadToServer });
-    } catch (e) {
-        console.error("Error preparing main header media:", e);
-        // Fallback or handle error, maybe send a text-only message or carousel without header image
-        // For now, mainHeaderMedia will be null, check before using
-    }
-
-
-    const interactiveMessage = proto.Message.InteractiveMessage.fromObject({
-        body: proto.Message.InteractiveMessage.Body.create({
-            text: introText.trim() // Use the captured intro text for the main body
-        }),
-        footer: proto.Message.InteractiveMessage.Footer.create({
-            text: textbot || 'Bot Features' // Use textbot or a default for main footer
-        }),
-        header: proto.Message.InteractiveMessage.Header.create({
-            // Header for the whole carousel, using the banner image if successfully prepared
-            hasMediaAttachment: !!mainHeaderMedia, // True if media was prepared
-            ...(mainHeaderMedia ? { imageMessage: mainHeaderMedia.imageMessage } : {}) // Spread imageMessage if it exists
-             // title: botname, // You could add a title here even with media
-        }),
-        carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
-            cards: carouselCards // Add the generated cards here
-        })
-    });
-
-    // --- Wrap in ViewOnceMessage and Send ---
-    const messageContent = generateWAMessageFromContent(m.chat, {
-        viewOnceMessage: {
-            message: {
-                messageContextInfo: {
-                    deviceListMetadata: {},
-                    deviceListMetadataVersion: 2,
-                     // Include the externalAdReply here based on your original message structure
-                    externalAdReply: {
-                        title: botname,
-                        body: textbot,
-                        thumbnailUrl: banner, // Use the banner URL here
-                        sourceUrl: redes,
-                        mediaType: 1, // 1 for image
-                        showAdAttribution: true,
-                        renderLargerThumbnail: true,
-                    },
-                },
-                interactiveMessage: interactiveMessage
-            }
-        }
-    }, {
-        quoted: m
-    });
-
-    // Use relayMessage to send the interactive message
-    await conn.relayMessage(m.chat, messageContent.message, {
-        messageId: messageContent.key.id
-    });
 
 }
 
@@ -708,3 +656,4 @@ function clockString(ms) {
 }
 
 // Ensure botname, moneda, channelRD, textbot, banner, redes, dev, avatar are defined globally or imported elsewhere.
+// Note: channelRD needs to be an object like { id: 'some-jid@whatsapp.net', name: 'Channel Name' } if used for forwardedNewsletterMessageInfo
