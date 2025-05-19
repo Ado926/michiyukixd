@@ -13,14 +13,14 @@ let handler = async (m, { conn, args }) => {
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
     // --- Original Menu Text ---
-    // We will parse this text to extract the intro and sections
     // Using template literals allows embedding variables like botname, uptime, etc.
+    // This text will be parsed to extract intro and sections
     let fullMenuText = ` > 𝙷᥆ᥣᥲ! ᑲіᥱᥒ᥎ᥱᥒіძ@ ᥲᥣ mᥱᥒᥙ ძᥱ *${botname}*
 
 ╭─〔🪴 𝗜𝗻𝗳𝗼 𝗱𝗲𝗹 𝗕𝗼𝘁 🪴〕─╮
 │🌿 𖫖᥉᥉ᥲɾі᥆ *➩* @${userId.split('@')[0]}
 │🌱 M᥆ძ᥆ *➩* Público
-│🌸 𝖡᥆𝗍 *➩* ${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Prem Bot 🅑')}
+│🌸 𖫖᥆𝗍 *➩* ${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Prem Bot 🅑')}
 │🌺 𖫖ᥒᥴᥱᥒძіძ᥆ *➩* ${uptime}
 │🌻 𖫖s᥉ᥲɾі᥆s 𝗍᥆𝗍ᥲᥣᥱs *➩* ${totalreg}
 │🌼 𝖢᥆mᥲᥒძ᥆s ძіsρ᥆ᥒіᑲᥣᥱs *➩* ${totalCommands}
@@ -230,7 +230,7 @@ let handler = async (m, { conn, args }) => {
 > ✿ Buscador de películas/series por Cuevana.
 ➜ *#infoanime*
 > ✿ Buscador de información de anime/manga.
-➜ *#npmjs*
+> *#npmjs*
 > ✿ Buscandor de npmjs.
 
 ✦⭒ NSFW ⭒✦
@@ -602,17 +602,24 @@ let handler = async (m, { conn, args }) => {
     const validSections = sections.filter(section => section.commands.length > 0);
 
 
-    // --- Construct Single Output Text ---
+    // --- Construct Single Output Text with Formatting ---
     let outputText = introTextLines.join('\n').trim(); // Start with the intro
 
     // Add sections to the output text
     for (const section of validSections) {
-        // Add extra newlines between sections for spacing
-        outputText += '\n\n';
-        // Add the section title
-        outputText += section.title + '\n';
-        // Add commands, joining them back
-        outputText += section.commands.join('\n').trim();
+        // Add extra newlines before each section for separation
+        outputText += '\n\n───────────────────\n\n'; // Separator line
+        // Add the section title (maybe bolded)
+        outputText += `*${section.title.replace(/✦⭒\s*(.*?)\s*⭒✦/, '$1')}*\n\n`; // Use bold markdown for title
+        // Add commands, joining them back and wrapping in code block markdown
+        // Replace original markdown like * or >✿ within the code block if they interfere, or keep them
+        const formattedCommands = section.commands.join('\n')
+             .replace(/\*\s*#/g, '#') // Remove bold around command prefix if needed
+             .replace(/> ✿ /g, '∙ ') // Simplify description markers inside code block
+             .trim();
+
+        // Use triple backticks for a code block
+        outputText += '```\n' + formattedCommands + '\n```';
     }
 
     // --- Send the Single Message ---
