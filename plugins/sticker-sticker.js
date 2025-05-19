@@ -33,7 +33,7 @@ const handler = async (m, { conn, args }) => {
 
     // Ningún contenido válido
     else {
-      return conn.reply(m.chat, '♡︶꒷꒦︶˙♡︶꒷꒦︶˙♡\n\nPor favor, envíame una *imagen*, *video* o *URL* para hacer tu sticker\n\n♡︶꒷꒦︶˙♡︶꒷꒦︶˙♡', m)
+      return conn.reply(m.chat, '> Por favor, envíame una *imagen*, *video* o *URL* para hacer el sticker ☁️', m)
     }
 
     if (stickerBuffer) {
