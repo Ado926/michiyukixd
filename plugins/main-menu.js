@@ -15,7 +15,7 @@ let handler = async (m, { conn, args }) => {
 > *・°☆・°・°☆・°・*☆・°・*
 > Bot: *${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Sub Bot 🅑')}*
 > Moneda: *${moneda}*
-> Activada: *${uptime}*
+> Activado: *${uptime}*
 > Usuarios: *${totalreg}*
 > Comandos: *${totalCommands}*
 > *・°☆・°・°☆・°・*☆・°・*
