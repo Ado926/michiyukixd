@@ -36,6 +36,7 @@ export async function handler(chatUpdate) {
     // If `pushMessage` is intended to add messages to a queue for later processing, this line is fine.
     // If it's meant to *immediately* process them, it might conflict with the rest of the handler logic.
     // Assuming it's part of an external queueing mechanism.
+    // Nota: Asegúrate de que 'pushMessage' esté definido en alguna parte si lo necesitas.
     this.pushMessage(chatUpdate.messages).catch(console.error)
 
     let m = chatUpdate.messages[chatUpdate.messages.length - 1]
@@ -248,20 +249,15 @@ export async function handler(chatUpdate) {
         const isPrems = isROwner || global.prems.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || (_user?.premium == true) // Use optional chaining for _user
 
         // Message Queueing (Basic) for non-mod/premium users
-        // This logic seems to add the message ID to a queue and then set an interval
-        // to potentially wait for the previous message in the queue.
-        // The `setInterval` clearing logic based on `indexOf` the previous ID is a bit unusual
-        // and might not work reliably depending on how the queue is processed elsewhere.
-        // It seems intended as a simple rate limiter/sequential processor.
+        // This logic is a bit complex and might not work reliably depending on how the queue is processed elsewhere.
         if (opts['queque'] && m.text && !(isMods || isPrems)) {
             let queque = this.msgqueque,
                 time = 1000 * 5 // 5 seconds delay
             const previousID = queque[queque.length - 1]
             queque.push(m.id || m.key.id)
             setInterval(async function() {
-                // Clear interval if the *previous* message ID is no longer in the queue
                 if (queque.indexOf(previousID) === -1) clearInterval(this)
-                await delay(time) // Wait for the delay
+                await delay(time)
             }, time)
         }
 
@@ -529,13 +525,15 @@ export async function handler(chatUpdate) {
                 // Coin check
                 // Requires global.moneda to be defined
                 if (!isPrems && plugin.coin && (global.db.data.users[m.sender]?.coin || 0) < plugin.coin * 1) { // Use optional chaining and default to 0 if coin is undefined
-                    conn.reply(m.chat, `❮✦❯ Se agotaron tus ${global.moneda}`, m) // Use global.moneda
+                    // MODIFICACION 1: Añadir texto al mensaje de "monedas agotadas"
+                    conn.reply(m.chat, `❮✦❯ Se agotaron tus ${global.moneda}` + ' > ✰ 𝖬𝗂𝖼𝗁𝗂 𝗜𝗔 ✰', m)
                     continue
                 }
 
                 // Level check
                 if (plugin.level > (_user?.level || 0)) { // Use optional chaining and default to 0
-                    conn.reply(m.chat, `❮✦❯ Se requiere el nivel: *${plugin.level}*\n\n• Tu nivel actual es: *${(_user?.level || 0)}*\n\n• Usa este comando para subir de nivel:\n*${usedPrefix}levelup*`, m)
+                     // MODIFICACION 2: Añadir texto al mensaje de "nivel requerido"
+                    conn.reply(m.chat, `❮✦❯ Se requiere el nivel: *${plugin.level}*\n\n• Tu nivel actual es: *${(_user?.level || 0)}*\n\n• Usa este comando para subir de nivel:\n*${usedPrefix}levelup*` + ' > ✰ 𝖬𝗂𝖼𝗁𝗂 𝗜𝗔 ✰', m)
                     continue
                 }
 
@@ -580,7 +578,7 @@ export async function handler(chatUpdate) {
                         // Replace API keys in error messages for security
                         for (let key of Object.values(global.APIKeys || {})) // Use optional chaining for global.APIKeys
                             text = text.replace(new RegExp(key, 'g'), 'Administrador') // Use 'Administrador' as replacement
-                        m.reply(text)
+                        m.reply(text) // Nota: Este m.reply enviará el error SIN el texto adicional por diseño. Si quisieras que los errores también lo tuvieran, deberías modificar esta línea.
                     }
                 } finally {
                     // Execute the 'after' function in the plugin if it exists
@@ -594,7 +592,8 @@ export async function handler(chatUpdate) {
 
                     // Reply with coin deduction message if applicable
                     if (m.coin && typeof global.moneda !== 'undefined') { // Check if m.coin is truthy and global.moneda is defined
-                         conn.reply(m.chat, `⭐ Usaste ${+m.coin} ${global.moneda}`, m)
+                         // MODIFICACION 3: Añadir texto al mensaje de "monedas usadas"
+                         conn.reply(m.chat, `⭐ Usaste ${+m.coin} ${global.moneda}` + ' > ✰ 𝖬𝗂𝖼𝗁𝗂 𝗜𝗔 ✰', m)
                     }
                 }
                 break // Stop processing plugins after finding a match and executing
@@ -713,10 +712,11 @@ global.dfail = (type, m, conn) => { // Added conn to arguments as it was passed 
     } [type];
 
     if (msg) {
+        // MODIFICACION 4: Añadir texto al mensaje de dfail
         // Use conn.reply instead of m.reply as m might not have the reply method directly depending on smsg implementation
         // Or ensure smsg adds a reply method to m
         // Assuming smsg adds reply, m.reply is fine.
-        return m.reply(msg).then(_ => m.react('✖️')) // React with X emoji on failure
+        return m.reply(msg + ' > ✰ 𝖬𝗂𝖼𝗁𝗂 𝗜𝗔 ✰').then(_ => m.react('✖️')) // React with X emoji on failure
     }
 }
 
