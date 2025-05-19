@@ -14,6 +14,7 @@ let handler = async (m, { conn, args }) => {
 
     // --- Original Menu Text ---
     // We will parse this text to extract the intro and sections
+    // Using template literals allows embedding variables like botname, uptime, etc.
     let fullMenuText = ` > 𝙷᥆ᥣᥲ! ᑲіᥱᥒ᥎ᥱᥒіძ@ ᥲᥣ mᥱᥒᥙ ძᥱ *${botname}*
 
 ╭─〔🪴 𝗜𝗻𝗳𝗼 𝗱𝗲𝗹 𝗕𝗼𝘁 🪴〕─╮
@@ -550,29 +551,31 @@ let handler = async (m, { conn, args }) => {
     // --- Parsing the Menu Text ---
     const sections = [];
     let currentSection = null;
-    let introText = '';
+    let introTextLines = []; // Use array to build intro text
     let isParsingSections = false;
+    const menuCommandsTitle = '✦⭒ MENÚ DE COMANDOS ⭒✦';
+
 
     const lines = fullMenuText.split('\n');
 
     for (const line of lines) {
         const trimmedLine = line.trim();
 
-        if (trimmedLine === '✦⭒ MENÚ DE COMANDOS ⭒✦') {
+        if (trimmedLine === menuCommandsTitle) {
             // Found the start of the command sections
-            introText += line + '\n'; // Include this line in the intro
+            introTextLines.push(line); // Include this line in the intro
             isParsingSections = true;
             continue; // Move to the next line to start parsing actual sections
         }
 
         if (!isParsingSections) {
             // Still in the intro block
-            introText += line + '\n';
+            introTextLines.push(line);
         } else {
             // Parsing command sections
             if (trimmedLine.startsWith('✦⭒') && trimmedLine.endsWith('⭒✦')) {
                 // Found a new section title
-                const title = trimmedLine.replace(/✦⭒\s*(.*?)\s*⭒✦/, '$1');
+                const title = trimmedLine; // Keep original title line formatting
                 if (currentSection) {
                     sections.push(currentSection); // Add previous section
                 }
@@ -595,15 +598,27 @@ let handler = async (m, { conn, args }) => {
         sections.push(currentSection);
     }
 
-     // Filter out any sections that might have been created but ended up empty (e.g., if there was text between sections that wasn't command format)
+     // Filter out any sections that might have been created but ended up empty
     const validSections = sections.filter(section => section.commands.length > 0);
 
 
-    // --- Send Introduction Message ---
-    // This uses the basic sendMessage which should be more stable
+    // --- Construct Single Output Text ---
+    let outputText = introTextLines.join('\n').trim(); // Start with the intro
+
+    // Add sections to the output text
+    for (const section of validSections) {
+        // Add extra newlines between sections for spacing
+        outputText += '\n\n';
+        // Add the section title
+        outputText += section.title + '\n';
+        // Add commands, joining them back
+        outputText += section.commands.join('\n').trim();
+    }
+
+    // --- Send the Single Message ---
     await conn.sendMessage(m.chat, {
-        text: introText.trim(),
-        contextInfo: { // Keep the contextInfo/externalAdReply on the first message
+        text: outputText, // Send the entire formatted text as one message
+        contextInfo: { // Keep the contextInfo/externalAdReply
             mentionedJid: [m.sender, userId],
             isForwarded: true,
             // channelRD might need proper JID format, assuming it's correct from your setup
@@ -624,21 +639,6 @@ let handler = async (m, { conn, args }) => {
             },
         },
     }, { quoted: m });
-
-    // Add a small delay before sending sections to make it cleaner in chat
-    // await new Promise(resolve => setTimeout(resolve, 1000)); // Optional delay
-
-
-    // --- Send Sections as Separate Messages ---
-    for (const section of validSections) {
-        const sectionText = `*${section.title}*\n\n${section.commands.join('\n').trim()}`;
-
-        // Send each section as a plain text message
-        await conn.sendMessage(m.chat, { text: sectionText }, { quoted: m });
-
-        // Optional: Add a small delay between sending sections
-        // await new Promise(resolve => setTimeout(resolve, 500));
-    }
 
 }
 
