@@ -1,4 +1,15 @@
-import { proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice } from "@whiskeysockets/baileys";
+// Importación corregida para módulos CommonJS en entorno ESM
+import pkg from '@whiskeysockets/baileys';
+const {
+  proto,
+  generateWAMessageFromContent,
+  prepareWAMessageMedia,
+  generateWAMessageContent,
+  getDevice
+} = pkg;
+
+// import { proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice } from "@whiskeysockets/baileys"; // Línea original que causaba el error
+
 // No need for axios in this specific menu implementation unless you add images from URLs.
 // import axios from 'axios';
 
@@ -210,7 +221,7 @@ let handler = async (m, { conn, args }) => {
 > ✿ Buscador de videos de tiktok.
 ➜ *#tweetposts*
 > ✿ Buscador de posts de Twitter/X.
-➜ *#ytsearch • #yts*
+> *#ytsearch • #yts*
 > ✿ Realiza búsquedas de Youtube.
 ➜ *#google*
 > ✿ Realiza búsquedas por Google.
@@ -378,7 +389,7 @@ let handler = async (m, { conn, args }) => {
 > ✿ Ver lista de usuarios advertidos.
 ➜ *#setwelcome*
 > ✿ Establecer un mensaje de bienvenida personalizado.
-➜ *#setbye*
+> *#setbye*
 > ✿ Establecer un mensaje de despedida personalizado.
 ➜ *#setemoji • #setemo*
 > ✿ Cambia el emoji que se usa en la invitación de usuarios.
@@ -577,11 +588,10 @@ let handler = async (m, { conn, args }) => {
                 };
             } else if (currentSection) {
                 // Add line to the current section's commands
-                 if (trimmedLine) { // Only add non-empty lines to commands
-                    currentSection.commands.push(line);
-                 } else {
-                    // Add empty line to preserve some spacing within sections
-                    currentSection.commands.push('');
+                 // Check if the line contains command info before adding
+                 // A simple check: does it contain "➜ *" or "> ✿"? Adjust if needed.
+                 if (line.includes('➜ *') || line.includes('> ✿') || trimmedLine === '' || trimmedLine.startsWith('❣') || trimmedLine.startsWith('❢')) {
+                     currentSection.commands.push(line);
                  }
             }
         }
@@ -592,9 +602,13 @@ let handler = async (m, { conn, args }) => {
         sections.push(currentSection);
     }
 
+     // Filter out any sections that might have been created but ended up empty (e.g., if there was text between sections that wasn't command format)
+    const validSections = sections.filter(section => section.commands.length > 0);
+
+
     // --- Create Carousel Cards ---
     const carouselCards = [];
-    for (const section of sections) {
+    for (const section of validSections) {
         const commandsBody = section.commands.join('\n').trim();
 
         // Skip sections with no commands after trimming (like the main menu title section if it were mistakenly captured)
@@ -617,7 +631,15 @@ let handler = async (m, { conn, args }) => {
 
     // --- Create Main Interactive Message ---
     // Prepare the main header media (banner image)
-    const mainHeaderMedia = await prepareWAMessageMedia({ image: { url: banner || 'URL_TO_DEFAULT_BANNER_IMAGE' } }, { upload: conn.waUploadToServer });
+    // Use try-catch for media preparation in case banner URL is invalid or upload fails
+    let mainHeaderMedia = null;
+    try {
+        mainHeaderMedia = await prepareWAMessageMedia({ image: { url: banner || 'https://via.placeholder.com/300x150?text=Bot+Menu' } }, { upload: conn.waUploadToServer });
+    } catch (e) {
+        console.error("Error preparing main header media:", e);
+        // Fallback or handle error, maybe send a text-only message or carousel without header image
+        // For now, mainHeaderMedia will be null, check before using
+    }
 
 
     const interactiveMessage = proto.Message.InteractiveMessage.fromObject({
@@ -628,9 +650,10 @@ let handler = async (m, { conn, args }) => {
             text: textbot || 'Bot Features' // Use textbot or a default for main footer
         }),
         header: proto.Message.InteractiveMessage.Header.create({
-            // Header for the whole carousel, using the banner image
-            hasMediaAttachment: true,
-            imageMessage: mainHeaderMedia.imageMessage // Attach the prepared image message
+            // Header for the whole carousel, using the banner image if successfully prepared
+            hasMediaAttachment: !!mainHeaderMedia, // True if media was prepared
+            ...(mainHeaderMedia ? { imageMessage: mainHeaderMedia.imageMessage } : {}) // Spread imageMessage if it exists
+             // title: botname, // You could add a title here even with media
         }),
         carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
             cards: carouselCards // Add the generated cards here
@@ -648,9 +671,9 @@ let handler = async (m, { conn, args }) => {
                     externalAdReply: {
                         title: botname,
                         body: textbot,
-                        thumbnailUrl: banner,
+                        thumbnailUrl: banner, // Use the banner URL here
                         sourceUrl: redes,
-                        mediaType: 1,
+                        mediaType: 1, // 1 for image
                         showAdAttribution: true,
                         renderLargerThumbnail: true,
                     },
