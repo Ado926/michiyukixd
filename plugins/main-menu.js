@@ -554,7 +554,7 @@ let handler = async (m, { conn, args }) => {
           forwardingScore: 999,
           externalAdReply: {
               title: botname,
-              body: global.textbot || 'By Wirk', // Fallback body
+              body: "Aqui tienes la lista de comandos", // Fallback body
               thumbnailUrl: global.banner || '', // Fallback empty string if banner not defined
               sourceUrl: global.redes || '', // Fallback empty string if redes not defined
               mediaType: 1,
