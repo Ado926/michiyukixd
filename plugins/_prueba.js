@@ -1,15 +1,11 @@
-// Importación ajustada
-import baileys from '@whiskeysockets/baileys'; // Importamos el export default
+// Usamos la sintaxis de importación de tu código de ejemplo que funciona
 const {
-  proto, // Intentamos obtener proto directamente de ese export default
+  proto,
   generateWAMessageFromContent,
   prepareWAMessageMedia,
   generateWAMessageContent,
   getDevice
-} = baileys; // Y también las otras funciones necesarias
-
-// import pkg from '@whiskeysockets/baileys'; // Línea anterior comentada
-// const { proto, generateWAMessageFromContent, prepareWAMessageMedia, generateWAMessageContent, getDevice } = pkg; // Líneas anteriores comentadas
+} = (await import("@whiskeysockets/baileys")).default;
 
 // No need for axios in this specific menu implementation unless you add images from URLs.
 // import axios from 'axios';
@@ -28,11 +24,11 @@ let handler = async (m, { conn, args }) => {
     let fullMenuText = ` > 𝙷᥆ᥣᥲ! ᑲіᥱᥒ᥎ᥱᥒіძ@ ᥲᥣ mᥱᥒᥙ ძᥱ *${botname}*
 
 ╭─〔🪴 𝗜𝗻𝗳𝗼 𝗱𝗲𝗹 𝗕𝗼𝘁 🪴〕─╮
-│🌿 𝖴sᥙᥲrі᥆ *➩* @${userId.split('@')[0]}
+│🌿 𖫖᥉᥉ᥲɾі᥆ *➩* @${userId.split('@')[0]}
 │🌱 M᥆ძ᥆ *➩* Público
 │🌸 𝖡᥆𝗍 *➩* ${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Prem Bot 🅑')}
-│🌺 𝖤ᥒᥴᥱᥒძіძ᥆ *➩* ${uptime}
-│🌻 𝖴sᥙᥲrі᥆s 𝗍᥆𝗍ᥲᥣᥱs *➩* ${totalreg}
+│🌺 𖫖ᥒᥴᥱᥒძіძ᥆ *➩* ${uptime}
+│🌻 𖫖s᥉ᥲɾі᥆s 𝗍᥆𝗍ᥲᥣᥱs *➩* ${totalreg}
 │🌼 𝖢᥆mᥲᥒძ᥆s ძіsρ᥆ᥒіᑲᥣᥱs *➩* ${totalCommands}
 ╰───────────────────╯
 
