@@ -6,33 +6,37 @@ export async function before(m, { conn, isAdmin, isBotAdmin, isOwner, isROwner, 
   if (isAdmin || isOwner || m.fromMe || isROwner) return;
 
   let chat = global.db.data.chats[m.chat];
-  if (!chat.antilink) return;
+  if (!chat?.antilink) return;
 
-  const isGroupLink = linkRegex.test(m.text) || linkRegex1.test(m.text);
-  if (!isGroupLink) return;
+  const text = m.text || '';
+  const isLink = linkRegex.exec(text) || linkRegex1.exec(text);
+  if (!isLink) return;
 
-  const linkThisGroup = `https://chat.whatsapp.com/${await conn.groupInviteCode(m.chat)}`;
-  if (m.text.includes(linkThisGroup)) return; // Ignora si es el link del mismo grupo
+  try {
+    // Ignora si es el link del mismo grupo
+    const thisGroupLink = `https://chat.whatsapp.com/${await conn.groupInviteCode(m.chat)}`;
+    if (text.includes(thisGroupLink)) return;
 
-  if (isBotAdmin) {
-    const user = `@${m.sender.split('@')[0]}`;
-    const bang = m.key.id;
-    const delet = m.key.participant;
+    if (isBotAdmin) {
+      const user = m.sender;
+      const bang = m.key.id;
+      const delet = m.key.participant;
 
-    // Elimina el mensaje con el link
-    await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet } });
+      // Borra mensaje
+      await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet } });
 
-    // Anuncia y expulsa
-    await conn.sendMessage(
-      m.chat,
-      {
-        text: `*⛔ Anti-Link Detectado*\n\nEl usuario ${user} fue eliminado por enviar un link no permitido.`,
-        mentions: [m.sender]
-      },
-      { quoted: m }
-    );
+      // Envía mensaje de aviso
+      await conn.sendMessage(m.chat, {
+        text: `*⚠️ Anti-Link activado*\n\nEl usuario @${user.split('@')[0]} ha sido *eliminado* por enviar un link no permitido.`,
+        mentions: [user]
+      }, { quoted: m });
 
-    // Expulsar del grupo
-    await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+      // Expulsa al usuario
+      await conn.groupParticipantsUpdate(m.chat, [user], 'remove');
+    }
+  } catch (e) {
+    console.error('[ERROR ANTI-LINK]', e);
   }
+
+  return !0;
 }
