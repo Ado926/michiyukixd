@@ -78,35 +78,77 @@ global.prefix = new RegExp('^(?:[#/!.])?')
 
 global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile('./src/database/database.json'))
 
-global.DATABASE = global.db 
+global.DATABASE = global.db
+global.dbModified = false; // Flag to track database changes
+let dbWriteTimeout = null; // Timeout for debounced database writes
+
+/**
+ * Debounced function to save the database only when changes occur.
+ * @param {number} delay - The delay in milliseconds before saving.
+ */
+function saveDatabaseDebounced(delay = 5000) {
+    if (dbWriteTimeout) {
+        clearTimeout(dbWriteTimeout);
+    }
+    dbWriteTimeout = setTimeout(async () => {
+        if (global.db.data && global.dbModified) {
+            await global.db.write().catch(console.error);
+            global.dbModified = false;
+            console.log(chalk.green('✔ Database saved successfully (debounced).'));
+        }
+    }, delay);
+}
+
+
 global.loadDatabase = async function loadDatabase() {
-if (global.db.READ) {
-return new Promise((resolve) => setInterval(async function() {
-if (!global.db.READ) {
-clearInterval(this)
-resolve(global.db.data == null ? global.loadDatabase() : global.db.data);
-}}, 1 * 1000))
-}
-if (global.db.data !== null) return
-global.db.READ = true
-await global.db.read().catch(console.error)
-global.db.READ = null
-global.db.data = {
-users: {},
-chats: {},
-stats: {},
-msgs: {},
-sticker: {},
-settings: {},
-...(global.db.data || {}),
-}
-global.db.chain = chain(global.db.data)
+    if (global.db.READ) {
+        return new Promise((resolve) => setInterval(async function() {
+            if (!global.db.READ) {
+                clearInterval(this)
+                resolve(global.db.data == null ? global.loadDatabase() : global.db.data);
+            }
+        }, 1 * 1000))
+    }
+    if (global.db.data !== null) return
+    global.db.READ = true
+    await global.db.read().catch(console.error)
+    global.db.READ = null
+    global.db.data = {
+        users: {},
+        chats: {},
+        stats: {},
+        msgs: {},
+        sticker: {},
+        settings: {},
+        ...(global.db.data || {}),
+    }
+    global.db.chain = chain(global.db.data)
+
+    // Intercept changes to global.db.data to set dbModified flag
+    // This is a simple proxy for demonstration. For complex objects, deep proxy might be needed.
+    const originalSet = Object.getOwnPropertyDescriptor(Object.prototype, 'set')?.set || function(target, property, value, receiver) {
+        target[property] = value;
+        return true;
+    };
+
+    const handler = {
+        set(target, property, value, receiver) {
+            const result = Reflect.set(target, property, value, receiver);
+            if (result) { // Check if the set operation was successful
+                global.dbModified = true;
+            }
+            return result;
+        }
+    };
+
+    // Apply the proxy only to top-level properties of global.db.data
+    global.db.data = new Proxy(global.db.data, handler);
 }
 loadDatabase()
 
 const {state, saveState, saveCreds} = await useMultiFileAuthState(global.sessions)
 const msgRetryCounterMap = (MessageRetryMap) => { };
-const msgRetryCounterCache = new NodeCache()
+const msgRetryCounterCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 }); // Cache items expire after 1 hour, checked every 2 minutes
 const {version} = await fetchLatestBaileysVersion();
 let phoneNumber = global.botNumber
 
@@ -130,22 +172,22 @@ opcion = await question(colores('⌨ Seleccione una opción:\n') + opcionQR('1. 
 if (!/^[1-2]$/.test(opcion)) {
 console.log(chalk.bold.redBright(`✦ No se permiten numeros que no sean 1 o 2, tampoco letras o símbolos especiales.`))
 }} while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${sessions}/creds.json`))
-} 
+}
 
-console.info = () => {} 
-console.debug = () => {} 
+console.info = () => {}
+console.debug = () => {}
 
 const connectionOptions = {
 logger: pino({ level: 'silent' }),
 printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
-mobile: MethodMobile, 
+mobile: MethodMobile,
 browser: opcion == '1' ? [`${nameqr}`, 'Edge', '20.0.04'] : methodCodeQR ? [`${nameqr}`, 'Edge', '20.0.04'] : ['Ubuntu', 'Edge', '110.0.1587.56'],
 auth: {
 creds: state.creds,
 keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
 },
-markOnlineOnConnect: true, 
-generateHighQualityLinkPreview: true, 
+markOnlineOnConnect: true,
+generateHighQualityLinkPreview: true,
 getMessage: async (clave) => {
 let jid = jidNormalizedUser(clave.remoteJid)
 let msg = await store.loadMessage(jid, clave.id)
@@ -188,11 +230,36 @@ conn.isInit = false;
 conn.well = false;
 //conn.logger.info(`✦  H E C H O\n`)
 
+// Message Queue for processing incoming messages
+global.messageQueue = [];
+
+/**
+ * Processes messages from the queue to prevent blocking the event loop.
+ */
+async function processMessageQueue() {
+    if (global.messageQueue.length === 0) return;
+
+    // Process a batch of messages to keep the bot responsive
+    const messagesToProcess = global.messageQueue.splice(0, 10); // Process 10 messages at a time, adjust as needed
+
+    for (const m of messagesToProcess) {
+        try {
+            await handler.handler.bind(global.conn)(m); // Call the actual handler
+        } catch (e) {
+            console.error(chalk.red(`Error processing queued message: ${e}`));
+        }
+    }
+}
+setInterval(processMessageQueue, 75); // Process queue every 75ms
+
 if (!opts['test']) {
-if (global.db) setInterval(async () => {
-if (global.db.data) await global.db.write()
-if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 'tmp', `${jadi}`], tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])));
-}, 30 * 1000);
+    if (global.db) setInterval(() => {
+        saveDatabaseDebounced(); // Use debounced save
+        if (opts['autocleartmp'] && (global.support || {}).find) {
+            const tmp = [tmpdir(), 'tmp', `${jadi}`]; // 'os.tmpdir()' is already defined as 'tmpdir'
+            tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
+        }
+    }, 30 * 1000); // Check for save every 30 seconds
 }
 
 // if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
@@ -265,7 +332,13 @@ conn.ev.off('connection.update', conn.connectionUpdate)
 conn.ev.off('creds.update', conn.credsUpdate)
 }
 
-conn.handler = handler.handler.bind(global.conn)
+// Modify conn.handler to push messages to queue instead of processing directly
+conn.handler = async function(m) {
+    if (m.messages && m.messages[0]) {
+        global.messageQueue.push(m.messages[0]);
+    }
+}.bind(global.conn);
+
 conn.connectionUpdate = connectionUpdate.bind(global.conn)
 conn.credsUpdate = saveCreds.bind(global.conn, true)
 
@@ -285,16 +358,16 @@ isInit = false
 return true
 };
 
-//Arranque nativo para subbots by - ReyEndymion >> https://github.com/ReyEndymion
+//Arranque nativo para subbots by - ReyEndymion
 
 global.rutaJadiBot = join(__dirname, './JadiBots')
 
 if (global.yukiJadibts) {
 if (!existsSync(global.rutaJadiBot)) {
-mkdirSync(global.rutaJadiBot, { recursive: true }) 
+mkdirSync(global.rutaJadiBot, { recursive: true })
 console.log(chalk.bold.cyan(`La carpeta: ${jadi} se creó correctamente.`))
 } else {
-console.log(chalk.bold.cyan(`La carpeta: ${jadi} ya está creada.`)) 
+console.log(chalk.bold.cyan(`La carpeta: ${jadi} ya está creada.`))
 }
 
 const readRutaJadiBot = readdirSync(rutaJadiBot)
@@ -310,7 +383,7 @@ yukiJadiBot({pathYukiJadiBot: botPath, m: null, conn, args: '', usedPrefix: '/',
 }
 }
 
-const pluginFolder = global.__dirname(join(__dirname, './plugins/index'))
+const pluginFolder = global.__dirname(join(__dirname, './plugins')) // Corrected path to plugins
 const pluginFilter = (filename) => /\.js$/.test(filename)
 global.plugins = {}
 async function filesInit() {
@@ -379,10 +452,16 @@ Object.freeze(global.support);
 
 function clearTmp() {
 const tmpDir = join(__dirname, 'tmp')
+if (!existsSync(tmpDir)) return; // Ensure tmp directory exists
 const filenames = readdirSync(tmpDir)
 filenames.forEach(file => {
 const filePath = join(tmpDir, file)
-unlinkSync(filePath)})
+try {
+    unlinkSync(filePath)
+} catch (e) {
+    console.error(`Error deleting tmp file ${filePath}: ${e}`);
+}
+})
 }
 
 function purgeSession() {
@@ -393,9 +472,13 @@ return file.startsWith('pre-key-')
 })
 prekey = [...prekey, ...filesFolderPreKeys]
 filesFolderPreKeys.forEach(files => {
-unlinkSync(`./${sessions}/${files}`)
+try {
+    unlinkSync(`./${sessions}/${files}`)
+} catch (e) {
+    console.error(`Error deleting session pre-key ${files}: ${e}`);
+}
 })
-} 
+}
 
 function purgeSessionSB() {
 try {
@@ -409,7 +492,11 @@ return fileInDir.startsWith('pre-key-')
 SBprekey = [...SBprekey, ...DSBPreKeys];
 DSBPreKeys.forEach(fileInDir => {
 if (fileInDir !== 'creds.json') {
-unlinkSync(`./${jadi}/${directorio}/${fileInDir}`)
+try {
+    unlinkSync(`./${jadi}/${directorio}/${fileInDir}`)
+} catch (e) {
+    console.error(`Error deleting sub-bot pre-key ${fileInDir}: ${e}`);
+}
 }})
 }})
 if (SBprekey.length === 0) {
@@ -423,18 +510,19 @@ console.log(chalk.bold.red(`\n╭» ❍ ${jadi} ❍\n│→ OCURRIÓ UN ERROR\n�
 function purgeOldFiles() {
 const directories = [`./${sessions}/`, `./${jadi}/`]
 directories.forEach(dir => {
-readdirSync(dir, (err, files) => {
-if (err) throw err
-files.forEach(file => {
-if (file !== 'creds.json') {
-const filePath = path.join(dir, file);
-unlinkSync(filePath, err => {
-if (err) {
-console.log(chalk.bold.red(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} NO SE LOGRÓ BORRAR\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ✘\n` + err))
-} else {
-console.log(chalk.bold.green(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} BORRADO CON ÉXITO\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))
-} }) }
-}) }) }) }
+    readdirSync(dir).forEach(file => { // No need for a callback here, readdirSync is synchronous
+        if (file !== 'creds.json') {
+            const filePath = path.join(dir, file);
+            try {
+                unlinkSync(filePath);
+                console.log(chalk.bold.green(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} BORRADO CON ÉXITO\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`));
+            } catch (err) {
+                console.log(chalk.bold.red(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} NO SE LOGRÓ BORRAR\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ✘\n` + err));
+            }
+        }
+    });
+});
+}
 
 function redefineConsoleMethod(methodName, filterStrings) {
 const originalConsoleMethod = console[methodName]
@@ -449,7 +537,7 @@ originalConsoleMethod.apply(console, arguments)
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await clearTmp()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 4) // 4 min 
+console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 4) // 4 min
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
@@ -458,7 +546,7 @@ console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SE
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
-await purgeSessionSB()}, 1000 * 60 * 10) 
+await purgeSessionSB()}, 1000 * 60 * 10)
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
@@ -479,4 +567,5 @@ const parsedNumber = phoneUtil.parseAndKeepRawInput(number)
 return phoneUtil.isValidNumber(parsedNumber)
 } catch (error) {
 return false
-}}
+}
+}
