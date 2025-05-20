@@ -1,19 +1,11 @@
 let handler = async (m, { conn, args }) => {
-    let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
-    let user = global.db.data.users[userId]; // Asegúrate de que 'user' se maneje si es undefined (nuevo usuario)
-
-    // Corregido: conn.getName es probablemente asíncrono
-    let name = await conn.getName(userId);
-
-    let _uptime = process.uptime() * 1000;
-    let uptime = clockString(_uptime);
-    let totalreg = Object.keys(global.db.data.users).length;
-
-    // Corregido: Sintaxis de la función flecha
-    let totalCommands = Object.values(global.plugins).filter(v => v.help && v.tags).length;
-
-    let moneda = global.moneda || 'Moneda';
-    let botname = global.botname || 'TuBot';
+    let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender
+    let user = global.db.data.users[userId]
+    let name = conn.getName(userId)
+    let _uptime = process.uptime() * 1000
+    let uptime = clockString(_uptime)
+    let totalreg = Object.keys(global.db.data.users).length
+    let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length
 
     let txt = `> *・°☆・°・°☆・°・*☆・°・*
 > Hola @${userId.split('@')[0]}!, Bienvenido!
@@ -241,4 +233,346 @@ let handler = async (m, { conn, args }) => {
  𖹭𖹭 *#boobjob* + <mencion
 ✿ Hacer una rusa
  𖹭𖹭 *#cum* + <mencion
-✿
+✿ Venirse en alguien.
+ 𖹭𖹭 *#fap* + <mencion
+✿ Hacerse una paja
+ 𖹭𖹭 *#footjob* + <mencion
+✿ Hacer una paja con los pies
+ 𖹭𖹭 *#fuck • #coger • #fuck2* + <mencion
+✿ Follarte a alguien
+ 𖹭𖹭 *#violar • #perra* + <mencion
+✿ Viola a alguien
+ 𖹭𖹭 *#grabboobs* + <mencion
+✿ Agarrrar tetas
+ 𖹭𖹭 *#grop* + <mencion
+✿ Manosear a alguien
+ 𖹭𖹭 *#lickpussy* + <mencion
+✿ Lamer un coño
+ 𖹭𖹭 *#sixnine • #69* + <mencion
+✿ Haz un 69 con alguien
+ 𖹭𖹭 *#spank • #nalgada* + <mencion
+✿ Dar una nalgada
+ 𖹭𖹭 *#suckboobs* + <mencion
+✿ Chupar tetas
+ 𖹭𖹭 *#undress • #encuerar* + <mencion
+✿ Desnudar a alguien
+ 𖹭𖹭 *#yuri • #tijeras* + <mencion
+✿ Hacer tijeras.
+ 𖹭𖹭 *#waifu*
+✿ Buscá una waifu aleatorio.
+ 𖹭𖹭 *#ppcouple • #ppcp*
+✿ Genera imagenes para amistades o parejas.
+ 𖹭𖹭 *#hentaisearch • #searchhentai*
+✿ Buscador de capítulos hentai.
+ 𖹭𖹭 #xnxxsearch • #xnxxs*
+✿ Buscador de vídeos de Xnxx.
+ 𖹭𖹭 *#xvsearch • #xvideossearch*
+✿ Buscador de vídeos de Xvideos.
+ 𖹭𖹭 *#pornhubsearch • #phsearch*
+✿ Buscador de videos de Pornhub.
+ 𖹭𖹭 *#rule34 • #r34* + [Tags]
+✿ Buscar imagenes en Rule34
+ 𖹭𖹭 *#xvideosdl*
+✿ Descarga videos porno de (Xvideos).
+ 𖹭𖹭 *#xnxxdl*
+✿ Descarga videos porno de (xnxx).
+
+ ⧠⭔ *𝐒𝐭𝐢𝐜𝐤𝐞𝐫𝐬* ⭔⧠
+ ❣ Comandos para creaciones de stickers etc.
+ 𖹭𖹭 *#sticker • #s*
+✿ Crea stickers de (imagen/video)
+ 𖹭𖹭 *#toimg • #img*
+✿ Convierte stickers en imagen.
+ 𖹭𖹭 *#setmeta*
+✿ Estable un pack y autor para los stickers.
+ 𖹭𖹭 *#delmeta*
+✿ Elimina tu pack de stickers.
+ 𖹭𖹭 *#pfp • #getpic*
+✿ Obtén la foto de perfil de un usuario.
+ 𖹭𖹭 *#qc*
+✿ Crea stickers con texto o de un usuario.
+ 𖹭𖹭 *#brat • #ttp • #attp*︎
+✿ Crea stickers con texto.
+ 𖹭𖹭 *#emojimix*
+✿ Fuciona 2 emojis para crear un sticker.
+ 𖹭𖹭 *#wm*
+✿ Cambia el nombre de los stickers.
+
+ ⧠⭔ *𝐇𝐞𝐫𝐫𝐚𝐦𝐢𝐞𝐧𝐭𝐚𝐬* ⭔⧠
+ ❣ Comandos de herramientas con muchas funciones.
+ 𖹭𖹭 *#calcular • #calcular • #cal*
+✿ Calcular todo tipo de ecuaciones.
+ 𖹭𖹭 *#translate • #traducir • #trad*
+✿ Traduce palabras en otros idiomas.
+ 𖹭𖹭 *#tiempo • #clima*
+✿ Ver el clima de un pais.
+ 𖹭𖹭 *#horario*
+✿ Ver el horario global de los países.
+ 𖹭𖹭 *#ss • #ssweb*
+✿ Ver el estado de una página web.
+ 𖹭𖹭 *#whatmusic • #shazam*
+✿ Descubre el nombre de canciones o vídeos.
+ 𖹭𖹭 *#enhance • #remini • #hd*
+✿ Mejora la calidad de una imagen.
+ 𖹭𖹭 *#length • #tamaño*
+✿ Cambia el tamaño de imágenes y vídeos.
+ 𖹭𖹭 *#letra*
+✿ Cambia la fuente de las letras.
+ 𖹭𖹭 *#say • #decir* + [texto]
+✿ Repetir un mensaje.
+ 𖹭𖹭 *#fake • #fakereply*
+✿ Crea un mensaje falso de un usuario.
+ 𖹭𖹭 *#read • #readviewonce • #ver*
+✿ Ver imágenes de una sola vista.
+ 𖹭𖹭 *#todoc • #toducument*
+✿ Crea documentos de (audio, imágenes y vídeos).
+
+ ⧠⭔ *𝐆𝐫𝐮𝐩𝐨𝐬* ⭔⧠
+ ❣ Comandos de grupos para una mejor gestión de ellos.
+ 𖹭𖹭 *#gp • #infogrupo*
+✿Ver la Informacion del grupo.
+ 𖹭𖹭 *#link*
+✿ El bot envia el link del grupo.
+ 𖹭𖹭 *#restablecer • #revoke*
+✿ Restablecer el enlace del grupo.
+ 𖹭𖹭 *#grupo • #group* [open / abrir]
+✿ Cambia ajustes del grupo para que todos los usuarios envien mensaje.
+ 𖹭𖹭 *#grupo • #gruop* [close / cerrar]
+✿ Cambia ajustes del grupo para que solo los administradores envien mensaje.
+ 𖹭𖹭 *#gpbanner • #groupimg*
+✿ Cambiar la imagen del grupo.
+ 𖹭𖹭 *#gpname • #groupname*
+✿ Cambiar el nombre del grupo.
+ 𖹭𖹭 *#gpdesc • #groupdesc*
+✿ Cambiar la descripción del grupo.
+ 𖹭𖹭 *admins • admin*
+✿ Mencionar a los admins para solicitar ayuda.
+ 𖹭𖹭 *#hidetag*
+✿ Envia un mensaje mencionando a todos los usuarios
+ 𖹭𖹭 *#invocar • #tagall • #todos*
+✿ Invoca a todos los usuarios de un grupo.
+ 𖹭𖹭 *#linea • #listonline*
+✿ Ver la lista de los usuarios en linea.
+ 𖹭𖹭 *#fantasmas*
+✿ Ver lista de inactivos del grupo.
+ 𖹭𖹭 *#kickfantasmas*
+✿ Elimina a los inactivos del grupo.
+ 𖹭𖹭 *#kick* [número / mension]
+✿ Elimina un usuario de un grupo.
+ 𖹭𖹭 *#add • #añadir • #agregar* [número]
+✿ Invita a un usuario a tu grupo.
+ 𖹭𖹭 *#promote* [mension / etiquetar]
+✿ El bot dara administrador al usuario mencionando.
+ 𖹭𖹭 *#demote* [mension / etiquetar]
+✿ El bot quitara administrador al usuario mencionando.
+ 𖹭𖹭 *#advertir • #warn • #warning*
+✿ Darle una advertencia aún usuario.
+ 𖹭𖹭 ︎*#unwarn • #delwarn*
+✿ Quitar advertencias.
+ 𖹭𖹭 *#advlist • #listadv*
+✿ Ver lista de usuarios advertidos.
+ 𖹭𖹭 *#setwelcome*
+✿ Establecer un mensaje de bienvenida personalizado.
+ 𖹭𖹭 *#setbye*
+✿ Establecer un mensaje de despedida personalizado.
+ 𖹭𖹭 *#setemoji • #setemo*
+✿ Cambia el emoji que se usa en la invitación de usuarios.
+ 𖹭𖹭 *#listnum • #kicknum*
+✿ Elimine a usuario por el prefijo de país.
+ 𖹭𖹭 *#bot on*
+✿ Enciende el bot en un grupo.
+✿ Apaga el bot en un grupo.
+ 𖹭𖹭 *#mute* [mension / etiquetar]
+✿ El bot elimina los mensajes del usuario.
+ 𖹭𖹭 *#unmute* [mension / etiquetar]
+✿ El bot deja de eliminar los mensajes del usuario.
+ 𖹭𖹭 *#delete • #del*
+✿ Elimina mensaje de otros usuarios.
+ 𖹭𖹭 *#encuesta • #poll*
+✿ Crea una encuesta.
+
+ ⧠⭔ *𝐉𝐮𝐞𝐠𝐨𝐬* ⭔⧠
+ ❣ Comandos de juegos para jugar con tus amigos.
+ 𖹭𖹭 *#amistad • #amigorandom*
+✿ hacer amigos con un juego.
+ 𖹭𖹭 *#formarpareja*
+✿ Forma una pareja.
+ 𖹭𖹭 *#formarpareja5*
+✿ Forma 5 parejas diferentes.
+ 𖹭𖹭 *#ship • #pareja*
+✿ La bot te da la probabilidad de enamorarte de una persona.
+ 𖹭𖹭 *#formartrio* + <mencion
+✿ Forma un trio.
+ 𖹭𖹭 *#pvp • #suit* + <mencion
+✿ Juega un pvp contra otro usuario.
+ 𖹭𖹭 *#ttt*
+✿ Crea una sala de juego.
+✧･ﾟ: *Michi* by Wirk ･ﾟ✧
+ 𖹭𖹭 *#ahorcado*
+✿ Diviertete con la bot jugando el juego ahorcado.
+ 𖹭𖹭 *#mates • #matematicas*
+✿ Responde las preguntas de matemáticas para ganar recompensas.
+ 𖹭𖹭 *#ppt*
+✿ Juega piedra papel o tijeras con la bot.
+ 𖹭𖹭 *#sopa • #buscarpalabra*
+✿ Juega el famoso juego de sopa de letras.
+ 𖹭𖹭 *#chiste*
+✿ La bot te cuenta un chiste.
+ 𖹭𖹭 *#consejo*
+✿ La bot te da un consejo.
+ 𖹭𖹭 *#facto*
+✿ La bot te lanza un facto.
+ 𖹭𖹭 *#frase*
+✿ La bot te da una frase.
+ 𖹭𖹭 *#meme*
+✿ La bot te envía un meme aleatorio.
+ 𖹭𖹭 *#morse*
+✿ Convierte un texto a codigo morse.
+ 𖹭𖹭 *#nombreninja*
+✿ Busca un nombre ninja aleatorio.
+ 𖹭𖹭 *#personalidad* + <mencion
+✿ La bot busca tu personalidad.
+ 𖹭𖹭 *#piropo*
+✿ Lanza un piropo.
+ 𖹭𖹭 *#pregunta*
+✿ Hazle una pregunta a la bot.
+ 𖹭𖹭 *#sorteo*
+✿ Empieza un sorteo.
+ 𖹭𖹭 *#top*
+✿ Empieza un top de personas.
+ 𖹭𖹭 *#doxeo • #doxear* + <mencion
+✿ Simular un doxeo falso.
+ 𖹭𖹭 *#chaqueta • #jalamela*
+✿ Hacerte una chaqueta.
+ 𖹭𖹭 *#huevo*
+✿ Agarrale el huevo a alguien.
+ 𖹭𖹭 *#chupalo* + <mencion
+✿ Hacer que un usuario te la chupe.
+ 𖹭𖹭 *#aplauso* + <mencion
+✿ Aplaudirle a alguien.
+ 𖹭𖹭 *#marron* + <mencion
+✿ Burlarte del color de piel de un usuario.
+ 𖹭𖹭 *#suicidar*
+✿ Suicidate.
+ 𖹭𖹭 *#iq • #iqtest* + <mencion
+✿ Calcular el iq de alguna persona.
+ 𖹭𖹭 *#paja • #pajeame*
+✿ La bot te hace una paja.
+
+
+ ⧠⭔ *𝐀𝐧𝐢𝐦𝐞 𝐲 𝐑𝐞𝐚𝐜𝐜𝐢𝐨𝐧𝐞𝐬* ⭔⧠
+ ❣ Comandos de reacciones de anime.
+ 𖹭𖹭 *#angry • #enojado* + <mencion
+✿ Estar enojado
+ 𖹭𖹭 *#bite* + <mencion
+✿ Muerde a alguien
+ 𖹭𖹭 *#bleh* + <mencion
+✿ Sacar la lengua
+ 𖹭𖹭 *#blush* + <mencion
+✿ Sonrojarte
+ 𖹭𖹭 *#bored • #aburrido* + <mencion
+✿ Estar aburrido
+ 𖹭𖹭 *#cry* + <mencion
+✿ Llorar por algo o alguien
+ 𖹭𖹭 *#cuddle* + <mencion
+✿ Acurrucarse
+ 𖹭𖹭 *#dance* + <mencion
+✿ Sacate los pasitos prohíbidos
+ 𖹭𖹭 *#drunk* + <mencion
+✿ Estar borracho
+ 𖹭𖹭 *#eat • #comer* + <mencion
+✿ Comer algo delicioso
+ 𖹭𖹭 *#facepalm* + <mencion
+✿ Darte una palmada en la cara
+ 𖹭𖹭 *#happy • #feliz* + <mencion
+✿ Salta de felicidad
+ 𖹭𖹭 *#hug* + <mencion
+✿ Dar un abrazo
+ 𖹭𖹭 *#impregnate • #preg* + <mencion
+✿ Embarazar a alguien
+ 𖹭𖹭 *#kill* + <mencion
+✿ Toma tu arma y mata a alguien
+ 𖹭𖹭 *#kiss • #besar* • #kiss2 + <mencion
+✿ Dar un beso
+ 𖹭𖹭 *#laugh* + <mencion
+✿ Reírte de algo o alguien
+ 𖹭𖹭 *#lick* + <mencion
+✿ Lamer a alguien
+ 𖹭𖹭 *#love • #amor* + <mencion
+✿ Sentirse enamorado
+ 𖹭𖹭 *#pat* + <mencion
+✿ Acaricia a alguien
+ 𖹭𖹭 *#poke* + <mencion
+✿ Picar a alguien
+ 𖹭𖹭 *#pout* + <mencion
+✿ Hacer pucheros
+ 𖹭𖹭 *#punch* + <mencion
+✿ Dar un puñetazo
+ 𖹭𖹭 *#run* + <mencion
+✿ Correr
+ 𖹭𖹭 *#sad • #triste* + <mencion
+✿ Expresar tristeza
+ 𖹭𖹭 *#scared* + <mencion
+✿ Estar asustado
+ 𖹭𖹭 *#seduce* + <mencion
+✿ Seducir a alguien
+ 𖹭𖹭 *#shy • #timido* + <mencion
+✿ Sentir timidez
+ 𖹭𖹭 *#slap* + <mencion
+✿ Dar una bofetada
+ 𖹭𖹭 *#dias • #days*
+✿ Darle los buenos días a alguien
+ 𖹭𖹭 *#noches • #nights*
+✿ Darle las buenas noches a alguien
+ 𖹭𖹭 *#sleep* + <mencion
+✿ Tumbarte a dormir
+ 𖹭𖹭 *#smoke* + <mencion
+✿ Fumar
+ 𖹭𖹭 *#think* + <mencion
+✿ Pensar en algo
+ 𖹭𖹭 *#marry* [mension / etiquetar]
+✿ Propón matrimonio a otro usuario.
+ 𖹭𖹭 *#divorce*
+✿ Divorciarte de tu pareja.
+ 𖹭𖹭 *#cafe • #coffe*
+✿ Tomate un cafecito con alguien.
+  `.trim()
+
+      await conn.sendMessage(m.chat, { 
+      text: txt,
+      contextInfo: {
+          mentionedJid: [m.sender, userId],
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+              newsletterJid: channelRD.id,
+              newsletterName: channelRD.name,
+              serverMessageId: -1,
+          },
+          forwardingScore: 999,
+          externalAdReply: {
+              title: botname,
+              body: "✰ 𝗔𝗾𝘂𝗶 𝘁𝗶𝗲𝗻𝗲𝘀 𝗹𝗼𝘀 𝗰𝗼𝗺𝗮𝗻𝗱𝗼𝘀",
+              thumbnailUrl: banner,
+              sourceUrl: redes,
+              mediaType: 1,
+              showAdAttribution: true,
+              renderLargerThumbnail: true,
+          },
+      },
+  }, { quoted: m })
+
+}
+
+handler.help = ['menu']
+handler.tags = ['main']
+handler.command = ['menu', 'menú', 'help']
+
+// Changed export default handler to module.exports
+export default handler
+
+function clockString(ms) {
+    let seconds = Math.floor((ms / 1000) % 60)
+    let minutes = Math.floor((ms / (1000 * 60)) % 60)
+    let hours = Math.floor((ms / (1000 * 60 * 60)) % 24)
+    return `${hours}h ${minutes}m ${seconds}s`
+}
