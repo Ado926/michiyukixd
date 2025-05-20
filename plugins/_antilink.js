@@ -1,30 +1,38 @@
-let linkRegex = /chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i;
-let linkRegex1 = /whatsapp.com\/channel\/([0-9A-Za-z]{20,24})/i;
+let linkRegex = /chat\.whatsapp\.com\/([0-9A-Za-z]{20,24})/i;
+let linkRegex1 = /whatsapp\.com\/channel\/([0-9A-Za-z]{20,24})/i;
 
 export async function before(m, { conn, isAdmin, isBotAdmin, isOwner, isROwner, participants }) {
+  if (!m.isGroup) return;
+  if (isAdmin || isOwner || m.fromMe || isROwner) return;
 
-if (!m.isGroup) return;
-if (isAdmin || isOwner || m.fromMe || isROwner) return;
+  let chat = global.db.data.chats[m.chat];
+  if (!chat.antilink) return;
 
-let chat = global.db.data.chats[m.chat];
-let delet = m.key.participant;
-let bang = m.key.id;
-const user = `@${m.sender.split`@`[0]}`;
-const groupAdmins = participants.filter(p => p.admin);
-const listAdmin = groupAdmins.map((v, i) => `*» ${i + 1}. @${v.id.split('@')[0]}*`).join('\n');
-let bot = global.db.data.settings[conn.user.jid] || {};
-const isGroupLink = linkRegex.exec(m.text) || linkRegex1.exec(m.text);
-const grupo = `https://chat.whatsapp.com`;
-if (chat.antilink && isGroupLink && !isAdmin) {
-if (isBotAdmin) {
-const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`;
-if (m.text.includes(linkThisGroup)) return !0;
-}
-await conn.sendMessage(m.chat, { text: `> El usuario ${user}⁩ se ha eliminado del grupo por Anti-Link.`, mentions: [m.sender] }, { quoted: m, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100 });
-if (isBotAdmin) {
-await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet } });
-let responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
-if (responseb[0].status === "404") return;
-}} 
-return !0;
+  const isGroupLink = linkRegex.test(m.text) || linkRegex1.test(m.text);
+  if (!isGroupLink) return;
+
+  const linkThisGroup = `https://chat.whatsapp.com/${await conn.groupInviteCode(m.chat)}`;
+  if (m.text.includes(linkThisGroup)) return; // Ignora si es el link del mismo grupo
+
+  if (isBotAdmin) {
+    const user = `@${m.sender.split('@')[0]}`;
+    const bang = m.key.id;
+    const delet = m.key.participant;
+
+    // Elimina el mensaje con el link
+    await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet } });
+
+    // Anuncia y expulsa
+    await conn.sendMessage(
+      m.chat,
+      {
+        text: `*⛔ Anti-Link Detectado*\n\nEl usuario ${user} fue eliminado por enviar un link no permitido.`,
+        mentions: [m.sender]
+      },
+      { quoted: m }
+    );
+
+    // Expulsar del grupo
+    await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+  }
 }
