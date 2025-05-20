@@ -716,7 +716,7 @@ global.dfail = (type, m, conn) => { // Added conn to arguments as it was passed 
         // Use conn.reply instead of m.reply as m might not have the reply method directly depending on smsg implementation
         // Or ensure smsg adds a reply method to m
         // Assuming smsg adds reply, m.reply is fine.
-        return m.reply(msg + ' > ✰ 𝖬𝗂𝖼𝗁𝗂 𝗜𝗔 ✰').then(_ => m.react('✖️')) // React with X emoji on failure
+        return m.reply(msg + '✰').then(_ => m.react('✖️')) // React with X emoji on failure
     }
 }
 
