@@ -1,4 +1,4 @@
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1'
+Process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1'
 import './settings.js'
 import { setupMaster, fork } from 'cluster'
 import { watchFile, unwatchFile } from 'fs'
@@ -22,7 +22,7 @@ import pino from 'pino'
 import Pino from 'pino'
 import path, { join, dirname } from 'path'
 import {Boom} from '@hapi/boom'
-import {makeWASocket, protoType, serialize} from './lib/simple.js'
+import {makeWASocket, protoType, serialize} from './lib/simple.js' // makeWASocket, protoType, serialize
 import {Low, JSONFile} from 'lowdb'
 import {mongoDB, mongoDBV2} from './lib/mongoDB.js'
 import store from './lib/store.js'
@@ -37,8 +37,6 @@ const {CONNECTING} = ws
 const {chain} = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
-//const yuw = dirname(fileURLToPath(import.meta.url))
-//let require = createRequire(megu)
 let { say } = cfonts
 
 console.log(chalk.bold.redBright(`\n✰ Iniciando Yuki-Suou-Bot ✰\n`))
@@ -55,6 +53,7 @@ align: 'center',
 colors: ['blueBright']
 })
 
+// Asegúrate de que protoType() y serialize() se ejecutan para normalizar los mensajes
 protoType()
 serialize()
 
@@ -74,7 +73,6 @@ const __dirname = global.__dirname(import.meta.url)
 
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 global.prefix = new RegExp('^(?:[#/!.])?')
-// global.opts['db'] = process.env['db']
 
 global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile('./src/database/database.json'))
 
@@ -124,31 +122,22 @@ global.loadDatabase = async function loadDatabase() {
     }
     global.db.chain = chain(global.db.data)
 
-    // Intercept changes to global.db.data to set dbModified flag
-    // This is a simple proxy for demonstration. For complex objects, deep proxy might be needed.
-    const originalSet = Object.getOwnPropertyDescriptor(Object.prototype, 'set')?.set || function(target, property, value, receiver) {
-        target[property] = value;
-        return true;
-    };
-
     const handler = {
         set(target, property, value, receiver) {
             const result = Reflect.set(target, property, value, receiver);
-            if (result) { // Check if the set operation was successful
+            if (result) {
                 global.dbModified = true;
             }
             return result;
         }
     };
-
-    // Apply the proxy only to top-level properties of global.db.data
     global.db.data = new Proxy(global.db.data, handler);
 }
 loadDatabase()
 
 const {state, saveState, saveCreds} = await useMultiFileAuthState(global.sessions)
 const msgRetryCounterMap = (MessageRetryMap) => { };
-const msgRetryCounterCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 }); // Cache items expire after 1 hour, checked every 2 minutes
+const msgRetryCounterCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });
 const {version} = await fetchLatestBaileysVersion();
 let phoneNumber = global.botNumber
 
@@ -174,8 +163,9 @@ console.log(chalk.bold.redBright(`✦ No se permiten numeros que no sean 1 o 2, 
 }} while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${sessions}/creds.json`))
 }
 
-console.info = () => {}
-console.debug = () => {}
+// Comenta estas líneas temporalmente para ver más logs si es necesario
+// console.info = () => {}
+// console.debug = () => {}
 
 const connectionOptions = {
 logger: pino({ level: 'silent' }),
@@ -228,7 +218,6 @@ console.log(chalk.bold.white(chalk.bgMagenta(`✧ CÓDIGO DE VINCULACIÓN ✧`))
 
 conn.isInit = false;
 conn.well = false;
-//conn.logger.info(`✦  H E C H O\n`)
 
 // Message Queue for processing incoming messages
 global.messageQueue = [];
@@ -239,30 +228,31 @@ global.messageQueue = [];
 async function processMessageQueue() {
     if (global.messageQueue.length === 0) return;
 
-    // Process a batch of messages to keep the bot responsive
-    const messagesToProcess = global.messageQueue.splice(0, 10); // Process 10 messages at a time, adjust as needed
+    const messagesToProcess = global.messageQueue.splice(0, 10);
 
     for (const m of messagesToProcess) {
+        // **DEBUGGING**
+        // console.log(chalk.yellowBright('Processing queued message:'), m.body || m.type);
+        // console.log(chalk.yellowBright('Full message object from queue:'), JSON.stringify(m, null, 2));
+
         try {
-            await handler.handler.bind(global.conn)(m); // Call the actual handler
+            await handler.handler.bind(global.conn)(m);
         } catch (e) {
             console.error(chalk.red(`Error processing queued message: ${e}`));
         }
     }
 }
-setInterval(processMessageQueue, 75); // Process queue every 75ms
+setInterval(processMessageQueue, 75);
 
 if (!opts['test']) {
     if (global.db) setInterval(() => {
-        saveDatabaseDebounced(); // Use debounced save
+        saveDatabaseDebounced();
         if (opts['autocleartmp'] && (global.support || {}).find) {
-            const tmp = [tmpdir(), 'tmp', `${jadi}`]; // 'os.tmpdir()' is already defined as 'tmpdir'
+            const tmp = [tmpdir(), 'tmp', `${jadi}`];
             tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
         }
-    }, 30 * 1000); // Check for save every 30 seconds
+    }, 30 * 1000);
 }
-
-// if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
 
 async function connectionUpdate(update) {
 const {connection, lastDisconnect, isNewLogin} = update;
@@ -309,11 +299,16 @@ console.log(chalk.bold.redBright(`\n⚠︎！ RAZON DE DESCONEXIÓN DESCONOCIDA:
 process.on('uncaughtException', console.error)
 
 let isInit = true;
+// La importación del handler debe estar aquí y ser global para que processMessageQueue pueda usarla
 let handler = await import('./handler.js')
+
 global.reloadHandler = async function(restatConn) {
 try {
-const Handler = await import(`./handler.js?update=${Date.now()}`).catch(console.error);
-if (Object.keys(Handler || {}).length) handler = Handler
+// Recargar el módulo handler asegurando que sea la última versión
+const HandlerModule = await import(`./handler.js?update=${Date.now()}`).catch(console.error);
+if (Object.keys(HandlerModule || {}).length && HandlerModule.handler) { // Verifica si existe HandlerModule y su exportación 'handler'
+    handler = HandlerModule; // Actualiza la referencia global al módulo handler
+}
 } catch (e) {
 console.error(e);
 }
@@ -332,10 +327,20 @@ conn.ev.off('connection.update', conn.connectionUpdate)
 conn.ev.off('creds.update', conn.credsUpdate)
 }
 
-// Modify conn.handler to push messages to queue instead of processing directly
-conn.handler = async function(m) {
-    if (m.messages && m.messages[0]) {
-        global.messageQueue.push(m.messages[0]);
+// **AQUÍ ES DONDE CAPTURAMOS EL MENSAJE Y LO PREPARAMOS PARA LA COLA**
+conn.handler = async function(upsert) {
+    if (!upsert || !upsert.messages || upsert.messages.length === 0) return;
+
+    // Asegúrate de que simple.js procese el mensaje aquí antes de encolar
+    const m = serialize(upsert.messages[0], global.conn);
+
+    if (m) {
+        // **DEBUGGING**
+        // console.log(chalk.blueBright('Message received from Baileys. Adding to queue.'));
+        // console.log(chalk.blueBright('Enqueuing message body:'), m.body || m.type);
+        // console.log(chalk.blueBright('Full enqueued message object (m):'), JSON.stringify(m, null, 2));
+
+        global.messageQueue.push(m);
     }
 }.bind(global.conn);
 
@@ -357,8 +362,6 @@ conn.ev.on('creds.update', conn.credsUpdate)
 isInit = false
 return true
 };
-
-//Arranque nativo para subbots by - ReyEndymion
 
 global.rutaJadiBot = join(__dirname, './JadiBots')
 
@@ -383,7 +386,7 @@ yukiJadiBot({pathYukiJadiBot: botPath, m: null, conn, args: '', usedPrefix: '/',
 }
 }
 
-const pluginFolder = global.__dirname(join(__dirname, './plugins')) // Corrected path to plugins
+const pluginFolder = global.__dirname(join(__dirname, './plugins'))
 const pluginFilter = (filename) => /\.js$/.test(filename)
 global.plugins = {}
 async function filesInit() {
@@ -452,7 +455,7 @@ Object.freeze(global.support);
 
 function clearTmp() {
 const tmpDir = join(__dirname, 'tmp')
-if (!existsSync(tmpDir)) return; // Ensure tmp directory exists
+if (!existsSync(tmpDir)) return;
 const filenames = readdirSync(tmpDir)
 filenames.forEach(file => {
 const filePath = join(tmpDir, file)
@@ -510,7 +513,7 @@ console.log(chalk.bold.red(`\n╭» ❍ ${jadi} ❍\n│→ OCURRIÓ UN ERROR\n�
 function purgeOldFiles() {
 const directories = [`./${sessions}/`, `./${jadi}/`]
 directories.forEach(dir => {
-    readdirSync(dir).forEach(file => { // No need for a callback here, readdirSync is synchronous
+    readdirSync(dir).forEach(file => {
         if (file !== 'creds.json') {
             const filePath = path.join(dir, file);
             try {
@@ -537,12 +540,12 @@ originalConsoleMethod.apply(console, arguments)
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await clearTmp()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 4) // 4 min
+console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 4)
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await purgeSession()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SESIONES NO ESENCIALES ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 10) // 10 min
+console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SESIONES NO ESENCIALES ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 10)
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
