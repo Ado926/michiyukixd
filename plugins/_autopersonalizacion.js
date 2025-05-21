@@ -223,7 +223,7 @@ const handler = async (m, { conn, args, command }) => {
       caption: `
 > ┆✰︴ *DETALLES DEL VIDEO* ︴✰┆
 
-   *${title}*
+*${title}*
  
 > ❒ *Tipo:* ${type === 'audio' ? 'Audio ☔' : `Video 🍁 (${quality}p)`}
 > ❒ *Duración:* ${durFormatted}
