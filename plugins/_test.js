@@ -5,9 +5,6 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
 
   try {
     await m.react('☔');
-    await m.react('🍁');
-    await m.react('🕓');
-    await m.react('🕛');
 
     // Buscar video en YouTube
     const searchApi = `https://delirius-apiofc.vercel.app/search/ytsearch?q=${encodeURIComponent(text)}`;
@@ -26,7 +23,7 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
     const data = await vreden.json();
 
     if (!data?.result?.download?.url) {
-      return m.reply("❌ No se pudo obtener el audio.");
+      return m.reply("🍁 No se pudo obtener el audio.");
     }
 
     const audioBuffer = await (await fetch(data.result.download.url)).buffer();
@@ -45,7 +42,7 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
   }
 };
 
-handler.command = ['play', 'playaudio'];
+handler.command = ['play'];
 handler.help = ['play <canción>', 'playaudio <canción>'];
 handler.tags = ['descargas'];
 
