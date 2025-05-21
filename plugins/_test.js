@@ -33,7 +33,6 @@ const handler = async (m, { conn, text }) => {
     react: { text: "🕓", key: m.key }
   });
 
-  await m.reply(toSansSerifPlain("✦ 𝖡𝗎𝗌𝖼𝖺𝗇𝖽𝗈 𝗍𝗎 𝗏𝗂𝖽𝖾𝗈, 𝗎𝗇 𝗆𝗈𝗆𝖾𝗇𝗍𝗂𝗍𝗈..."));
 
   let video;
   try {
