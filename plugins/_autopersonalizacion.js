@@ -205,7 +205,7 @@ const handler = async (m, { conn, args, command }) => {
   }
 
   // Elegir formato según comando
-  let format = command === 'playt' ? 'mp3' : '360';
+  let format = command === 'play' ? 'mp3' : '360';
 
   try {
     let res = await savetube.download(url, format);
@@ -249,7 +249,7 @@ const handler = async (m, { conn, args, command }) => {
 };
 
 handler.help = ['play', 'play2'];
-handler.command = ['playt', 'play2t'];
+handler.command = ['play', 'play'];
 handler.tags = ['downloader'];
 
 export default handler;
