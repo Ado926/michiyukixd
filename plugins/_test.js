@@ -28,10 +28,11 @@ const formatViews = (views) => {
 const handler = async (m, { conn, text }) => {
   if (!text) return m.reply(toSansSerifPlain("✦ Ingresa el nombre o link de un video."));
 
-  // Respuesta rápida decorativa mientras busca el video
+  // Reacción mientras busca
   await conn.sendMessage(m.chat, {
-    react: { text: "🕐", key: m.key }
+    react: { text: "🕓", key: m.key }
   });
+
   await m.reply(toSansSerifPlain("✦ 𝖡𝗎𝗌𝖼𝖺𝗇𝖽𝗈 𝗍𝗎 𝗏𝗂𝖽𝖾𝗈, 𝗎𝗇 𝗆𝗈𝗆𝖾𝗇𝗍𝗂𝗍𝗈..."));
 
   let video;
@@ -49,20 +50,24 @@ const handler = async (m, { conn, text }) => {
 
   const caption = [
     "乂  Y O U T U B E  -  P L A Y\n",
-    `➪ 𝖣𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗇𝖽𝗈 › *${title}*\n`,
-    `> ✰ 𝖢𝖺𝗇𝖺𝗅 › *${author.name}*`,
-    `> ✰ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇 › *${timestamp}*`,
-    `> ✰ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*`,
-    `> ✰ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 › *${ago || 'desconocido'}*`,
-    `> ✰ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n`,
-    "✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖺 𝖾𝗌𝗍𝖾 𝗆𝖾𝗇𝗌𝖺𝗃𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋."
+    `➤ 𝖳𝗂́𝗍𝗎𝗅𝗈 › *${title}*`,
+    `➤ 𝖢𝖺𝗇𝖺𝗅 › *${author.name}*`,
+    `➤ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇 › *${timestamp}*`,
+    `➤ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*`,
+    `➤ 𝖥𝖾𝖼𝗁𝖺 › *${ago || 'Desconocido'}*`,
+    `➤ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n`,
+    "✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋."
   ].join("\n");
 
-  // Enviar respuesta final con imagen
   await conn.sendMessage(m.chat, {
     image: { url: thumbnail },
     caption
   }, { quoted: m });
+
+  // Reacción final
+  await conn.sendMessage(m.chat, {
+    react: { text: "✅", key: m.key }
+  });
 };
 
 handler.command = ["play"];
