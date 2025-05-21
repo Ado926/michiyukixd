@@ -1,4 +1,5 @@
-mport yts from 'yt-search'
+import Starlights from '@StarlightsTeam/Scraper'
+import yts from 'yt-search'
 import fetch from 'node-fetch'
 
 let handler = async (m, { conn, args, usedPrefix, text, command }) => {
@@ -117,4 +118,4 @@ function toNum(number) {
     } else {
         return number.toString()
     }
-      }
+}
