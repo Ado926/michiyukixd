@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import { fromBuffer } from 'file-type';
 
 let handler = async (m, { conn, usedPrefix, command, text }) => {
   if (!text) return m.reply(`✨ Ingresa el nombre de una canción.\n\n*Ejemplo:* ${usedPrefix + command} Shakira - Acróstico`);
@@ -7,44 +6,39 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
   try {
     await m.react('🕓');
 
-    // Buscar en YouTube (usando delirius)
+    // Buscar video en YouTube
     const searchApi = `https://delirius-apiofc.vercel.app/search/ytsearch?q=${encodeURIComponent(text)}`;
-    const searchResponse = await fetch(searchApi);
-    const searchData = await searchResponse.json();
+    const res = await fetch(searchApi);
+    const json = await res.json();
 
-    if (!searchData?.data || searchData.data.length === 0) {
-      return m.reply(`❌ No se encontraron resultados para: "${text}".`);
+    if (!json?.data || !json.data.length) {
+      return m.reply(`❌ No se encontraron resultados para "${text}".`);
     }
 
-    const video = searchData.data[0]; // Primer resultado
+    const video = json.data[0]; // Primer resultado
     const ytUrl = video.url;
 
-    // Descargar desde la API de Vreden
-    const apiUrl = `https://api.vreden.my.id/api/ytmp3?url=${ytUrl}`;
-    const apiRes = await fetch(apiUrl);
-    const json = await apiRes.json();
+    // Descargar audio usando Vreden API
+    const vreden = await fetch(`https://api.vreden.my.id/api/ytmp3?url=${ytUrl}`);
+    const data = await vreden.json();
 
-    if (!json?.result?.download?.url) {
+    if (!data?.result?.download?.url) {
       return m.reply("❌ No se pudo obtener el audio.");
     }
 
-    // Descargar el archivo de audio en buffer
-    const audioBuffer = await (await fetch(json.result.download.url)).buffer();
-    const fileType = await fromBuffer(audioBuffer);
+    const audioBuffer = await (await fetch(data.result.download.url)).buffer();
 
-    // Enviar como nota de voz (PTT)
     await conn.sendMessage(m.chat, {
       audio: audioBuffer,
-      mimetype: fileType?.mime || 'audio/mpeg',
+      mimetype: 'audio/mpeg',
       ptt: true,
       fileName: `${video.title}.mp3`
     }, { quoted: m });
 
     await m.react('✅');
-
-  } catch (e) {
-    console.error(e);
-    m.reply(`❌ Error al procesar tu solicitud:\n${e.message}`);
+  } catch (err) {
+    console.error(err);
+    m.reply(`❌ Error al procesar la solicitud:\n${err.message}`);
   }
 };
 
