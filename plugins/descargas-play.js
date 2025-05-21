@@ -101,7 +101,7 @@ const handler = async (m, { conn, text, command }) => {
   }
 };
 
-handler.command = ["play2", "ytmp3", "yta", "ytv", "mp4", "playaudio"
+handler.command = ["ytmp3", "yta", "ytv", "mp4", "playaudio"
 ];
 handler.help = handler.command;
 handler.tags = ["downloader"];
