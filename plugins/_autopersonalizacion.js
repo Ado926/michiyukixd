@@ -214,7 +214,8 @@ const handler = async (m, { conn, args, command }) => {
     let { title, download, type, thumbnail, duration, quality } = res.result;
     let durFormatted = formatDuration(duration);
 
-    await conn.sendMessage(m.chat, {
+    // Enviar reacción sin await para no bloquear y que el caption se envíe más rápido
+    conn.sendMessage(m.chat, {
       react: { text: '✅', key: m.key }
     });
 
