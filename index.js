@@ -22,7 +22,7 @@ import pino from 'pino'
 import Pino from 'pino'
 import path, { join, dirname } from 'path'
 import {Boom} from '@hapi/boom'
-import {makeWASocket, protoType, serialize} from './lib/simple.js' // makeWASocket, protoType, serialize
+import {makeWASocket, protoType, serialize} from './lib/simple.js'
 import {Low, JSONFile} from 'lowdb'
 import {mongoDB, mongoDBV2} from './lib/mongoDB.js'
 import store from './lib/store.js'
@@ -37,6 +37,8 @@ const {CONNECTING} = ws
 const {chain} = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
+//const yuw = dirname(fileURLToPath(import.meta.url))
+//let require = createRequire(megu)
 let { say } = cfonts
 
 console.log(chalk.bold.redBright(`\n✰ Iniciando Yuki-Suou-Bot ✰\n`))
@@ -53,7 +55,6 @@ align: 'center',
 colors: ['blueBright']
 })
 
-// Asegúrate de que protoType() y serialize() se ejecutan para normalizar los mensajes
 protoType()
 serialize()
 
@@ -72,72 +73,40 @@ global.timestamp = {start: new Date}
 const __dirname = global.__dirname(import.meta.url)
 
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
-global.prefix = new RegExp('^(?:[#/!.])?')
+global.prefix = new RegExp('^[#/!.]')
+// global.opts['db'] = process.env['db']
 
 global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile('./src/database/database.json'))
 
-global.DATABASE = global.db
-global.dbModified = false; // Flag to track database changes
-let dbWriteTimeout = null; // Timeout for debounced database writes
-
-/**
- * Debounced function to save the database only when changes occur.
- * @param {number} delay - The delay in milliseconds before saving.
- */
-function saveDatabaseDebounced(delay = 5000) {
-    if (dbWriteTimeout) {
-        clearTimeout(dbWriteTimeout);
-    }
-    dbWriteTimeout = setTimeout(async () => {
-        if (global.db.data && global.dbModified) {
-            await global.db.write().catch(console.error);
-            global.dbModified = false;
-            console.log(chalk.green('✔ Database saved successfully (debounced).'));
-        }
-    }, delay);
-}
-
-
+global.DATABASE = global.db 
 global.loadDatabase = async function loadDatabase() {
-    if (global.db.READ) {
-        return new Promise((resolve) => setInterval(async function() {
-            if (!global.db.READ) {
-                clearInterval(this)
-                resolve(global.db.data == null ? global.loadDatabase() : global.db.data);
-            }
-        }, 1 * 1000))
-    }
-    if (global.db.data !== null) return
-    global.db.READ = true
-    await global.db.read().catch(console.error)
-    global.db.READ = null
-    global.db.data = {
-        users: {},
-        chats: {},
-        stats: {},
-        msgs: {},
-        sticker: {},
-        settings: {},
-        ...(global.db.data || {}),
-    }
-    global.db.chain = chain(global.db.data)
-
-    const handler = {
-        set(target, property, value, receiver) {
-            const result = Reflect.set(target, property, value, receiver);
-            if (result) {
-                global.dbModified = true;
-            }
-            return result;
-        }
-    };
-    global.db.data = new Proxy(global.db.data, handler);
+if (global.db.READ) {
+return new Promise((resolve) => setInterval(async function() {
+if (!global.db.READ) {
+clearInterval(this)
+resolve(global.db.data == null ? global.loadDatabase() : global.db.data);
+}}, 1 * 1000))
+}
+if (global.db.data !== null) return
+global.db.READ = true
+await global.db.read().catch(console.error)
+global.db.READ = null
+global.db.data = {
+users: {},
+chats: {},
+stats: {},
+msgs: {},
+sticker: {},
+settings: {},
+...(global.db.data || {}),
+}
+global.db.chain = chain(global.db.data)
 }
 loadDatabase()
 
 const {state, saveState, saveCreds} = await useMultiFileAuthState(global.sessions)
 const msgRetryCounterMap = (MessageRetryMap) => { };
-const msgRetryCounterCache = new NodeCache({ stdTTL: 3600, checkperiod: 120 });
+const msgRetryCounterCache = new NodeCache()
 const {version} = await fetchLatestBaileysVersion();
 let phoneNumber = global.botNumber
 
@@ -161,23 +130,22 @@ opcion = await question(colores('⌨ Seleccione una opción:\n') + opcionQR('1. 
 if (!/^[1-2]$/.test(opcion)) {
 console.log(chalk.bold.redBright(`✦ No se permiten numeros que no sean 1 o 2, tampoco letras o símbolos especiales.`))
 }} while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${sessions}/creds.json`))
-}
+} 
 
-// Comenta estas líneas temporalmente para ver más logs si es necesario
-// console.info = () => {}
-// console.debug = () => {}
+console.info = () => {} 
+console.debug = () => {} 
 
 const connectionOptions = {
 logger: pino({ level: 'silent' }),
 printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
-mobile: MethodMobile,
+mobile: MethodMobile, 
 browser: opcion == '1' ? [`${nameqr}`, 'Edge', '20.0.04'] : methodCodeQR ? [`${nameqr}`, 'Edge', '20.0.04'] : ['Ubuntu', 'Edge', '110.0.1587.56'],
 auth: {
 creds: state.creds,
 keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
 },
-markOnlineOnConnect: true,
-generateHighQualityLinkPreview: true,
+markOnlineOnConnect: true, 
+generateHighQualityLinkPreview: true, 
 getMessage: async (clave) => {
 let jid = jidNormalizedUser(clave.remoteJid)
 let msg = await store.loadMessage(jid, clave.id)
@@ -218,41 +186,16 @@ console.log(chalk.bold.white(chalk.bgMagenta(`✧ CÓDIGO DE VINCULACIÓN ✧`))
 
 conn.isInit = false;
 conn.well = false;
-
-// Message Queue for processing incoming messages
-global.messageQueue = [];
-
-/**
- * Processes messages from the queue to prevent blocking the event loop.
- */
-async function processMessageQueue() {
-    if (global.messageQueue.length === 0) return;
-
-    const messagesToProcess = global.messageQueue.splice(0, 10);
-
-    for (const m of messagesToProcess) {
-        // **DEBUGGING**
-        // console.log(chalk.yellowBright('Processing queued message:'), m.body || m.type);
-        // console.log(chalk.yellowBright('Full message object from queue:'), JSON.stringify(m, null, 2));
-
-        try {
-            await handler.handler.bind(global.conn)(m);
-        } catch (e) {
-            console.error(chalk.red(`Error processing queued message: ${e}`));
-        }
-    }
-}
-setInterval(processMessageQueue, 75);
+//conn.logger.info(`✦  H E C H O\n`)
 
 if (!opts['test']) {
-    if (global.db) setInterval(() => {
-        saveDatabaseDebounced();
-        if (opts['autocleartmp'] && (global.support || {}).find) {
-            const tmp = [tmpdir(), 'tmp', `${jadi}`];
-            tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
-        }
-    }, 30 * 1000);
+if (global.db) setInterval(async () => {
+if (global.db.data) await global.db.write()
+if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 'tmp', `${jadi}`], tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])));
+}, 30 * 1000);
 }
+
+// if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
 
 async function connectionUpdate(update) {
 const {connection, lastDisconnect, isNewLogin} = update;
@@ -299,16 +242,11 @@ console.log(chalk.bold.redBright(`\n⚠︎！ RAZON DE DESCONEXIÓN DESCONOCIDA:
 process.on('uncaughtException', console.error)
 
 let isInit = true;
-// La importación del handler debe estar aquí y ser global para que processMessageQueue pueda usarla
 let handler = await import('./handler.js')
-
 global.reloadHandler = async function(restatConn) {
 try {
-// Recargar el módulo handler asegurando que sea la última versión
-const HandlerModule = await import(`./handler.js?update=${Date.now()}`).catch(console.error);
-if (Object.keys(HandlerModule || {}).length && HandlerModule.handler) { // Verifica si existe HandlerModule y su exportación 'handler'
-    handler = HandlerModule; // Actualiza la referencia global al módulo handler
-}
+const Handler = await import(`./handler.js?update=${Date.now()}`).catch(console.error);
+if (Object.keys(Handler || {}).length) handler = Handler
 } catch (e) {
 console.error(e);
 }
@@ -327,23 +265,7 @@ conn.ev.off('connection.update', conn.connectionUpdate)
 conn.ev.off('creds.update', conn.credsUpdate)
 }
 
-// **AQUÍ ES DONDE CAPTURAMOS EL MENSAJE Y LO PREPARAMOS PARA LA COLA**
-conn.handler = async function(upsert) {
-    if (!upsert || !upsert.messages || upsert.messages.length === 0) return;
-
-    // Asegúrate de que simple.js procese el mensaje aquí antes de encolar
-    const m = serialize(upsert.messages[0], global.conn);
-
-    if (m) {
-        // **DEBUGGING**
-        // console.log(chalk.blueBright('Message received from Baileys. Adding to queue.'));
-        // console.log(chalk.blueBright('Enqueuing message body:'), m.body || m.type);
-        // console.log(chalk.blueBright('Full enqueued message object (m):'), JSON.stringify(m, null, 2));
-
-        global.messageQueue.push(m);
-    }
-}.bind(global.conn);
-
+conn.handler = handler.handler.bind(global.conn)
 conn.connectionUpdate = connectionUpdate.bind(global.conn)
 conn.credsUpdate = saveCreds.bind(global.conn, true)
 
@@ -363,14 +285,16 @@ isInit = false
 return true
 };
 
+//Arranque nativo para subbots by - ReyEndymion >> https://github.com/ReyEndymion
+
 global.rutaJadiBot = join(__dirname, './JadiBots')
 
 if (global.yukiJadibts) {
 if (!existsSync(global.rutaJadiBot)) {
-mkdirSync(global.rutaJadiBot, { recursive: true })
+mkdirSync(global.rutaJadiBot, { recursive: true }) 
 console.log(chalk.bold.cyan(`La carpeta: ${jadi} se creó correctamente.`))
 } else {
-console.log(chalk.bold.cyan(`La carpeta: ${jadi} ya está creada.`))
+console.log(chalk.bold.cyan(`La carpeta: ${jadi} ya está creada.`)) 
 }
 
 const readRutaJadiBot = readdirSync(rutaJadiBot)
@@ -386,7 +310,7 @@ yukiJadiBot({pathYukiJadiBot: botPath, m: null, conn, args: '', usedPrefix: '/',
 }
 }
 
-const pluginFolder = global.__dirname(join(__dirname, './plugins'))
+const pluginFolder = global.__dirname(join(__dirname, './plugins/index'))
 const pluginFilter = (filename) => /\.js$/.test(filename)
 global.plugins = {}
 async function filesInit() {
@@ -455,16 +379,10 @@ Object.freeze(global.support);
 
 function clearTmp() {
 const tmpDir = join(__dirname, 'tmp')
-if (!existsSync(tmpDir)) return;
 const filenames = readdirSync(tmpDir)
 filenames.forEach(file => {
 const filePath = join(tmpDir, file)
-try {
-    unlinkSync(filePath)
-} catch (e) {
-    console.error(`Error deleting tmp file ${filePath}: ${e}`);
-}
-})
+unlinkSync(filePath)})
 }
 
 function purgeSession() {
@@ -475,13 +393,9 @@ return file.startsWith('pre-key-')
 })
 prekey = [...prekey, ...filesFolderPreKeys]
 filesFolderPreKeys.forEach(files => {
-try {
-    unlinkSync(`./${sessions}/${files}`)
-} catch (e) {
-    console.error(`Error deleting session pre-key ${files}: ${e}`);
-}
+unlinkSync(`./${sessions}/${files}`)
 })
-}
+} 
 
 function purgeSessionSB() {
 try {
@@ -495,11 +409,7 @@ return fileInDir.startsWith('pre-key-')
 SBprekey = [...SBprekey, ...DSBPreKeys];
 DSBPreKeys.forEach(fileInDir => {
 if (fileInDir !== 'creds.json') {
-try {
-    unlinkSync(`./${jadi}/${directorio}/${fileInDir}`)
-} catch (e) {
-    console.error(`Error deleting sub-bot pre-key ${fileInDir}: ${e}`);
-}
+unlinkSync(`./${jadi}/${directorio}/${fileInDir}`)
 }})
 }})
 if (SBprekey.length === 0) {
@@ -513,19 +423,18 @@ console.log(chalk.bold.red(`\n╭» ❍ ${jadi} ❍\n│→ OCURRIÓ UN ERROR\n�
 function purgeOldFiles() {
 const directories = [`./${sessions}/`, `./${jadi}/`]
 directories.forEach(dir => {
-    readdirSync(dir).forEach(file => {
-        if (file !== 'creds.json') {
-            const filePath = path.join(dir, file);
-            try {
-                unlinkSync(filePath);
-                console.log(chalk.bold.green(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} BORRADO CON ÉXITO\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`));
-            } catch (err) {
-                console.log(chalk.bold.red(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} NO SE LOGRÓ BORRAR\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ✘\n` + err));
-            }
-        }
-    });
-});
-}
+readdirSync(dir, (err, files) => {
+if (err) throw err
+files.forEach(file => {
+if (file !== 'creds.json') {
+const filePath = path.join(dir, file);
+unlinkSync(filePath, err => {
+if (err) {
+console.log(chalk.bold.red(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} NO SE LOGRÓ BORRAR\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ✘\n` + err))
+} else {
+console.log(chalk.bold.green(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} BORRADO CON ÉXITO\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))
+} }) }
+}) }) }) }
 
 function redefineConsoleMethod(methodName, filterStrings) {
 const originalConsoleMethod = console[methodName]
@@ -540,16 +449,16 @@ originalConsoleMethod.apply(console, arguments)
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await clearTmp()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 4)
+console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 4) // 4 min 
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await purgeSession()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SESIONES NO ESENCIALES ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 10)
+console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SESIONES NO ESENCIALES ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 10) // 10 min
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
-await purgeSessionSB()}, 1000 * 60 * 10)
+await purgeSessionSB()}, 1000 * 60 * 10) 
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
@@ -570,5 +479,4 @@ const parsedNumber = phoneUtil.parseAndKeepRawInput(number)
 return phoneUtil.isValidNumber(parsedNumber)
 } catch (error) {
 return false
-}
-}
+}}
