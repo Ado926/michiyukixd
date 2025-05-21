@@ -215,7 +215,7 @@ const handler = async (m, { conn, args, command }) => {
     let durFormatted = formatDuration(duration);
 
     await conn.sendMessage(m.chat, {
-      react: { text: '⏳', key: m.key }
+      react: { text: '✅', key: m.key }
     });
 
     await conn.sendMessage(m.chat, {
@@ -223,7 +223,8 @@ const handler = async (m, { conn, args, command }) => {
       caption: `
 > ┆✰︴ *DETALLES DEL VIDEO* ︴✰┆
 
-> ❒ *Título:* ${title}
+   *${title}*
+ 
 > ❒ *Tipo:* ${type === 'audio' ? 'Audio ☔' : `Video 🍁 (${quality}p)`}
 > ❒ *Duración:* ${durFormatted}
 > ❒ *Enlace:* ${url}
