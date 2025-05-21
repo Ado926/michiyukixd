@@ -31,7 +31,7 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
     await conn.sendMessage(m.chat, {
       audio: audioBuffer,
       mimetype: 'audio/mpeg',
-      ptt: true,
+      ptt: false,
       fileName: `${video.title}.mp3`
     }, { quoted: m });
 
