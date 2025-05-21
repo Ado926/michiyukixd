@@ -33,7 +33,7 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
       mimetype: 'audio/mpeg',
       ptt: false,
       fileName: `${video.title}.mp3`
-    }, { quoted: m });
+    }, { quoted: rcanal });
 
     await m.react('✅');
   } catch (err) {
