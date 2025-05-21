@@ -198,7 +198,20 @@ const handler = async (m, { conn, args, command }) => {
     let res = await savetube.download(url, format);
     if (!res.status) return m.reply(`*Error:* ${res.error}`);
 
-    let { title, download, type } = res.result;
+    let { title, download, type, thumbnail, duration, quality } = res.result;
+
+    await conn.sendMessage(m.chat, {
+      react: { text: '📥', key: m.key }
+    });
+
+    await conn.sendMessage(m.chat, {
+      image: { url: thumbnail },
+      caption:`
+> ┆✰︴ 𝖣𝖤𝖲𝖢𝖠𝖱𝖦𝖠𝖭𝖣𝖮 ${title}\n\n
+> ❒ *Tipo:* ${type === 'audio' ? 'Audio (MP3)' : `Video (${quality}p)`}
+> ⏱ *Duración:* ${duration || 'Desconocida'}
+> ✐ *Enlace:* ${url}`,
+    }, { quoted: m });
 
     if (type === 'video') {
       await conn.sendMessage(m.chat, { 
