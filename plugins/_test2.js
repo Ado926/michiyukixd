@@ -40,13 +40,13 @@ const handler = async (m, { conn }) => {
       audio: audioBuffer,
       fileName: `audio.mp3`,
       mimetype: 'audio/mpeg',
-      ptt: false
+      ptt: true
     }, { quoted: m });
 
     conn.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (e) {
-    return m.reply(toSansSerifPlain("⚠︎ Error al descargar: ") + e);
+    return m.reply(toSansSerifPlain("☔ Error al descargar: ") + e);
   }
 };
 
