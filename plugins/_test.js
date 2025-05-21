@@ -4,7 +4,10 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
   if (!text) return m.reply(`✨ Ingresa el nombre de una canción.\n\n*Ejemplo:* ${usedPrefix + command} Shakira - Acróstico`);
 
   try {
+    await m.react('☔');
+    await m.react('🍁');
     await m.react('🕓');
+    await m.react('🕛');
 
     // Buscar video en YouTube
     const searchApi = `https://delirius-apiofc.vercel.app/search/ytsearch?q=${encodeURIComponent(text)}`;
