@@ -180,6 +180,18 @@ const savetube = {
   }
 };
 
+const formatDuration = (seconds) => {
+  if (!seconds || isNaN(seconds) || seconds <= 0) return 'Desconocida';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return [
+    h > 0 ? h.toString().padStart(2, '0') : null,
+    m.toString().padStart(2, '0'),
+    s.toString().padStart(2, '0')
+  ].filter(Boolean).join(':');
+};
+
 const handler = async (m, { conn, args, command }) => {
   if (args.length < 1) return m.reply(`Formato:\n- *.play <texto o URL>* (para audio)\n- *.play2 <texto o URL>* (para video)`);
 
@@ -192,6 +204,7 @@ const handler = async (m, { conn, args, command }) => {
     url = search.videos[0].url;
   }
 
+  // Elegir formato según comando
   let format = command === 'playt' ? 'mp3' : '360';
 
   try {
@@ -199,18 +212,22 @@ const handler = async (m, { conn, args, command }) => {
     if (!res.status) return m.reply(`*Error:* ${res.error}`);
 
     let { title, download, type, thumbnail, duration, quality } = res.result;
+    let durFormatted = formatDuration(duration);
 
     await conn.sendMessage(m.chat, {
-      react: { text: '📥', key: m.key }
+      react: { text: '⏳', key: m.key }
     });
 
     await conn.sendMessage(m.chat, {
       image: { url: thumbnail },
-      caption:`
-> ┆✰︴ 𝖣𝖤𝖲𝖢𝖠𝖱𝖦𝖠𝖭𝖣𝖮 ${title}\n\n
-> ❒ *Tipo:* ${type === 'audio' ? 'Audio (MP3)' : `Video (${quality}p)`}
-> ⏱ *Duración:* ${duration || 'Desconocida'}
-> ✐ *Enlace:* ${url}`,
+      caption: `
+> ┆✰︴ *DETALLES DEL VIDEO* ︴✰┆
+
+> ❒ *Título:* ${title}
+> ❒ *Tipo:* ${type === 'audio' ? 'Audio ☔' : `Video 🍁 (${quality}p)`}
+> ❒ *Duración:* ${durFormatted}
+> ❒ *Enlace:* ${url}
+      `.trim()
     }, { quoted: m });
 
     if (type === 'video') {
