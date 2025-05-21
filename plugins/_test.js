@@ -1,76 +1,48 @@
-import fetch from "node-fetch";
-import yts from "yt-search";
+import fetch from 'node-fetch';
 
-const ytIdRegex = /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+let handler = async (m, { conn, usedPrefix, command, text }) => {
+  if (!text) return m.reply(`✨ Ingresa un texto para buscar en YouTube.\n> *Ejemplo:* ${usedPrefix + command} Shakira`);
 
-const toSansSerifPlain = (text = "") =>
-  text.split("").map((char) => {
-    const map = {
-      a: "𝖺", b: "𝖻", c: "𝖼", d: "𝖽", e: "𝖾", f: "𝖿", g: "𝗀", h: "𝗁", i: "𝗂",
-      j: "𝗃", k: "𝗄", l: "𝗅", m: "𝗆", n: "𝗇", o: "𝗈", p: "𝗉", q: "𝗊", r: "𝗋",
-      s: "𝗌", t: "𝗍", u: "𝗎", v: "𝗏", w: "𝗐", x: "𝗑", y: "𝗒", z: "𝗓",
-      A: "𝖠", B: "𝖡", C: "𝖢", D: "𝖣", E: "𝖤", F: "𝖥", G: "𝖦", H: "𝖧", I: "𝖨",
-      J: "𝖩", K: "𝖪", L: "𝖫", M: "𝖬", N: "𝖭", O: "𝖮", P: "𝖯", Q: "𝖰", R: "𝖱",
-      S: "𝖲", T: "𝖳", U: "𝖴", V: "𝖵", W: "𝖶", X: "𝖷", Y: "𝖸", Z: "𝖹",
-      0: "𝟢", 1: "𝟣", 2: "𝟤", 3: "𝟥", 4: "𝟦", 5: "𝟧", 6: "𝟨", 7: "𝟩", 8: "𝟪", 9: "𝟫"
-    };
-    return map[char] || char;
-  }).join("");
-
-const formatViews = (views) => {
-  if (!views) return "Desconocido";
-  if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B`;
-  if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M`;
-  if (views >= 1_000) return `${(views / 1_000).toFixed(1)}k`;
-  return views.toString();
-};
-
-const handler = async (m, { conn, text }) => {
-  if (!text) return m.reply(toSansSerifPlain("✦ Ingresa el nombre o link de un video."));
-
-  // Reacción mientras busca
-  await conn.sendMessage(m.chat, {
-    react: { text: "🕓", key: m.key }
-  });
-
-
-  let video;
   try {
-    const ytId = ytIdRegex.exec(text);
-    const search = ytId ? await yts({ videoId: ytId[1] }) : await yts(text);
-    video = ytId ? search.video : search.all[0];
-  } catch {
-    return m.reply(toSansSerifPlain("✦ Error al buscar el video."));
+    await m.react('🕓'); // Reacción mientras procesa
+
+    // Buscar en YouTube
+    const searchApi = `https://delirius-apiofc.vercel.app/search/ytsearch?q=${text}`;
+    const searchResponse = await fetch(searchApi);
+    const searchData = await searchResponse.json();
+
+    if (!searchData?.data || searchData.data.length === 0) {
+      return m.reply(`⚠️ No se encontraron resultados para "${text}".`);
+    }
+
+    const video = searchData.data[0]; // Primer resultado
+
+    // Descargar el audio
+    const downloadApi = `https://api.vreden.my.id/api/ytmp3?url=${video.url}`;
+    const downloadResponse = await fetch(downloadApi);
+    const downloadData = await downloadResponse.json();
+
+    if (!downloadData?.result?.download?.url) {
+      return m.reply("❌ No se pudo obtener el audio del video.");
+    }
+
+    // Enviar audio como PTT
+    await conn.sendMessage(m.chat, {
+      audio: { url: downloadData.result.download.url },
+      mimetype: 'audio/mpeg',
+      ptt: true, // modo nota de voz
+      fileName: `${video.title}.mp3`
+    }, { quoted: m });
+
+    await m.react("✅"); // Reacción al finalizar
+  } catch (error) {
+    console.error(error);
+    m.reply(`❌ Error al procesar la solicitud:\n${error.message}`);
   }
-
-  if (!video) return m.reply(toSansSerifPlain("✦ No se encontró el video."));
-
-  const { title, timestamp, views, url, thumbnail, author, ago } = video;
-
-  const caption = [
-    "乂  Y O U T U B E  -  P L A Y\n",
-    `➤ 𝖳𝗂́𝗍𝗎𝗅𝗈 › *${title}*`,
-    `➤ 𝖢𝖺𝗇𝖺𝗅 › *${author.name}*`,
-    `➤ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈𝗇 › *${timestamp}*`,
-    `➤ 𝖵𝗂𝗌𝗍𝖺𝗌 › *${formatViews(views)}*`,
-    `➤ 𝖥𝖾𝖼𝗁𝖺 › *${ago || 'Desconocido'}*`,
-    `➤ 𝖤𝗇𝗅𝖺𝖼𝖾 › *${url}*\n`,
-    "✦ 𝖱𝖾𝗌𝗉𝗈𝗇𝖽𝖾 𝖼𝗈𝗇 *Audio* 𝗈 *Video* 𝗉𝖺𝗋𝖺 𝖽𝖾𝗌𝖼𝖺𝗋𝗀𝖺𝗋."
-  ].join("\n");
-
-  await conn.sendMessage(m.chat, {
-    image: { url: thumbnail },
-    caption
-  }, { quoted: m });
-
-  // Reacción final
-  await conn.sendMessage(m.chat, {
-    react: { text: "✅", key: m.key }
-  });
 };
 
-handler.command = ["play"];
-handler.help = handler.command;
-handler.tags = ["downloader"];
+handler.command = ['play', 'playaudio'];
+handler.help = ['play <texto>', 'playaudio <texto>'];
+handler.tags = ['media'];
 
 export default handler;
