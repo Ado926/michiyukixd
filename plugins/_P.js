@@ -139,7 +139,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
               video: { url: downloadUrl },
               fileName: `${title}.mp4`,
               mimetype: "video/mp4",
-              caption: "${title} | *Sent By Michi Ai 🌴*",
+              caption: "*Sent By Michi Ai 🌴*",
               thumbnail: thumb
             }, { quoted: fkontak });
             break;
