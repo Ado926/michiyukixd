@@ -74,12 +74,18 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const vistas = formatViews(views);
     const thumb = (await conn.getFile(thumbnail))?.data;
 
-    const infoMessage = ` 🫆 \`Kirito-Bot - Descargas\`\n\n*✦ Título:* ${title}\n> ━━━━━━━━━━━━━━━━━━━━━\n*✰ Duración:* ${timestamp}\n> ━━━━━━━━━━━━━━━━━━━━━\n*✰ Vistas:* ${vistas}\n> ━━━━━━━━━━━━━━━━━━━━━\n*✰ Canal:* ${videoInfo.author.name || "Desconocido"}\n> ━━━━━━━━━━━━━━━━━━━━━\n*✰ Publicado:* ${ago}\n> ━━━━━━━━━━━━━━━━━━━━━\n*∞ Enlace:* ${url}`;
+    const infoMessage = `
+🌴 *𝗠𝗶𝗰𝗵𝗶 𝗕𝗼𝘁* ☔ YT PLAY:
 
+» 🍁 *Título:* ${title}
+» 🌵 *Tipo:* ${type === 'audio' ? 'Audio (.mp3)' : `Video (${quality}p)`}
+» 🕓 *Duración:* ${durFormatted}
+» 🔗 *Link:* ${url}
+`;
     const JT = {
       contextInfo: {
         externalAdReply: {
-          title: "Kirito-Bot MD 👑",
+          title: "Michi Ai Bot ☔",
           body: "🍁 Ai Michi",
           mediaType: 1,
           previewType: 0,
