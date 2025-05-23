@@ -46,12 +46,12 @@ const handler = async (m, { conn, text, usedPrefix, command, botname, dev }) => 
       contextInfo: {
         externalAdReply: {
           title: title,
-          body: 'Enviando espere un momento..',
+          body: '☔ Enviando espere un momento..',
           mediaType: 1,
           previewType: 0,
           mediaUrl: url,
           sourceUrl: url,
-          thumbnail: null,
+          thumbnail: thumb,
           renderLargerThumbnail: true,
         },
       },
