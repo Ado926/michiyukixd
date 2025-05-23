@@ -153,7 +153,7 @@ const handler = async (m, { conn, args, command }) => {
   if (!args[0]) return m.reply(`Formato:\n- *.play <texto o URL>*\n- *.play2 <texto o URL>*`);
 
   // Reacción anticipada
-  conn.sendMessage(m.chat, { react: { text: '☔', key: m.key } });
+  conn.sendMessage(m.chat, { react: { text: '🕓', key: m.key } });
 
   let query = args.join(' ');
   let url = savetube.isUrl(query) ? query : null;
@@ -177,13 +177,13 @@ const handler = async (m, { conn, args, command }) => {
     await conn.sendMessage(m.chat, {
       image: { url: thumbnail },
       caption: `
-┏━━━━━━━━━━━━━━━⬣
-┃ ✦  𝐓𝐈𝐓𝐔𝐋𝐎: *${title}*
-┃ ✦  𝐓𝐈𝐏𝐎: ${type === 'audio' ? '🎵 Audio (MP3)' : `🎬 Video (${quality}p)`}
-┃ ✦  𝐃𝐔𝐑𝐀𝐂𝐈𝐎𝐍: ${durFormatted}
-┃ ✦  𝐄𝐍𝐋𝐀𝐂𝐄: ${url}
-┗━━━━━━━━━━━━━━━⬣
-      `.trim()
+🌴 *𝗠𝗶𝗰𝗵𝗶 𝗕𝗼𝘁* ☔ YT PLAY:
+
+» 🍁 *Título:* ${title}
+» 🌵 *Tipo:* ${type === 'audio' ? 'Audio (.mp3)' : `Video (${quality}p)`}
+» 🕓 *Duración:* ${durFormatted}
+» 🔗 *Link:* ${url}
+`.trim()
     }, { quoted: m });
 
     if (type === 'video') {
