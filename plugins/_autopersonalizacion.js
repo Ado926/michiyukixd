@@ -19,10 +19,7 @@ const savetube = {
   formats: ['144', '240', '360', '480', '720', '1080', 'mp3'],
 
   crypto: {
-    hexToBuffer: (hexString) => {
-      const matches = hexString.match(/.{1,2}/g);
-      return Buffer.from(matches.join(''), 'hex');
-    },
+    hexToBuffer: hex => Buffer.from(hex.match(/.{1,2}/g).join(''), 'hex'),
 
     decrypt: async (enc) => {
       try {
@@ -43,26 +40,21 @@ const savetube = {
     }
   },
 
-  isUrl: str => { 
-    try { 
-      new URL(str); 
-      return true; 
-    } catch (_) { 
-      return false; 
-    } 
+  isUrl: str => {
+    try { new URL(str); return true; } catch { return false; }
   },
 
   youtube: url => {
     if (!url) return null;
-    const a = [
+    const patterns = [
       /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
       /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
       /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
       /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
       /youtu\.be\/([a-zA-Z0-9_-]{11})/
     ];
-    for (let b of a) {
-      if (b.test(url)) return url.match(b)[1];
+    for (let pattern of patterns) {
+      if (pattern.test(url)) return url.match(pattern)[1];
     }
     return null;
   },
@@ -76,11 +68,7 @@ const savetube = {
         params: method === 'get' ? data : undefined,
         headers: savetube.headers
       });
-      return {
-        status: true,
-        code: 200,
-        data: response
-      };
+      return { status: true, code: 200, data: response };
     } catch (error) {
       return {
         status: false,
@@ -93,61 +81,34 @@ const savetube = {
   getCDN: async () => {
     const response = await savetube.request(savetube.api.cdn, {}, 'get');
     if (!response.status) return response;
-    return {
-      status: true,
-      code: 200,
-      data: response.data.cdn
-    };
+    return { status: true, code: 200, data: response.data.cdn };
   },
 
   download: async (link, format) => {
-    if (!link) {
-      return {
-        status: false,
-        code: 400,
-        error: "No se proporcionó un enlace válido."
-      };
+    if (!link || !savetube.isUrl(link)) {
+      return { status: false, code: 400, error: "Enlace inválido." };
     }
-
-    if (!savetube.isUrl(link)) {
-      return {
-        status: false,
-        code: 400,
-        error: "Debes proporcionar un enlace de YouTube válido."
-      };
-    }
-
     if (!format || !savetube.formats.includes(format)) {
-      return {
-        status: false,
-        code: 400,
-        error: "Formato no válido. Usa uno de los disponibles.",
-        available_fmt: savetube.formats
-      };
+      return { status: false, code: 400, error: "Formato no válido.", available_fmt: savetube.formats };
     }
 
     const id = savetube.youtube(link);
-    if (!id) {
-      return {
-        status: false,
-        code: 400,
-        error: "No se pudo extraer el ID del video de YouTube."
-      };
-    }
+    if (!id) return { status: false, code: 400, error: "ID de video no válido." };
 
     try {
-      const cdnx = await savetube.getCDN();
-      if (!cdnx.status) return cdnx;
-      const cdn = cdnx.data;
+      const cdnData = await savetube.getCDN();
+      if (!cdnData.status) return cdnData;
+      const cdn = cdnData.data;
 
-      const result = await savetube.request(`https://${cdn}${savetube.api.info}`, {
+      const infoRes = await savetube.request(`https://${cdn}${savetube.api.info}`, {
         url: `https://www.youtube.com/watch?v=${id}`
       });
-      if (!result.status) return result;
-      const decrypted = await savetube.crypto.decrypt(result.data.data);
+      if (!infoRes.status) return infoRes;
 
-      const dl = await savetube.request(`https://${cdn}${savetube.api.download}`, {
-        id: id,
+      const decrypted = await savetube.crypto.decrypt(infoRes.data.data);
+
+      const downloadRes = await savetube.request(`https://${cdn}${savetube.api.download}`, {
+        id,
         downloadType: format === 'mp3' ? 'audio' : 'video',
         quality: format === 'mp3' ? '128' : format,
         key: decrypted.key
@@ -159,23 +120,19 @@ const savetube = {
         result: {
           title: decrypted.title || "Desconocido",
           type: format === 'mp3' ? 'audio' : 'video',
-          format: format,
+          format,
           thumbnail: decrypted.thumbnail || `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
-          download: dl.data.data.downloadUrl,
-          id: id,
+          download: downloadRes.data.data.downloadUrl,
+          id,
           key: decrypted.key,
           duration: decrypted.duration,
           quality: format === 'mp3' ? '128' : format,
-          downloaded: dl.data.data.downloaded || false
+          downloaded: downloadRes.data.data.downloaded || false
         }
       };
 
-    } catch (error) {
-      return {
-        status: false,
-        code: 500,
-        error: error.message
-      };
+    } catch (err) {
+      return { status: false, code: 500, error: err.message };
     }
   }
 };
@@ -193,56 +150,54 @@ const formatDuration = (seconds) => {
 };
 
 const handler = async (m, { conn, args, command }) => {
-  if (args.length < 1) return m.reply(`Formato:\n- *.play <texto o URL>* (para audio)\n- *.play2 <texto o URL>* (para video)`);
+  if (!args[0]) return m.reply(`Formato:\n- *.play <texto o URL>*\n- *.play2 <texto o URL>*`);
 
   let query = args.join(' ');
   let url = savetube.isUrl(query) ? query : null;
 
   if (!url) {
-    let search = await yts(query);
+    const search = await yts(query);
     if (!search.videos.length) return m.reply('*No se encontraron resultados.*');
     url = search.videos[0].url;
   }
 
-  // Elegir formato según comando
-  let format = command === 'play' ? 'mp3' : '360';
+  const format = command === 'play' ? 'mp3' : '360';
 
   try {
-    let res = await savetube.download(url, format);
+    const res = await savetube.download(url, format);
     if (!res.status) return m.reply(`*Error:* ${res.error}`);
 
-    let { title, download, type, thumbnail, duration, quality } = res.result;
-    let durFormatted = formatDuration(duration);
+    const { title, download, type, thumbnail, duration, quality } = res.result;
+    const durFormatted = formatDuration(duration);
 
-    // Enviar reacción sin await para no bloquear y que el caption se envíe más rápido
-    conn.sendMessage(m.chat, {
-      react: { text: '✅', key: m.key }
-    });
+    // Reacción anticipada
+    conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 
+    // Enviar detalles primero
     await conn.sendMessage(m.chat, {
       image: { url: thumbnail },
       caption: `
 > ┆✰︴ *DETALLES DEL VIDEO* ︴✰┆
 
 *${title}*
- 
+
 > ❒ *Tipo:* ${type === 'audio' ? 'Audio ☔' : `Video 🍁 (${quality}p)`}
 > ❒ *Duración:* ${durFormatted}
 > ❒ *Enlace:* ${url}
       `.trim()
     }, { quoted: m });
 
+    // Enviar media rápida
     if (type === 'video') {
-      await conn.sendMessage(m.chat, { 
-        video: { url: download }
-      }, { quoted: m });
+      conn.sendMessage(m.chat, { video: { url: download } }, { quoted: m });
     } else {
-      await conn.sendMessage(m.chat, { 
-        audio: { url: download }, 
-        mimetype: 'audio/mpeg', 
-        fileName: `${title}.mp3` 
+      conn.sendMessage(m.chat, {
+        audio: { url: download },
+        mimetype: 'audio/mpeg',
+        fileName: `${title}.mp3`
       }, { quoted: m });
     }
+
   } catch (e) {
     m.reply('*Error al procesar la solicitud.*');
   }
