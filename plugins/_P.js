@@ -61,7 +61,7 @@ const ddownr = {
 const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
     if (!text.trim()) {
-      return conn.reply(m.chat, "Ingresa el nombre de la canción que deseas buscar.", m, rcanal);
+      return conn.reply(m.chat, "Ingresa el nombre de la canción que deseas buscar.", m, {});
     }
 
     const search = await yts(text);
@@ -74,6 +74,10 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const vistas = formatViews(views);
     const thumb = (await conn.getFile(thumbnail))?.data;
 
+    const durFormatted = timestamp || "Desconocido";
+    const type = ["play", "yta", "ytmp3"].includes(command) ? "audio" : "video";
+    const quality = "360"; // Puedes adaptar esto si luego detectas la calidad real
+
     const infoMessage = `
 🌴 *𝗠𝗶𝗰𝗵𝗶 𝗕𝗼𝘁* ☔ YT PLAY:
 
@@ -82,6 +86,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 » 🕓 *Duración:* ${durFormatted}
 » 🔗 *Link:* ${url}
 `;
+
     const JT = {
       contextInfo: {
         externalAdReply: {
@@ -93,6 +98,16 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
           sourceUrl: url,
           thumbnail: thumb,
           renderLargerThumbnail: true
+        }
+      }
+    };
+
+    const fkontak = {
+      key: { fromMe: false, participant: "0@s.whatsapp.net" },
+      message: {
+        contactMessage: {
+          displayName: "Michi-Bot",
+          vcard: "BEGIN:VCARD\nVERSION:3.0\nFN:Michi\nORG:MichiBot;\nTEL;type=CELL;type=VOICE;waid=1:1\nEND:VCARD"
         }
       }
     };
@@ -138,7 +153,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         return m.reply("⛔ *Error:* No se encontró un enlace de descarga válido.");
       }
     } else {
-      throw "❌ Comando no reconocido.";
+      throw new Error("❌ Comando no reconocido.");
     }
   } catch (error) {
     return m.reply(`⚠ Ocurrió un error: ${error.message}`);
