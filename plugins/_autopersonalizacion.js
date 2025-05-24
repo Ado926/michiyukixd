@@ -1,5 +1,5 @@
-// editado y reestructurado por 
-// https://github.com/deylinqff
+// editado por
+// https://github.com/Ado926
 
 import fetch from "node-fetch";
 import yts from "yt-search";
@@ -75,40 +75,34 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const videoInfo = search.all[0];
     const { title, thumbnail, timestamp, views, ago, url } = videoInfo;
     const vistas = formatViews(views);
-    const thumb = (await conn.getFile(thumbnail))?.data;
+
+    // Obtener miniatura como buffer para enviarla
+    const thumbData = await conn.getFile(thumbnail);
+    const thumb = thumbData?.data || null;
 
     // Mensaje info
     const infoMessage = `「✦」Descargando *<${title}>*
 
 > ✐ Canal » *${videoInfo.author.name || 'Desconocido'}*
 > ⴵ Duración » *${timestamp}*
-> ✰ Vistas » *${formatViews(views)}*
+> ✰ Vistas » *${vistas}*
 > ❒ Publicado » *${ago}*
 > 🜸 Link » ${url}`;
 
-    // Contexto para mostrar la miniatura y enlace bonito
-    const JT = {
-      contextInfo: {
-        externalAdReply: {
-          title: "Kirito-Bot MD 👑",
-          body: "(1) De los mejores Bots de WhatsApp",
-          mediaType: 1,
-          previewType: 0,
-          mediaUrl: url,
-          sourceUrl: url,
-          thumbnail: thumb,
-          renderLargerThumbnail: true
-        }
-      }
-    };
+    // Enviar solo la imagen con el mensaje info
+    if (thumb) {
+      await conn.sendMessage(m.chat, { image: thumb, caption: infoMessage }, { quoted: m });
+    } else {
+      await conn.reply(m.chat, infoMessage, m);
+    }
 
-    // Primero enviar el mensaje con info + imagen
-    await conn.reply(m.chat, infoMessage, m, thumb);
-
-    // Luego según comando, descargar y enviar audio o video
+    // Enviar audio o video sin externalAdReply ni contextInfo
     if (["play", "yta", "ytmp3"].includes(command)) {
       const api = await ddownr.download(url, "mp3");
-      await conn.sendMessage(m.chat, { audio: { url: api.downloadUrl }, mimetype: "audio/mpeg" }, { quoted: m });
+      await conn.sendMessage(m.chat, {
+        audio: { url: api.downloadUrl },
+        mimetype: "audio/mpeg"
+      }, { quoted: m });
 
     } else if (["play2", "ytv", "ytmp4"].includes(command)) {
       const sources = [
@@ -122,8 +116,8 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
       for (let source of sources) {
         try {
           const res = await fetch(source);
-          const { data, result, downloads } = await res.json();
-          let downloadUrl = data?.dl || result?.download?.url || downloads?.url || data?.download?.url;
+          const json = await res.json();
+          let downloadUrl = json.data?.dl || json.result?.download?.url || json.downloads?.url || json.data?.download?.url;
 
           if (downloadUrl) {
             success = true;
