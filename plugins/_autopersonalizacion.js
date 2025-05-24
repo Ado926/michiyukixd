@@ -81,6 +81,7 @@ const handler = async (m, { conn, text, command, botname = "Bot", dev = "Dev" })
           audio: { url: audioUrl },
           fileName: `${apiRes.result.title || title}.mp3`,
           mimetype: "audio/mpeg",
+          ptt: true,
         }, { quoted: m })
       } catch {
         return conn.reply(m.chat, "⚠ No se pudo enviar el audio. Intenta más tarde.", m)
