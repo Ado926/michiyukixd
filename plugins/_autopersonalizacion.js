@@ -49,12 +49,12 @@ const handler = async (m, { conn, text, command, botname = "Bot", dev = "Dev" })
     }
 
     // Mensaje de info con thumbnail en contexto
-    const infoMessage = `「✦」𝗗𝗲𝘀𝗰𝗮𝗿𝗴𝗮𝗻𝗱𝗼 *<${title}>*\n\n` +
-      `> ✧ 𝖢𝖺𝗇𝖺𝗅 » *${canal}*\n` +
-      `> ✰ 𝖵𝗂𝗌𝗍𝖺𝗌 » *${vistas}*\n` +
-      `> ⴵ 𝖣𝗎𝗋𝖺𝖼𝗂𝗈́𝗇 » *${timestamp}*\n` +
-      `> ✐ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 » *${ago}*\n` +
-      `> 🜲 𝖫𝗂𝗇𝗄 » ${url}`
+    const infoMessage = `「✦」𝗘𝗻𝘃𝗶𝗮𝗻𝗱𝗼 *<${title}>*\n\n` +
+      `> ☀︎ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 𝗉𝗈𝗋 *${canal}*\n` +
+      `> ✰ *${vistas}*\n` +
+      `> ⴵ 𝖣𝗎𝗋𝖺 » *${timestamp}*\n` +
+      `> ✐ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 𝖧𝖺𝖼𝖾 » *${ago}*\n` +
+      `> 🜲 𝖫𝗂𝗇𝗄 𝖣𝖾𝗅 𝖵𝗂𝖽𝖾𝗈» ${url}`
 
     await conn.reply(m.chat, infoMessage, m, {
       contextInfo: {
@@ -112,8 +112,8 @@ export default handler
 function formatViews(views) {
   if (views === undefined || views === null) return "No disponible"
   if (typeof views === "string") return views
-  if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}B (${views.toLocaleString()})`
-  if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}M (${views.toLocaleString()})`
-  if (views >= 1_000) return `${(views / 1_000).toFixed(1)}K (${views.toLocaleString()})`
+  if (views >= 1_000_000_000) return `${(views / 1_000_000_000).toFixed(1)}𝖡 𝖽𝖾 𝗏𝗂𝗌𝗍𝖺𝗌 (${views.toLocaleString()})`
+  if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1)}𝖬 𝖽𝖾 𝗏𝗂𝗌𝗍𝖺𝗌 (${views.toLocaleString()})`
+  if (views >= 1_000) return `${(views / 1_000).toFixed(1)}K 𝖣𝖾 𝗏𝗂𝗌𝗍𝖺𝗌 (${views.toLocaleString()})`
   return views.toString()
 }
