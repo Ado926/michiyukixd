@@ -22,7 +22,7 @@ let txt = `🍬 *Nombre:* ${result.name}\n👑 *Owner:* ${result.creator}\n🌟 
 
 let img = 'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745610598914.jpeg';
 
-conn.sendMessage(m.chat, { image: { url: img }, caption: txt }, { quoted: fkontak });
+conn.sendMessage(m.chat, { image: { url: img }, caption: txt }, { quoted: m });
 
 } catch (error) {
 console.error(error)
