@@ -1,4 +1,3 @@
-
 import yts from 'yt-search'
 import axios from 'axios'
 import fetch from 'node-fetch'
@@ -59,7 +58,11 @@ const handler = async (m, { conn, text, command }) => {
 > ☔ Vistas *»* *${views.toLocaleString()}*
 > ☔ Link *»* ${url}`
 
-    await conn.sendMessage(m.chat, { image: { url: thumbnail }, caption: info }, ...bcanal { quoted: m })
+    await conn.sendMessage(m.chat, {
+      image: { url: thumbnail },
+      caption: info,
+      ...bcanal
+    }, { quoted: m })
 
     const data = await ddownr.download(url, 'mp3')
     const audio = await fetch(data.url).then(res => res.buffer())
@@ -67,7 +70,8 @@ const handler = async (m, { conn, text, command }) => {
     await conn.sendMessage(m.chat, {
       audio,
       mimetype: 'audio/mpeg',
-      ptt: true
+      ptt: true,
+      ...bcanal
     }, { quoted: m })
 
   } catch (err) {
