@@ -88,7 +88,7 @@ global.bcanal = {
       thumbnailUrl: 'https://files.catbox.moe/h3lk3c.jpg',
       sourceUrl: 'https://chat.whatsapp.com/LVswMhDLIzbAf4WliK6nau',
       mediaType: 2,
-      renderLargerThumbnail: false
+      renderLargerThumbnail: true
     },
   },
 }
