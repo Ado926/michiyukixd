@@ -47,7 +47,6 @@ const handler = async (m, { conn, text, command }) => {
 > ☔ Canal *»* *${author.name}*
 > ☔ Duración *»* *${timestamp}*
 > ☔ Vistas *»* *${views.toLocaleString()}*
-> ☔ Publicado *»* *${ago}*
 > ☔ Link *»* ${url}`
 
   await conn.sendMessage(m.chat, { image: { url: thumbnail }, caption: info }, { quoted: m })
