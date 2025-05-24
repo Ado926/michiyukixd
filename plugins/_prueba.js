@@ -11,7 +11,7 @@ const handler = async (m, { conn, text, command }) => {
 
     const { title, url, timestamp, ago, views, thumbnail } = video;
 
-    const info = `「✦」*Descargando:* ${title}\n\n` +
+    const info = `「✦」Descargando: ${title}\n\n` +
                  `> ⏱ *Duración:* ${timestamp}\n` +
                  `> 📅 *Publicado:* ${ago}\n` +
                  `> 👁 *Vistas:* ${views.toLocaleString()}\n` +
@@ -42,7 +42,7 @@ const handler = async (m, { conn, text, command }) => {
       mimetype: 'video/mp4',
       fileName: `${title}.mp4`,
       caption: `🌟 *Aquí tienes tu video* 🌟\n\n` +
-               `🎬 *Título:* ${title}\n` +
+               `🎬 *Título:* ${title}\n\n` +
                `⚔️ _Enviado por Michi Bot_ ⚔️`
     }, { quoted: m });
 
