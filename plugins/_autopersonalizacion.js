@@ -156,6 +156,6 @@ export default handler;
 function formatViews(views) {
   if (typeof views !== "number") return "Desconocido";
   return views >= 1000
-    ? (views / 1000).toFixed(1) + "k (" + views.toLocaleString() + ")"
+    ? (views / 1000).toFixed(1) + "K (" + views.toLocaleString() + ")"
     : views.toString();
 }
