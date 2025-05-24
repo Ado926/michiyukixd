@@ -228,6 +228,17 @@ await global.reloadHandler(true).catch(console.error)
 console.log(chalk.bold.yellowBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✗\n┆ ⚠︎ CONEXIÓN REEMPLAZADA, SE HA ABIERTO OTRA NUEVA SESION, POR FAVOR, CIERRA LA SESIÓN ACTUAL PRIMERO.\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✗`))
 } else if (reason === DisconnectReason.loggedOut) {
 console.log(chalk.bold.redBright(`\n⚠︎ SIN CONEXIÓN, BORRE LA CARPETA ${global.sessions} Y ESCANEA EL CÓDIGO QR ⚠︎`))
+// If a sub-bot logs out, remove its directory
+if (update.lastDisconnect?.error?.message === 'logged out') {
+    const jid = update.lastDisconnect.jid; // Assuming jid is available here for the specific sub-bot
+    if (jid) {
+        const subBotFolder = join(global.rutaJadiBot, jid.split('@')[0]); // Extract folder name from jid
+        if (existsSync(subBotFolder)) {
+            rmSync(subBotFolder, { recursive: true, force: true });
+            console.log(chalk.bold.green(`\n✔ Carpeta de sub-bot eliminada: ${subBotFolder}`));
+        }
+    }
+}
 await global.reloadHandler(true).catch(console.error)
 } else if (reason === DisconnectReason.restartRequired) {
 console.log(chalk.bold.cyanBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✓\n┆ ✧ CONECTANDO AL SERVIDOR...\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ✓`))
@@ -451,10 +462,22 @@ if (stopped === 'close' || !conn || !conn.user) return
 await clearTmp()
 console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 4) // 4 min 
 
+// Modified interval for purging sessions, only leaving creds.json
 setInterval(async () => {
-if (stopped === 'close' || !conn || !conn.user) return
-await purgeSession()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SESIONES NO ESENCIALES ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 10) // 10 min
+    if (stopped === 'close' || !conn || !conn.user) return;
+    const sessionDir = `./${sessions}/`;
+    if (existsSync(sessionDir)) {
+        const files = readdirSync(sessionDir);
+        files.forEach(file => {
+            const filePath = join(sessionDir, file);
+            if (file !== 'creds.json') {
+                unlinkSync(filePath);
+                console.log(chalk.bold.cyanBright(`\n🗑️ Archivo de sesión eliminado: ${file}`));
+            }
+        });
+        console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SESIONES NO ESENCIALES ELIMINADAS (solo creds.json restante)\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`));
+    }
+}, 1000 * 60 * 2); // Every 2 minutes
 
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
