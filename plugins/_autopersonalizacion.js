@@ -18,7 +18,7 @@ const ddownr = {
       method: "GET",
       url: `https://p.oceansaver.in/ajax/download.php?format=${format}&url=${encodeURIComponent(url)}&api=dfcb6d76f2f6a9894gjkege8a4ab232222`,
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, como Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        "User-Agent": "Mozilla/5.0"
       }
     };
 
@@ -42,7 +42,7 @@ const ddownr = {
       method: "GET",
       url: `https://p.oceansaver.in/ajax/progress.php?id=${id}`,
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, como Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        "User-Agent": "Mozilla/5.0"
       }
     };
 
@@ -64,7 +64,7 @@ const ddownr = {
 const handler = async (m, { conn, text, usedPrefix, command }) => {
   try {
     if (!text.trim()) {
-      return conn.reply(m.chat, "*.play <nombre del video>*", m);
+      return conn.reply(m.chat, `*${usedPrefix}${command} <nombre del video>*`, m);
     }
 
     const search = await yts(text);
@@ -75,12 +75,9 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     const videoInfo = search.all[0];
     const { title, thumbnail, timestamp, views, ago, url } = videoInfo;
     const vistas = formatViews(views);
-
-    // Obtener miniatura como buffer para enviarla
     const thumbData = await conn.getFile(thumbnail);
     const thumb = thumbData?.data || null;
 
-    // Mensaje info
     const infoMessage = `「✦」Descargando *<${title}>*
 
 > ☔ Canal *»* *${videoInfo.author.name || 'Desconocido'}*
@@ -89,21 +86,25 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 > ☔ Publicado *»* *${ago}*
 > ☔ Link *»* ${url}`;
 
-    // Enviar solo la imagen con el mensaje info
+    // Mostrar el mensaje de info de inmediato
     if (thumb) {
-      await conn.sendMessage(m.chat, { image: thumb, caption: infoMessage }, { quoted: m });
+      conn.sendMessage(m.chat, { image: thumb, caption: infoMessage }, { quoted: m });
     } else {
-      await conn.reply(m.chat, infoMessage, m);
+      conn.reply(m.chat, infoMessage, m);
     }
 
-    // Enviar audio o video sin externalAdReply ni contextInfo
+    // Enviar audio rápidamente (no usar await bloqueante)
     if (["play", "yta", "ytmp3"].includes(command)) {
-      const api = await ddownr.download(url, "mp3");
-      await conn.sendMessage(m.chat, {
-        audio: { url: api.downloadUrl },
-        mimetype: "audio/mpeg",
-        ptt: true
-      }, { quoted: m });
+      ddownr.download(url, "mp3").then(api => {
+        conn.sendMessage(m.chat, {
+          audio: { url: api.downloadUrl },
+          mimetype: "audio/mpeg",
+          ptt: true
+        }, { quoted: m });
+      }).catch(err => {
+        console.error("❌ Error al descargar audio:", err);
+        conn.reply(m.chat, "⛔ No se pudo descargar el audio.", m);
+      });
 
     } else if (["play2", "ytv", "ytmp4"].includes(command)) {
       const sources = [
@@ -118,7 +119,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
         try {
           const res = await fetch(source);
           const json = await res.json();
-          let downloadUrl = json.data?.dl || json.result?.download?.url || json.downloads?.url || json.data?.download?.url;
+          const downloadUrl = json.data?.dl || json.result?.download?.url || json.downloads?.url || json.data?.download?.url;
 
           if (downloadUrl) {
             success = true;
@@ -149,7 +150,7 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
 handler.command = handler.help = ["play"];
 handler.tags = ["downloader"];
-//handler.coin = 5;
+// handler.coin = 5;
 
 export default handler;
 
