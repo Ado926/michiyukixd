@@ -4,7 +4,8 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
   if (!text) return m.reply(`✨ Ingresa un texto para buscar en YouTube.\n> *Ejemplo:* ${usedPrefix + command} Shakira`);
 
   try {
-    const searchApi = `https://delirius-apiofc.vercel.app/search/ytsearch?q=${text}`;
+    // 1. Buscar video
+    const searchApi = `https://delirius-apiofc.vercel.app/search/ytsearch?q=${encodeURIComponent(text)}`;
     const searchResponse = await fetch(searchApi);
     const searchData = await searchResponse.json();
 
@@ -13,27 +14,32 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
     }
 
     const video = searchData.data[0]; // Primer resultado
-    const videoTitle = video.title;
     const videoUrl = video.url;
+    const videoTitle = video.title;
 
-    const downloadApi = `https://api.vreden.my.id/api/ytmp3?url=${videoUrl}`;
+    // 2. Descargar audio
+    const downloadApi = `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`;
     const downloadResponse = await fetch(downloadApi);
-    const downloadData = await downloadResponse.json();
+    const contentType = downloadResponse.headers.get('content-type');
 
-    if (!downloadData?.result?.download?.url) {
+    if (!contentType?.includes('application/json')) {
+      throw new Error('La respuesta no es JSON. La API puede estar fallando.');
+    }
+
+    const downloadData = await downloadResponse.json();
+    const audio = downloadData?.result?.download;
+
+    if (!audio?.url) {
       return m.reply("❌ No se pudo obtener el audio del video.");
     }
 
-    const audioUrl = downloadData.result.download.url;
-    const calidad = downloadData.result.quality || 'Desconocida';
-    const peso = downloadData.result.size || 'Desconocido';
-
+    // 3. Enviar mensaje decorado
     const infoMessage = `「✦」Descargando *<${videoTitle}>*
 
 > ✐ Canal » *${video.author.name}*
 > ⴵ Duración » *${video.duration}*
-> ✰ Calidad: *${calidad}*
-> ❒ Tamaño » *${peso}*
+> ✰ Calidad: *${audio.quality || 'Desconocida'}*
+> ❒ Tamaño » *${audio.size || 'Desconocido'}*
 > 🜸 Link » ${videoUrl}`;
 
     await conn.sendMessage(m.chat, {
@@ -41,14 +47,16 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
       caption: infoMessage
     }, { quoted: m });
 
+    // 4. Enviar el audio como nota de voz
     await conn.sendMessage(m.chat, {
-      audio: { url: audioUrl },
+      audio: { url: audio.url },
       mimetype: 'audio/mpeg',
       fileName: `${videoTitle}.mp3`,
       ptt: true
     }, { quoted: m });
 
     await m.react("✅");
+
   } catch (error) {
     console.error(error);
     m.reply(`❌ Error al procesar la solicitud:\n${error.message}`);
