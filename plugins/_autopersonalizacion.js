@@ -83,11 +83,11 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
     // Mensaje info
     const infoMessage = `「✦」Descargando *<${title}>*
 
-> ✐ Canal » *${videoInfo.author.name || 'Desconocido'}*
-> ⴵ Duración » *${timestamp}*
-> ✰ Vistas » *${vistas}*
-> ❒ Publicado » *${ago}*
-> 🜸 Link » ${url}`;
+> ☔ Canal *»* *${videoInfo.author.name || 'Desconocido'}*
+> ☔ Duración *»* *${timestamp}*
+> ☔ Vistas *»* *${vistas}*
+> ☔ Publicado *»* *${ago}*
+> ☔ Link *»* ${url}`;
 
     // Enviar solo la imagen con el mensaje info
     if (thumb) {
@@ -101,7 +101,8 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
       const api = await ddownr.download(url, "mp3");
       await conn.sendMessage(m.chat, {
         audio: { url: api.downloadUrl },
-        mimetype: "audio/mpeg"
+        mimetype: "audio/mpeg",
+        ptt: true
       }, { quoted: m });
 
     } else if (["play2", "ytv", "ytmp4"].includes(command)) {
