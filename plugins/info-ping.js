@@ -12,10 +12,10 @@ let handler = async (m, { conn }) => {
   let arch = os.arch()
 
   let info = `✰ *¡Pong!*\n> Tiempo ⴵ ${latensi.toFixed(4)} ms\n\n` +
-             `🖥️ Plataforma: ${platform}\n` +
-             `⚙️ Arquitectura: ${arch}\n` +
-             `🧠 Memoria total: ${totalMem}\n` +
-             `💾 Memoria libre: ${freeMem}`
+             `🖥️ *Plataforma:* ${platform}\n` +
+             `⚙️ *Arquitectura:* ${arch}\n` +
+             `🧠 *Memoria total:* ${totalMem}\n` +
+             `💾 *Memoria libre:* ${freeMem}`
 
   conn.reply(m.chat, info, m, global.bcanal)
 }
