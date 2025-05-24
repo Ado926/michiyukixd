@@ -19,10 +19,10 @@ txt += `│    💬 *Comentarios:* ${comment}\n`
 txt += `│    🔄 *Compartidos:* ${share}\n`
 txt += `│    📅 *Publicado:* ${published}\n`
 txt += `│    📥 *Descargas:* ${downloads}\n`
-txt += `╰────────────────────╯\n\n`
+txt += `╰──────────────────╯\n\n`
 
-txt += `┈┈⟡ ᯓ Powered by ᯓ ⟡┈┈\n`
-txt += `           ✧ Michi Ai ✧ 🌵`
+txt += `┈┈⟡ ᯓ Powered by  ✧ Michi Ai ✧ 🌵 ᯓ ⟡┈┈\n`
+txt += `           *Dev Wirk*`
 await conn.sendFile(m.chat, dl_url, 'tiktok.mp4', txt, m, null, rcanal)
 await m.react('✅')
 } catch {
