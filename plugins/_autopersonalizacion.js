@@ -3,38 +3,15 @@ import axios from 'axios'
 import fetch from 'node-fetch'
 
 const ddownr = {
-  download: async (url, format = 'mp3') => {
-    const config = {
-      method: 'GET',
-      url: `https://p.oceansaver.in/ajax/download.php?format=${format}&url=${encodeURIComponent(url)}&api=dfcb6d76f2f6a9894gjkege8a4ab232222`,
-      headers: {
-        'User-Agent': 'Mozilla/5.0'
-      }
-    }
-    const res = await axios.request(config)
-    if (!res.data?.success || !res.data.id) throw new Error('⛔ No se pudo obtener los detalles del video.')
-    const downloadUrl = await ddownr.cekProgress(res.data.id)
-    return {
-      title: res.data.title,
-      image: res.data.info?.image,
-      url: downloadUrl
-    }
-  },
+  download: async (url) => {
+    const { data } = await axios.get(`https://zenzapis.xyz/downloader/youtube?url=${encodeURIComponent(url)}&apikey=zenkey`)
+    if (!data || !data.status || !data.result?.audio) throw new Error('❌ No se pudo obtener el audio.')
 
-  cekProgress: async (id) => {
-    const config = {
-      method: 'GET',
-      url: `https://p.oceansaver.in/ajax/progress.php?id=${id}`,
-      headers: { 'User-Agent': 'Mozilla/5.0' }
+    return {
+      title: data.result.title,
+      url: data.result.audio,
+      image: data.result.thumb
     }
-    for (let i = 0; i < 20; i++) {
-      const res = await axios.request(config)
-      if (res.data?.success && res.data.progress === 1000 && res.data.download_url) {
-        return res.data.download_url
-      }
-      await new Promise(r => setTimeout(r, 1200))
-    }
-    throw new Error('❌ La descarga tardó demasiado. Intenta nuevamente.')
   }
 }
 
@@ -64,13 +41,15 @@ const handler = async (m, { conn, text, command }) => {
       ...bcanal
     }, { quoted: m })
 
-    const data = await ddownr.download(url, 'mp3')
+    const data = await ddownr.download(url)
     const audio = await fetch(data.url).then(res => res.buffer())
 
     await conn.sendMessage(m.chat, {
       audio,
       mimetype: 'audio/mpeg',
-      ptt: true
+      fileName: `${data.title}.mp3`,
+      ptt: true,
+      ...bcanal
     }, { quoted: m })
 
   } catch (err) {
