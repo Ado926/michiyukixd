@@ -38,15 +38,20 @@ function getRandomEmoji() {
   return emojisArray[Math.floor(Math.random() * emojisArray.length)];
 }
 global.emojis = getRandomEmoji();
-//reacciones 😜
-global.rwait = '🕒'
-global.done = '✅'
-global.error = '✖️'
-global.msm = '⚠︎'
-// definicion pa cosas como el menu xd
-global.canalIdM = ["120363402846939411@newsletter", "120363402846939411@newsletter"]
-global.canalNombreM = ["⏤͟͟͞͞Vivos Vivientes 🌻❀", "🌳 𝖵𝗂𝗏𝗈𝗌 𝖵𝗂𝗏𝗂𝖾𝗇𝗍𝖾𝗌 🍄"]
-global.channelRD = await getRandomChannel()
+
+// Reacciones
+global.rwait = '🕒';
+global.done = '✅';
+global.error = '✖️';
+global.msm = '⚠︎';
+
+// Definición para cosas como el menú
+global.canalIdM = ["120363402846939411@newsletter", "120363402846939411@newsletter"];
+global.canalNombreM = ["⏤͟͟͞͞Vivos Vivientes 🌻❀", "🌳 𝖵𝗂𝗏𝗈𝗌 𝖵𝗂𝗏𝗂𝖾𝗇𝗍𝖾𝗌 🍄"];
+
+// Si tienes la función getRandomChannel, descomenta esta línea y haz que sea async o inicialízalo en otra parte
+// global.channelRD = await getRandomChannel(); // <- Esto da error si no está dentro de función async
+
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = 'Baileys';
@@ -95,7 +100,6 @@ global.estilo = {
   key: {
     fromMe: false,
     participant: '0@s.whatsapp.net',
-    // No es necesario poner condición falsa, quité
   },
   message: {
     orderMessage: {
@@ -105,7 +109,7 @@ global.estilo = {
       message: global.packname,
       orderTitle: 'Bang',
       thumbnail: global.catalogo,
-      sellerJid: '0@s.whatsapp.net'
+      sellerJid: '0@s.whatsapp.net',
     }
   }
 };
@@ -132,7 +136,7 @@ global.bcanal = {
       thumbnailUrl: 'https://files.catbox.moe/h3lk3c.jpg',
       sourceUrl: 'https://github.com/Ado926',
       mediaType: 2,
-      renderLargerThumbnail: false
+      renderLargerThumbnail: false,
     },
   },
 };
