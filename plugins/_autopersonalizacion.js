@@ -59,7 +59,7 @@ const handler = async (m, { conn, text, command }) => {
 > ☔ Vistas *»* *${views.toLocaleString()}*
 > ☔ Link *»* ${url}`
 
-    await conn.sendMessage(m.chat, { image: { url: thumbnail }, caption: info }, { quoted: m })
+    await conn.sendMessage(m.chat, bcanal, { image: { url: thumbnail }, caption: info }, { quoted: m })
 
     const data = await ddownr.download(url, 'mp3')
     const audio = await fetch(data.url).then(res => res.buffer())
