@@ -1,64 +1,59 @@
-import fetch from 'node-fetch'
-import yts from 'yt-search'
-import axios from 'axios'
-
-const MAX_MB = 20
+import yts from 'yt-search';
+import axios from 'axios';
 
 const handler = async (m, { conn, text, command }) => {
-  if (!text) return m.reply(`*Ejemplo:* .${command} calma rihanna`)
-
   try {
-    m.react('⏳')
-    
-    // Buscar video
-    const search = await yts(text)
-    const video = search.videos[0]
-    if (!video) return m.reply("❌ No encontré resultados.")
+    if (!text) return m.reply(`*Ejemplo:* ${command} Rosa pastel`);
 
-    const yturl = video.url
-    const titulo = video.title
-    const duracion = video.timestamp
-    const views = video.views.toLocaleString()
-    const fecha = video.ago
-    const autor = video.author.name
-    const thumbnail = video.thumbnail
+    const search = await yts(text);
+    const video = search.videos[0];
+    if (!video) return m.reply('⚠ No encontré resultados.');
 
-    // Mostrar info
-    const info = `「🎥」*${titulo}*\n\n> 📺 Canal: *${autor}*\n> 🕒 Duración: *${duracion}*\n> 👀 Vistas: *${views}*\n> 📆 Publicado: *${fecha}*\n> 🔗 Link: ${yturl}`
-    await conn.sendMessage(m.chat, { image: { url: thumbnail }, caption: info }, { quoted: m })
+    const { title, url, timestamp, ago, views, thumbnail } = video;
 
-    // Llamar API externa
-    const apiUrl = `https://ytmp4.run/api/button/mp4/${encodeURIComponent(yturl)}`
-    const res1 = await axios.get(apiUrl)
-    const html = res1.data
+    const info = `「✦」*Descargando:* ${title}\n\n` +
+                 `> ⏱ *Duración:* ${timestamp}\n` +
+                 `> 📅 *Publicado:* ${ago}\n` +
+                 `> 👁 *Vistas:* ${views.toLocaleString()}\n` +
+                 `> 🔗 *Link:* ${url}`;
 
-    // Extraer link del video de 360p o 480p
-    const match = html.match(/href="(https:\/\/[^"]+\.mp4[^"]*)"/)
-    if (!match) return m.reply("❌ No se encontró enlace de descarga válido.")
-    const videoUrl = match[1]
+    await conn.sendMessage(m.chat, { image: { url: thumbnail }, caption: info }, { quoted: m });
 
-    // Verificar tamaño
-    const head = await axios.head(videoUrl)
-    const sizeMB = parseInt(head.headers['content-length']) / (1024 * 1024)
-    if (sizeMB > MAX_MB) {
-      return m.reply(`❌ El video pesa *${sizeMB.toFixed(2)} MB* y supera el límite de WhatsApp (${MAX_MB} MB).`)
-    }
+    const api = `https://p.oceansaver.in/ajax/download.php?format=360&url=${encodeURIComponent(url)}&api=dfcb6d76f2f6a9894gjkege8a4ab232222`;
+    const { data } = await axios.get(api);
+    if (!data.success) throw '⛔ No se pudo obtener el video.';
 
-    // Descargar buffer
-    const buffer = await fetch(videoUrl).then(res => res.buffer())
+    const { id } = data;
 
-    // Enviar
+    const checkProgress = async () => {
+      while (true) {
+        const res = await axios.get(`https://p.oceansaver.in/ajax/progress.php?id=${id}`);
+        if (res.data?.success && res.data.progress === 1000) {
+          return res.data.download_url;
+        }
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    };
+
+    const downloadUrl = await checkProgress();
+
     await conn.sendMessage(m.chat, {
-      video: buffer,
-      caption: `🎞️ *${titulo}*`,
-      mimetype: 'video/mp4'
-    }, { quoted: m })
+      video: { url: downloadUrl },
+      mimetype: 'video/mp4',
+      fileName: `${title}.mp4`,
+      caption: `🌟 *Aquí tienes tu video* 🌟\n\n` +
+               `🎬 *Título:* ${title}\n` +
+               `⚔️ _Enviado por Michi Bot_ ⚔️`
+    }, { quoted: m });
 
-  } catch (e) {
-    console.error(e)
-    m.reply('❌ Error al obtener o enviar el video.')
+  } catch (err) {
+    console.error(err);
+    return m.reply('⚠ *Error al obtener o enviar el video.*');
   }
-}
+};
 
-handler.command = ['video', 'ytvideo']
-export default handler
+handler.command = ['play2', 'ytv', 'ytmp4'];
+handler.tags = ['downloader'];
+handler.help = ['play2 <texto>'];
+
+export default handler;
