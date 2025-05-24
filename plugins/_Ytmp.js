@@ -5,7 +5,7 @@ import ytdl from 'ytdl-core';
 import axios from 'axios';
 import { savetube } from '../lib/yt-savetube.js'
 import { ogmp3 } from '../lib/youtubedl.js'; 
-import { amdl } from '../lib/scraper.js';  
+import { amdl } from '../lib/scraper1.js';  
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { ytmp3, ytmp4 } = require("@hiudyy/ytdl");
