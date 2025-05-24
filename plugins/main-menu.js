@@ -11,7 +11,7 @@ let handler = async (m, { conn, args }) => {
 ¡Hola @${userId.split('@')[0]}!, ¡Bienvenido!
 *・°☆・°・°☆・°・*☆・°・*
 
-❄ *𝖬𝗂𝖼𝗁𝗂 𝖠𝗂* 🎋 *${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Sub Bot 🅑')}*
+ 【 *𝖬𝗂𝖼𝗁𝗂 𝖠𝗂* *${(conn.user.jid == global.conn.user.jid ? 'Principal 🅥' : 'Sub Bot 🅑')}* 】
 
 🍁 *Moneda:* ${moneda}
 🍁 *Activado:* ${uptime}
