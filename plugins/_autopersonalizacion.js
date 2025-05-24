@@ -228,8 +228,7 @@ const handler = async (m, { conn, args, command }) => {
         audio: { url: download }, 
         mimetype: 'audio/mpeg', 
         fileName: `${title}.mp3`,
-        ptt: true,
-        ...bcanal
+        ptt: true
       }, { quoted: m });
     }
   } catch (e) {
