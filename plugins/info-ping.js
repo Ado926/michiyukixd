@@ -8,9 +8,8 @@ let handler = async (m, { conn }) => {
           let child = stdout.toString("utf-8");
           let ssd = child.replace(/Memory:/, "Ram:");
 
-          conn.reply(m.chat, `✰ *¡Pong!*\n> Tiempo ⴵ ${latensi.toFixed(4)}ms`, m);
-            });
-}
+          conn.reply(m.chat, `✰ *¡Pong!*\n> Tiempo ⴵ ${latensi.toFixed(4)}ms`, m, global.bcanal);
+
 handler.help = ['ping']
 handler.tags = ['info']
 handler.command = ['ping', 'p']
