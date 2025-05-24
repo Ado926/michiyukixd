@@ -326,11 +326,20 @@ _Comandos de reacciones de anime para expresar emociones._
 ☔  *#divorce*: Divorciarte de tu pareja.
 ☔  *#cafe* / *#coffe*: Tomarte un cafecito con alguien.`.trim()
 
-      await conn.sendMessage(m.chat, { 
+        await conn.sendMessage(m.chat, { 
       text: txt,
+      contextInfo: {
+          mentionedJid: [m.sender, userId],
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+              newsletterJid: channelRD.id,
+              newsletterName: channelRD.name,
+              serverMessageId: -1,
+          },
+          forwardingScore: 999,
           externalAdReply: {
               title: botname,
-              body: "✰ 𝗔𝗾𝘂𝗶 𝘁𝗶𝗲𝗻𝗲𝘀 𝗹𝗼𝘀 𝗰𝗼𝗺𝗮𝗻𝗱𝗼𝘀",
+              body: textbot,
               thumbnailUrl: banner,
               sourceUrl: redes,
               mediaType: 1,
@@ -341,7 +350,6 @@ _Comandos de reacciones de anime para expresar emociones._
   }, { quoted: m })
 
 }
-
 handler.help = ['menu']
 handler.tags = ['main']
 handler.command = ['menu', 'menú', 'help']
