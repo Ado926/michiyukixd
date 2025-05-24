@@ -33,8 +33,10 @@ const handler = async (m, { conn, args }) => {
 
     // Ningún contenido válido
     else {
-      return conn.reply(m.chat, '> Por favor, envíame una *imagen*, *video* o *URL* para hacer el sticker ☁️', m)
-    }
+      await conn.sendMessage(m.chat, {
+  text: '> Por favor, envía una *imagen*, *video* o *URL* para hacer el sticker.',
+  ...bcanal
+}, { quoted: m })
 
     if (stickerBuffer) {
       await conn.sendFile(m.chat, stickerBuffer, 'sticker.webp', '', m)
