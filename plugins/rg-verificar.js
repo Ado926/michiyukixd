@@ -15,6 +15,8 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
   const user = global.db.data.users[m.sender]
   const name2 = conn.getName(m.sender)
 
+  // bcanal global decora
+
   if (user.registered) {
     return m.reply(`✦.── Ya estás Registrado ──.✦\n\n¿Deseas volver a registrarte?\nUtiliza *${usedPrefix}unreg* para borrar tu registro.`)
   }
@@ -59,28 +61,16 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 ┃ ꒰ Bienvenido/a ꒱
 ┃ 𝖱𝖾𝗀𝗂𝗌𝗍𝗋𝗈𝗌 𝖺𝗊𝗎𝗂́:
 ┃🌵https://chat.whatsapp.com/HXsoXHoKEIe4OhrPjYroX2
-┃  
-┗━━━━━━━━━━━━━━━━━━┛
-`.trim()
+┗━━━━━━━━━━━━━━━━━━┛`.trim()
 
   await m.react('☁️')
 
   await conn.sendMessage(m.chat, {
     text: regbot,
-    contextInfo: {
-      externalAdReply: {
-        title: '✧ Registro Completado ✧',
-        body: '👻',
-        thumbnailUrl: pp,
-        sourceUrl: 'https://chat.whatsapp.com/HXsoXHoKEIe4OhrPjYroX2',
-        mediaType: 1,
-        showAdAttribution: true,
-        renderLargerThumbnail: true
-      }
-    }
+    ...bcanal
   }, { quoted: m })
 
-  // Enviar notificación al grupo oficial
+  // Notificación al grupo oficial
   const grupoNotificacion = '120363401533528804@g.us'
   const mensajeNotificacion = `
 ✦.──  Nuevo Registro ──.✦
@@ -94,15 +84,16 @@ let handler = async function (m, { conn, text, usedPrefix, command }) {
 𓆩 ✰ +310 experiencia
 𓆩 ❖ +25 tokens
 
-🕒 Se Registro hoy: ${moment().format('YYYY-MM-DD HH:mm:ss')}
+🕒 Se Registró hoy: ${moment().format('YYYY-MM-DD HH:mm:ss')}
 `.trim()
 
   try {
     if (global.conn?.sendMessage) {
-      const ppGroup = await conn.profilePictureUrl(who, 'image').catch(() => null)
+      const ppGroup = await conn.profilePictureUrl(who, 'image').catch(() => pp)
       await global.conn.sendMessage(grupoNotificacion, {
         image: { url: ppGroup || pp },
-        caption: mensajeNotificacion
+        caption: mensajeNotificacion,
+        ...bcanal
       })
     }
   } catch (e) {
