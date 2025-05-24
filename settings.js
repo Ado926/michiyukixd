@@ -85,7 +85,7 @@ global.rcanal = {
       mediaUrl: null,
       description: null,
       previewType: "PHOTO",
-      thumbnailUrl: 'https://qu.ax/vmBSN.jpg',
+      thumbnailUrl: 'https://files.catbox.moe/h3lk3c.jpg',
       sourceUrl: 'https://whatsapp.com/channel/0029VaAN15BJP21BYCJ3tH04',
       mediaType: 1,
       renderLargerThumbnail: false
