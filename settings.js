@@ -86,9 +86,9 @@ global.bcanal = {
       description: null,
       previewType: "PHOTO",
       thumbnailUrl: 'https://files.catbox.moe/h3lk3c.jpg',
-      sourceUrl: 'https://chat.whatsapp.com/LVswMhDLIzbAf4WliK6nau',
+      sourceUrl: 'github.com/Ado926',
       mediaType: 2,
-      renderLargerThumbnail: true
+      renderLargerThumbnail: false
     },
   },
 }
