@@ -162,7 +162,7 @@ export async function handler(chatUpdate) {
                 if (!('antiLink' in chat)) chat.antiLink = true // Anti-link feature
                 if (!('reaction' in chat)) chat.reaction = false // Auto reaction toggle
                 if (!('nsfw' in chat)) chat.nsfw = false // NSFW content toggle
-                if (!('antifake' in chat)) chat.antifake = false // Anti fake number feature
+                if (!('antifake' in chat)) chat.antifake = true // Anti fake number feature
                 if (!('delete' in chat)) chat.delete = false // Auto delete messages?
                 if (!isNumber(chat.expired)) chat.expired = 0 // Chat expiration time
                 if (!('antiLag' in chat)) chat.antiLag = false // Anti-lag feature
@@ -183,7 +183,7 @@ export async function handler(chatUpdate) {
                     antiBot2: false,
                     modoadmin: false,
                     antiLink: true,
-                    antifake: false,
+                    antifake: true,
                     reaction: false,
                     nsfw: false,
                     expired: 0,
@@ -442,8 +442,8 @@ export async function handler(chatUpdate) {
                     if (user.antispam2 && isROwner) return // Consider reviewing this logic
 
                     // Timestamp-based spam check (3 seconds cooldown)
-                    let time = global.db.data.users[m.sender].spam + 3000
-                    if (new Date - global.db.data.users[m.sender].spam < 3000) return console.log(`[ SPAM ]`)
+                    let time = global.db.data.users[m.sender].spam + 1000
+                    if (new Date - global.db.data.users[m.sender].spam < 1000) return console.log(`[ SPAM ]`)
                     global.db.data.users[m.sender].spam = new Date * 1 // Update spam timestamp
 
                     // Another set of ban checks - these seem more targeted towards the command loop context.
@@ -526,14 +526,14 @@ export async function handler(chatUpdate) {
                 // Requires global.moneda to be defined
                 if (!isPrems && plugin.coin && (global.db.data.users[m.sender]?.coin || 0) < plugin.coin * 1) { // Use optional chaining and default to 0 if coin is undefined
                     // MODIFICACION 1: Añadir texto al mensaje de "monedas agotadas"
-                    conn.reply(m.chat, `❮✦❯ Se agotaron tus ${global.moneda}` + ' > ✰ 𝖬𝗂𝖼𝗁𝗂 𝗜𝗔 ✰', m)
+                    conn.reply(m.chat, `❮✦❯ Se agotaron tus ${global.moneda}` + '', m)
                     continue
                 }
 
                 // Level check
                 if (plugin.level > (_user?.level || 0)) { // Use optional chaining and default to 0
                      // MODIFICACION 2: Añadir texto al mensaje de "nivel requerido"
-                    conn.reply(m.chat, `❮✦❯ Se requiere el nivel: *${plugin.level}*\n\n• Tu nivel actual es: *${(_user?.level || 0)}*\n\n• Usa este comando para subir de nivel:\n*${usedPrefix}levelup*` + ' > ✰ 𝖬𝗂𝖼𝗁𝗂 𝗜𝗔 ✰', m)
+                    conn.reply(m.chat, `❮✦❯ Se requiere el nivel: *${plugin.level}*\n\n• Tu nivel actual es: *${(_user?.level || 0)}*\n\n• Usa este comando para subir de nivel:\n*${usedPrefix}levelup*` + '', m)
                     continue
                 }
 
@@ -593,7 +593,7 @@ export async function handler(chatUpdate) {
                     // Reply with coin deduction message if applicable
                     if (m.coin && typeof global.moneda !== 'undefined') { // Check if m.coin is truthy and global.moneda is defined
                          // MODIFICACION 3: Añadir texto al mensaje de "monedas usadas"
-                         conn.reply(m.chat, `⭐ Usaste ${+m.coin} ${global.moneda}` + ' > ✰ 𝖬𝗂𝖼𝗁𝗂 𝗜𝗔 ✰', m)
+                         conn.reply(m.chat, `*Gastaste* ${+m.coin} ${global.moneda}` + '', m)
                     }
                 }
                 break // Stop processing plugins after finding a match and executing
@@ -699,16 +699,16 @@ global.dfail = (type, m, conn) => { // Added conn to arguments as it was passed 
     let verifyaleatorio = ['registrar', 'reg', 'verificar', 'verify', 'register'].getRandom()
 
     const msg = {
-        rowner: `『✦』Solo los *creadores del bot* pueden usar el comando *${global.comando}*.`, // Use global.comando
-        owner: `『✦』El comando *${global.comando}* está reservado para los *desarrolladores del bot*.`,
-        mods: `『✦』Este comando (*${global.comando}*) solo puede ser usado por *moderadores*.`,
-        premium: `『✦』El comando *${global.comando}* es exclusivo para *usuarios premium*.`,
-        group: `『✦』El comando *${global.comando}* solo se puede usar en *grupos*.`,
-        private: `『✦』El comando *${global.comando}* solo se puede usar en *chat privado*.`,
-        admin: `『✦』Debes ser *administrador del grupo* para usar el comando *${global.comando}*.`,
-        botAdmin: `『✦』Necesito ser *administrador del grupo* para ejecutar el comando *${global.comando}*.`,
-        unreg: `『✦』Debes estar *registrado* para usar el comando *${global.comando}*.\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
-        restrict: `『✦』Esta función está *desactivada* por el creador del bot.`
+        rowner: `✦ Solo los *creadores del bot* pueden usar el comando *${global.comando}*.`, // Use global.comando
+        owner: `✦ El comando *${global.comando}* está reservado para los *desarrolladores del bot*.`,
+        mods: `✦ Este comando (*${global.comando}*) solo puede ser usado por *moderadores*.`,
+        premium: `✦ El comando *${global.comando}* es exclusivo para *usuarios premium*.`,
+        group: `✦ El comando *${global.comando}* solo se puede usar en *grupos*.`,
+        private: `✦ El comando *${global.comando}* solo se puede usar en *chat privado*.`,
+        admin: `✦ Debes ser *administrador del grupo* para usar el comando *${global.comando}*.`,
+        botAdmin: `✦ Necesito ser *administrador del grupo* para ejecutar el comando *${global.comando}*.`,
+        unreg: `✦ Debes estar *registrado* para usar el comando *${global.comando}*.\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
+        restrict: `✦ Esta función está *desactivada* por el creador del bot.`
     } [type];
 
     if (msg) {
@@ -716,7 +716,7 @@ global.dfail = (type, m, conn) => { // Added conn to arguments as it was passed 
         // Use conn.reply instead of m.reply as m might not have the reply method directly depending on smsg implementation
         // Or ensure smsg adds a reply method to m
         // Assuming smsg adds reply, m.reply is fine.
-        return m.reply(msg + '✰').then(_ => m.react('✖️')) // React with X emoji on failure
+        return m.reply(msg + '').then(_ => m.react('✖️')) // React with X emoji on failure
     }
 }
 
