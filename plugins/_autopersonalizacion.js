@@ -70,8 +70,7 @@ const handler = async (m, { conn, text, command }) => {
     await conn.sendMessage(m.chat, {
       audio,
       mimetype: 'audio/mpeg',
-      ptt: true,
-      ...bcanal
+      ptt: true
     }, { quoted: m })
 
   } catch (err) {
