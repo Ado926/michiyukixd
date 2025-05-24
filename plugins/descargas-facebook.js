@@ -5,6 +5,8 @@ const handler = async (m, { text, conn, args }) => {
     return conn.reply(m.chat, `${emoji} Por favor, ingresa un enlace de Facebook.`, m, global.bcanal)
   }
 
+ const msm '❗'
+
   let res
   try {
     await m.react(rwait)
