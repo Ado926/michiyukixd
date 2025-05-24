@@ -17,7 +17,12 @@ const handler = async (m, { conn, text, command }) => {
                  `> 👁 *Vistas:* ${views.toLocaleString()}\n` +
                  `> 🔗 *Link:* ${url}`;
 
-    await conn.sendMessage(m.chat, { image: { url: thumbnail }, caption: info }, { quoted: m });
+          await conn.sendMessage(m.chat, {
+        image: { url: vid.thumbnail },
+        caption: info,
+        ...bcanal
+      }, { quoted: m });
+    }
 
     const api = `https://p.oceansaver.in/ajax/download.php?format=360&url=${encodeURIComponent(url)}&api=dfcb6d76f2f6a9894gjkege8a4ab232222`;
     const { data } = await axios.get(api);
