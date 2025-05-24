@@ -70,6 +70,28 @@ global.estilo = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(fa
 global.ch = {
 ch1: '120363402846939411@newsletter',
 }
+global.rcanal = {
+  contextInfo: {
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: "120363402846939411@newsletter",
+      serverMessageId: 100,
+      newsletterName: '🍁 Vivos Vivientes - By @Wirk ☔',
+    },
+    externalAdReply: {
+      showAdAttribution: true,
+      title: wm,
+      body: 'Michino Ai 🦈',
+      mediaUrl: null,
+      description: null,
+      previewType: "PHOTO",
+      thumbnailUrl: 'https://qu.ax/vmBSN.jpg',
+      sourceUrl: 'https://whatsapp.com/channel/0029VaAN15BJP21BYCJ3tH04',
+      mediaType: 1,
+      renderLargerThumbnail: false
+    },
+  },
+}
 global.multiplier = 70
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
