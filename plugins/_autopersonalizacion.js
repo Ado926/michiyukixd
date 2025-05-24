@@ -49,7 +49,7 @@ const handler = async (m, { conn, text, command, botname = "Bot", dev = "Dev" })
     }
 
     // Mensaje de info con thumbnail en contexto
-    const infoMessage = `「✦」𝗘𝗻𝘃𝗶𝗮𝗻𝗱𝗼 *<${title}>*\n\n` +
+    const infoMessage = `「✦」*𝘝𝘪𝘥𝘦𝘰 𝘋𝘦𝘵𝘢𝘪𝘭𝘴* 🜲\n\n` +
       `> ☀︎ 𝖯𝗎𝖻𝗅𝗂𝖼𝖺𝖽𝗈 𝗉𝗈𝗋 *${canal}*\n` +
       `> ✰ *${vistas}*\n` +
       `> ⴵ 𝖣𝗎𝗋𝖺 » *${timestamp}*\n` +
@@ -60,7 +60,7 @@ const handler = async (m, { conn, text, command, botname = "Bot", dev = "Dev" })
       contextInfo: {
         externalAdReply: {
           title,
-          body: canal,
+          body: ago,
           mediaType: 1,
           previewType: 0,
           mediaUrl: url,
