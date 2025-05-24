@@ -43,6 +43,10 @@ global.rwait = '🕒'
 global.done = '✅'
 global.error = '✖️'
 global.msm = '⚠︎'
+// definicion pa cosas como el menu xd
+global.canalIdM = ["120363402846939411@newsletter", "120363402846939411@newsletter"]
+global.canalNombreM = ["⏤͟͟͞͞Vivos Vivientes 🌻❀", "🌳 𝖵𝗂𝗏𝗈𝗌 𝖵𝗂𝗏𝗂𝖾𝗇𝗍𝖾𝗌 🍄"]
+global.channelRD = await getRandomChannel()
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = 'Baileys';
