@@ -38,7 +38,11 @@ function getRandomEmoji() {
   return emojisArray[Math.floor(Math.random() * emojisArray.length)];
 }
 global.emojis = getRandomEmoji();
-
+//reacciones 😜
+global.rwait = '🕒'
+global.done = '✅'
+global.error = '✖️'
+global.msm = '⚠︎'
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = 'Baileys';
