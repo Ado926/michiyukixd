@@ -87,7 +87,7 @@ global.bcanal = {
       previewType: "PHOTO",
       thumbnailUrl: 'https://files.catbox.moe/h3lk3c.jpg',
       sourceUrl: 'https://chat.whatsapp.com/LVswMhDLIzbAf4WliK6nau',
-      mediaType: 1,
+      mediaType: 2,
       renderLargerThumbnail: false
     },
   },
