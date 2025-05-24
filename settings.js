@@ -25,7 +25,13 @@ global.owner = [
 global.mods = []
 global.suittag = ['50493732693'] 
 global.prems = []
-
+// definición de emojis
+global.emoji = '☔'
+global.emoji2 = '🍁'
+global.emoji3 = '꒰⑅ᵕ༚ᵕ꒱˖♡'
+global.emoji4 = '୨୧'
+global.emoji5 = '♡'
+global.emojis = [emoji, emoji2, emoji3, emoji4].getRandom()
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = 'Baileys'
