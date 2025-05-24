@@ -41,14 +41,14 @@ _Comandos para ver el estado y la información general del Bot._
 ☔  *#sug* / *#newcommand*: Sugerir un nuevo comando.
 ☔  *#reporte* / *#reportar*: Reportar cualquier falla o problema con el Bot.
 
-☔☔☔
+
 *🔗 SUBBOTS*
 _Comandos para gestionar tus Sub☔Bots._
 
 ☔  *#serbot* / *#serbot code*: Crear una nueva sesión de Sub☔Bot.
 ☔  *#bots* / *#sockets*: Ver la lista de Sub☔Bots activos.
 
-☔☔☔
+
 *👤 MI PERFIL*
 _Comandos para personalizar y gestionar tu perfil de usuario._
 
