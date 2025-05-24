@@ -1,11 +1,16 @@
 import { igdl } from 'ruhend-scraper'
 
 const handler = async (m, { text, conn, args }) => {
+  const emoji = '📽️'
+  const emoji2 = '⚠️'
+  const msm = '❗'
+  const rwait = '⏳'
+  const done = '✅'
+  const error = '❌'
+
   if (!args[0]) {
     return conn.reply(m.chat, `${emoji} Por favor, ingresa un enlace de Facebook.`, m, global.bcanal)
   }
-
- const msm '❗'
 
   let res
   try {
@@ -33,7 +38,16 @@ const handler = async (m, { text, conn, args }) => {
 
   let video = data.url
   try {
-    await conn.sendMessage(m.chat, { video: { url: video }, caption: `${emoji} Tu pedido 👻`, fileName: 'fb.mp4', mimetype: 'video/mp4' }, { quoted: m })
+    await conn.sendMessage(
+      m.chat,
+      {
+        video: { url: video },
+        caption: `${emoji} Tu pedido 👻`,
+        fileName: 'fb.mp4',
+        mimetype: 'video/mp4'
+      },
+      { quoted: m }
+    )
     await m.react(done)
   } catch (e) {
     await m.react(error)
