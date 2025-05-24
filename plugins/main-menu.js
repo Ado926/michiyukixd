@@ -328,15 +328,6 @@ _Comandos de reacciones de anime para expresar emociones._
 
       await conn.sendMessage(m.chat, { 
       text: txt,
-      contextInfo: {
-          mentionedJid: [m.sender, userId],
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-              newsletterJid: channelRD.id,
-              newsletterName: channelRD.name,
-              serverMessageId: -1,
-          },
-          forwardingScore: 999,
           externalAdReply: {
               title: botname,
               body: "✰ 𝗔𝗾𝘂𝗶 𝘁𝗶𝗲𝗻𝗲𝘀 𝗹𝗼𝘀 𝗰𝗼𝗺𝗮𝗻𝗱𝗼𝘀",
