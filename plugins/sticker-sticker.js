@@ -4,39 +4,42 @@ import uploadImage from '../lib/uploadImage.js'
 import { webp2png } from '../lib/webp2mp4.js'
 
 const handler = async (m, { conn, args }) => {
-  const quoted = m.quoted || m
-  const mime = (quoted.msg || quoted).mimetype || quoted.mediaType || ''
-  const userId = m.sender
-  const userPack = global.db.data.users[userId] || {}
-  const texto1 = userPack.text1 || global.packsticker
-  const texto2 = userPack.text2 || global.packsticker2
-
-  let stickerBuffer = null
-
   try {
+    const quoted = m.quoted || m
+    const mime = (quoted.msg || quoted).mimetype || quoted.mediaType || ''
+    const userId = m.sender
+    const userPack = global.db.data.users[userId] || {}
+    const texto1 = userPack.text1 || global.packsticker
+    const texto2 = userPack.text2 || global.packsticker2
+
+    let stickerBuffer = null
+
     // Procesar imagen, video o sticker webp
     if (/webp|image|video/.test(mime)) {
-      if (/video/.test(mime) && (quoted.msg || quoted).seconds > 20)
+      if (/video/.test(mime) && (quoted.msg || quoted).seconds > 20) {
         return m.reply('✧ El video no puede durar más de *20 segundos*.')
-      
+      }
+
       const media = await quoted.download?.()
-      if (!media) return conn.reply(m.chat, '❀ Envía una imagen o video para crear el sticker.', m)
+      if (!media) return conn.sendMessage(m.chat, {
+        text: '> Por favor, envía una *imagen*, *video* o *URL* para hacer el sticker.',
+        ...bcanal
+      }, { quoted: m })
 
       stickerBuffer = await crearSticker(media, mime, texto1, texto2)
     }
-
     // Procesar URL
     else if (args[0]) {
       if (!isUrl(args[0])) return m.reply('⚠︎ El URL proporcionado no es válido.')
       stickerBuffer = await sticker(false, args[0], texto1, texto2)
     }
-
     // Ningún contenido válido
     else {
-      await conn.sendMessage(m.chat, {
-  text: '> Por favor, envía una *imagen*, *video* o *URL* para hacer el sticker.',
-  ...bcanal
-}, { quoted: m })
+      return conn.sendMessage(m.chat, {
+        text: '> Por favor, envía una *imagen*, *video* o *URL* para hacer el sticker.',
+        ...bcanal
+      }, { quoted: m })
+    }
 
     if (stickerBuffer) {
       await conn.sendFile(m.chat, stickerBuffer, 'sticker.webp', '', m)
