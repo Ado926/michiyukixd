@@ -6,17 +6,23 @@ if (!args || !args[0]) return conn.reply(m.chat, '🚩 Ingresa un enlace del ví
   await m.react('🕓')
 try {
 let { title, author, duration, views, likes, comment, share, published, downloads, dl_url } = await Starlights.tiktokdl(args[0])
-let txt = '`乂  T I K T O K  -  D O W N L O A D`\n\n'
-    txt += `        ✩  *Título* : ${title}\n`
-    txt += `        ✩  *Autor* : ${author}\n`
-    txt += `        ✩  *Duración* : ${duration} segundos\n`
-    txt += `        ✩  *Vistas* : ${views}\n`
-    txt += `        ✩  *Likes* : ${likes}\n`
-    txt += `        ✩  *Comentarios* : ${comment}\n`
-    txt += `        ✩  *Compartidos* : ${share}\n`
-    txt += `        ✩  *Publicado* : ${published}\n`
-    txt += `        ✩  *Descargas* : ${downloads}\n\n`
-    txt += `> 🚩 *© Provibed By Michi Ai 🌵*`
+let txt = `┏━━━━━━༻✦༺━━━━━━┓\n`
+txt += `        𓆩  TIKTOK INFO  𓆪\n`
+txt += `┗━━━━━━༻✦༺━━━━━━┛\n\n`
+
+txt += `╭─➤ 🎬 *Título:* ${title}\n`
+txt += `│    👤 *Autor:* ${author}\n`
+txt += `│    ⏱️ *Duración:* ${duration} seg\n`
+txt += `│    👁️ *Vistas:* ${views}\n`
+txt += `│    ❤️ *Likes:* ${likes}\n`
+txt += `│    💬 *Comentarios:* ${comment}\n`
+txt += `│    🔄 *Compartidos:* ${share}\n`
+txt += `│    📅 *Publicado:* ${published}\n`
+txt += `│    📥 *Descargas:* ${downloads}\n`
+txt += `╰────────────────────╯\n\n`
+
+txt += `┈┈⟡ ᯓ Powered by ᯓ ⟡┈┈\n`
+txt += `           ✧ Michi Ai ✧ 🌵`
 await conn.sendFile(m.chat, dl_url, 'tiktok.mp4', txt, m, null, rcanal)
 await m.react('✅')
 } catch {
@@ -24,7 +30,7 @@ await m.react('✖️')
 }}
 handler.help = ['tiktok o tt *<url>*']
 handler.tags = ['downloader']
-handler.command = /^(tiktok|tt|tiktokdl|tiktoknowm)$/i
+handler.command = ['tt', 'tiktok']
 handler.register = true
 
 export default handler
