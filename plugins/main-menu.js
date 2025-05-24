@@ -211,6 +211,8 @@ let handler = async (m, { conn, args }) => {
 ✿ Realiza búsquedas por Google.
  𖹭𖹭 *#pin • #pinterest*
 ✿ Buscador de imagenes de Pinterest.
+ 𖹭𖹭 *#wallpaper*
+✿ Buscador de wallpapers.
  𖹭𖹭 *#imagen • #image*
 ✿ buscador de imagenes de Google.
  𖹭𖹭 *#githubsearch*
