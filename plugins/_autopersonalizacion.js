@@ -1,13 +1,12 @@
-import fetch from 'node-fetch'
 import yts from 'yt-search'
+import fetch from 'node-fetch'
 
 const handler = async (m, { conn, text, command }) => {
-  if (!text) return m.reply(`*Ejemplo:* .${command} alone marshmello`)
+  if (!text) return m.reply(`*Ejemplo:* .${command} calm down rihanna`)
 
-  // Buscar video en YouTube
   let res = await yts(text)
   let vid = res.videos[0]
-  if (!vid) return m.reply("❌ No se encontró el video.")
+  if (!vid) return m.reply("❌ No se encontró ningún video.")
 
   let { title, url, timestamp, views, ago, author, thumbnail } = vid
   const info = `「✦」Descargando *<${title}>*
@@ -18,26 +17,38 @@ const handler = async (m, { conn, text, command }) => {
 > ☔ Publicado *»* *${ago}*
 > ☔ Link *»* ${url}`
 
-  // Mostrar mensaje decorado antes de descargar
   await conn.sendMessage(m.chat, { image: { url: thumbnail }, caption: info }, { quoted: m })
 
-  // Descargar desde API ULTRARRÁPIDA (zenkey)
-  try {
-    let api = `https://api.zenkey.my.id/api/download/ytmp3?apikey=zenkey&url=${encodeURIComponent(url)}`
-    let r = await fetch(api)
-    let json = await r.json()
+  // Lista de fuentes rápidas
+  const sources = [
+    `https://api.neoxr.eu.org/api/yta?url=${url}&apikey=neoxr`,
+    `https://server3.lxndr.me/api/yta?url=${url}`,
+    `https://api.lolhuman.xyz/api/ytmusic?apikey=GataDios&query=${encodeURIComponent(text)}`
+  ]
 
-    if (!json.result?.url) throw new Error("No se pudo obtener el audio.")
+  let success = false
+  for (let api of sources) {
+    try {
+      const r = await fetch(api)
+      const json = await r.json()
 
-    return conn.sendMessage(m.chat, {
-      audio: { url: json.result.url },
-      mimetype: 'audio/mpeg',
-      ptt: true
-    }, { quoted: m })
+      let dlUrl = json.result?.url || json.result?.link || json.result?.audio?.url || json.link
+      if (dlUrl) {
+        success = true
+        await conn.sendMessage(m.chat, {
+          audio: { url: dlUrl },
+          mimetype: 'audio/mpeg',
+          ptt: true
+        }, { quoted: m })
+        break
+      }
+    } catch (e) {
+      console.error(`⚠️ Error con la fuente ${api}: ${e.message}`)
+    }
+  }
 
-  } catch (e) {
-    console.error("[ERROR]", e)
-    return m.reply("⛔ Ocurrió un error descargando el audio.")
+  if (!success) {
+    return m.reply("⛔ No se pudo descargar el audio. Intenta con otro nombre o más tarde.")
   }
 }
 
