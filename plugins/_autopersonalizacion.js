@@ -34,7 +34,7 @@ const ddownr = {
 }
 
 const handler = async (m, { conn, text, command }) => {
-  if (!text) return m.reply(`*Ejemplo:* .${command} calm down rihanna`)
+  if (!text) return m.reply(`*Ejemplo:* .${command} calm down rihanna`, bcanal)
   
   const search = await yts(text)
   const vid = search.videos[0]
