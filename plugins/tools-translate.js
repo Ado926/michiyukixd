@@ -1,23 +1,23 @@
 import translate from '@vitalets/google-translate-api';
 import fetch from 'node-fetch';
 
-const msm = '❗'
+const msg = '❗'
 
 const handler = async (m, {args, usedPrefix, command}) => {
   const msg = `${emoji} Por favor, ingresé el (idioma) (texto) para traducirlo.`;
   if (!args || !args[0]) return m.reply(msg);
-  
+
   let lang = args[0];
   let text = args.slice(1).join(' ');
   const defaultLang = 'es';
-  
+
   if ((args[0] || '').length !== 2) {
     lang = defaultLang;
     text = args.join(' ');
   }
-  
+
   if (!text && m.quoted && m.quoted.text) text = m.quoted.text;
-  
+
   try {
     const result = await translate(`${text}`, {to: lang, autoCorrect: true});
     await conn.reply(m.chat, `Traducción: ${result.text}`, m);
