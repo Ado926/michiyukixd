@@ -26,7 +26,7 @@ return res.data
 } catch (e) {
 console.log(`Error : ${e}`)
 }}
-  
+
 global.creador = 'Wa.me/393715279301'
 global.ofcbot = `${conn.user.jid.split('@')[0]}`
 global.asistencia = 'Wa.me/393715279301'
@@ -54,7 +54,7 @@ global.done = '✅'
 global.error = '✖️'
 global.msm = '⚠︎'
 
-global.emoji = '☁️'
+global.emoji = '૮₍ ´• ˕ •` ₎ა'
 global.emoji2 = '♡'
 global.emoji3 = '꒰⑅ᵕ༚ᵕ꒱˖♡'
 global.emoji4 = '୨୧'
@@ -90,21 +90,26 @@ global.taguser = '@' + m.sender.split("@s.whatsapp.net")
 var more = String.fromCharCode(8206)
 global.readMore = more.repeat(850)
 
-global.packsticker = `┊ ૮₍｡•́︿•̀｡₎ა *Michi Stickers*  
+global.packsticker = `┊ ૮₍｡•́︿•̀｡₎ა *Mai Stickers*  
 ╰┈➤ ୨୧ https://whatsapp.com/channel/0029Vb5UfTC4CrfeKSamhp1f ✿
 ┊ ℹ️ *Info:*  
-╰┈➤ 𖥻 By Wirk 🪴`;
+╰┈➤ 𖥻 Mai By Wirk 🪴`;
 
 global.packsticker2 = `\n┊🌸 Bot: ${botname}
 ┊🌷 Usuario: ${nombre}
 ┊🕰️ Fecha: ${fecha}
 ╰┈➤ Hora: ${tiempo} ⏰`;
-  
+
 global.fkontak = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `6285600793871-1614953337@g.us` } : {}) }, message: { 'contactMessage': { 'displayName': `${nombre}`, 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;${nombre},;;;\nFN:${nombre},\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`, 'jpegThumbnail': null, thumbnail: null,sendEphemeral: true}}}
 
+global.fake = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, newsletterName: channelRD.name, serverMessageId: -1 }
+}}, { quoted: m }
+
 global.icono = [
-'https://qu.ax/HKtQj.jpg',
+'https://tinyurl.com/285a5ejf',
 ].getRandom()
+
+global.rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: 100, newsletterName: channelRD.name, }, externalAdReply: { showAdAttribution: true, title: packname, body: dev, mediaUrl: null, description: null, previewType: "PHOTO", thumbnailUrl: icono, sourceUrl: redes, mediaType: 1, renderLargerThumbnail: false }, }, }}
 
 export default handler
 
