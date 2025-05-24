@@ -1,6 +1,8 @@
 import translate from '@vitalets/google-translate-api';
 import fetch from 'node-fetch';
 
+const msm = '❗'
+
 const handler = async (m, {args, usedPrefix, command}) => {
   const msg = `${emoji} Por favor, ingresé el (idioma) (texto) para traducirlo.`;
   if (!args || !args[0]) return m.reply(msg);
