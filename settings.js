@@ -70,7 +70,7 @@ global.estilo = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(fa
 global.ch = {
 ch1: '120363402846939411@newsletter',
 }
-global.rcanal = {
+global.bcanal = {
   contextInfo: {
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
