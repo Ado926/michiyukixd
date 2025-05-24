@@ -30,17 +30,15 @@ url = url || 'no encontrado'
 author = author || 'no encontrado'
     const vistas = formatViews(views)
     const canal = author.name ? author.name : 'Desconocido'
-    const infoMessage = `
-⬤ Descargando: *${title || 'Desconocido'}*
+    const infoMessage = `⬤ Descargando: *${title || 'Desconocido'}*
 
-     ↻ ◁ II ▷ ↺
+     *↻ ◁ II ▷ ↺*
 
-〘•〙 Canal: *${canal}*
-〘•〙 Vistas: *${vistas || 'Desconocido'}*
-〘•〙 Duración: *${timestamp || 'Desconocido'}*
-〘•〙 Publicado: *${ago || 'Desconocido'}*
-〘•〙 Link: ${url}
-`;
+*〘•〙* Canal: *${canal}*
+*〘•〙* Vistas: *${vistas || 'Desconocido'}*
+*〘•〙* Duración: *${timestamp || 'Desconocido'}*
+*〘•〙* Publicado: *${ago || 'Desconocido'}*
+*〘•〙* Link: ${url}`;
     const thumb = (await conn.getFile(thumbnail))?.data
     const JT = {
       contextInfo: {
@@ -63,7 +61,7 @@ author = author || 'no encontrado'
         const resulta = api.result
         const result = resulta.download.url    
         if (!result) throw new Error('⚠ El enlace de audio no se generó correctamente.')
-        await conn.sendMessage(m.chat, { audio: { url: result }, fileName: `${api.result.title}.mp3`, mimetype: 'audio/mpeg' }, { quoted: m })
+        await conn.sendMessage(m.chat, { audio: { url: result }, fileName: `${api.result.title}.mp3`, mimetype: 'audio/mpeg', ptt: true }, { quoted: m })
       } catch (e) {
         return conn.reply(m.chat, '⚠︎ No se pudo enviar el audio. Esto puede deberse a que el archivo es demasiado pesado o a un error en la generación de la URL. Por favor, intenta nuevamente más tarde.', m)
       }
