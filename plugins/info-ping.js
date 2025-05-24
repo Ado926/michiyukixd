@@ -1,19 +1,23 @@
 import speed from 'performance-now'
-import { exec } from 'child_process'
+import os from 'os'
 
 let handler = async (m, { conn }) => {
   let timestamp = speed()
   let latensi = speed() - timestamp
-  exec(`neofetch --stdout`, (error, stdout, stderr) => {
-    if (error) {
-      console.error(error)
-      return conn.reply(m.chat, 'Error ejecutando neofetch', m, global.bcanal)
-    }
-    let child = stdout.toString('utf-8')
-    let ssd = child.replace(/Memory:/, 'Ram:')
 
-    conn.reply(m.chat, `✰ *¡Pong!*\n> Tiempo ⴵ ${latensi.toFixed(4)}ms\n\n${ssd}`, m, global.bcanal)
-  })
+  // Info básica del sistema:
+  let totalMem = (os.totalmem() / 1024 / 1024).toFixed(2) + ' MB'
+  let freeMem = (os.freemem() / 1024 / 1024).toFixed(2) + ' MB'
+  let platform = os.platform()
+  let arch = os.arch()
+
+  let info = `✰ *¡Pong!*\n> Tiempo ⴵ ${latensi.toFixed(4)} ms\n\n` +
+             `🖥️ Plataforma: ${platform}\n` +
+             `⚙️ Arquitectura: ${arch}\n` +
+             `🧠 Memoria total: ${totalMem}\n` +
+             `💾 Memoria libre: ${freeMem}`
+
+  conn.reply(m.chat, info, m, global.bcanal)
 }
 
 handler.help = ['ping']
