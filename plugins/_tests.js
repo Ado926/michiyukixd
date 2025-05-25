@@ -1,64 +1,29 @@
-/* 
-- Play Botones By Angel-OFC 
-- https://whatsapp.com/channel/0029VaJxgcB0bIdvuOwKTM2Y
-*/
+// *[ ❀ YTMP4 ]*
 import fetch from 'node-fetch';
-import yts from 'yt-search';
 
-let handler = async (m, { conn, args }) => {
-  if (!args[0]) return conn.reply(m.chat, '*\`Ingresa el nombre de lo que quieres buscar\`*', m, rcanal);
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+  if (!text) return conn.reply(m.chat, `💛 Ingresa un link de YouTube válido\n> Ejemplo https://youtu.be/P4LfHsUnNL8?si=ahDKJ5h0cW-EB9C9`, m, rcanal);
 
   await m.react('🕓');
+
   try {
-    let res = await search(args.join(" "));
-    let video = res[0];
-    let img = await (await fetch(video.image)).buffer();
+    let api = await (await fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${text}`)).json();
+    let dl_url = api.data.dl;
 
-    let txt = `*\`【Y O U T U B E - P L A Y】\`*\n\n`;
-    txt += `• *\`Título:\`* ${video.title}\n`;
-    txt += `• *\`Duración:\`* ${secondString(video.duration.seconds)}\n`;
-    txt += `• *\`Publicado:\`* ${eYear(video.ago)}\n`;
-    txt += `• *\`Canal:\`* ${video.author.name || 'Desconocido'}\n`;
-    txt += `• *\`Url:\`* _https://youtu.be/${video.videoId}_\n\n`;
-
-    await conn.sendMessage(m.chat, {
-      image: img,
-      caption: txt,
-      body: dev,
-      viewOnce: true,
-      headerType: 4,
-    }, { quoted: m });
+    await conn.sendMessage(m.chat, { video: { url: dl_url }, caption: `${resp}` },{ quoted: m });
 
     await m.react('✅');
-  } catch (e) {
-    console.error(e);
-    await m.react('✖️');
-    conn.reply(m.chat, '*\`Error al buscar el video.\`*', m);
+  } catch (error) {
+    console.error(error);
+    await m.react('❌');
+    conn.reply(m.chat, `✖️ error comando mal usado ${usedPrefix + commando} *<url>*  `, m, rcanal);
   }
 };
 
-handler.command = ['playop'];
+handler.help = ['ytmp4 *<url>*'];
+handler.tags = ['descargas'];
+handler.command = ['ytmp4', 'ytv'];
+handler.estrellas = 4;
+handler.register = true;
 
 export default handler;
-
-async function search(query, options = {}) {
-  let search = await yts.search({ query, hl: "es", gl: "ES", ...options });
-  return search.videos;
-}
-
-function secondString(seconds) {
-  seconds = Number(seconds);
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  return `${h > 0 ? h + 'h ' : ''}${m}m ${s}s`;
-}
-
-function eYear(txt) {
-  if (txt.includes('year')) return txt.replace('year', 'año').replace('years', 'años');
-  if (txt.includes('month')) return txt.replace('month', 'mes').replace('months', 'meses');
-  if (txt.includes('day')) return txt.replace('day', 'día').replace('days', 'días');
-  if (txt.includes('hour')) return txt.replace('hour', 'hora').replace('hours', 'horas');
-  if (txt.includes('minute')) return txt.replace('minute', 'minuto').replace('minutes', 'minutos');
-  return txt;
-}
