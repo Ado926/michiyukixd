@@ -54,11 +54,11 @@ global.done = '✅'
 global.error = '✖️'
 global.msm = '⚠︎'
 
-global.emoji = '૮₍ ´• ˕ •` ₎ა'
-global.emoji2 = '♡'
-global.emoji3 = '꒰⑅ᵕ༚ᵕ꒱˖♡'
-global.emoji4 = '୨୧'
-global.emoji5 = '♡'
+global.emoji = '♡(｡- ω -)'
+global.emoji2 = '(ฅ•.•ฅ)'
+global.emoji3 = '꒰ ֊ ܸ. .ܸ ֊ ꒱'
+global.emoji4 = '૮₍ ˶ᵔ ᵕ ᵔ˶ ₎ა'
+global.emoji5 = '(｡・//ε//・｡)'
 global.emojis = [emoji, emoji2, emoji3, emoji4].getRandom()
 
 global.wait = ' Espera un momento, soy lento...';
