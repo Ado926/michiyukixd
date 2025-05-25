@@ -75,7 +75,7 @@ global.etiqueta = 'Wirk';
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.moneda = '🍄 MichiCoins ☁️';
+global.moneda = '𝗖𝗵𝗼𝗰𝗼𝗹𝗮𝘁𝗲𝘀 🍫';
 global.welcom1 = '❍ Edita Con El Comando setwelcome';
 global.welcom2 = '❍ Edita Con El Comando setbye';
 global.banner = 'https://qu.ax/EbklL.jpg';
