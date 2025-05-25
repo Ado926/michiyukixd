@@ -31,7 +31,7 @@
   },
   "license": "MIT-License",
   "dependencies": {
-    "@whiskeysockets/baileys": "github:nstar-y/bail",
+    "@whiskeysockets/baileys": "github:Ado926/MekBaileys",
     "@StarlightsTeam/Scraper": "github:Ado926/Starlights-Scraper",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "^4.2.4",
