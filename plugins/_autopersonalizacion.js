@@ -208,7 +208,7 @@ const handler = async (m, { conn, args, command }) => {
       await conn.sendMessage(m.chat, {
         image: { url: vid.thumbnail },
         caption: info,
-        ...bcanal
+        ...rcanal
       }, { quoted: m });
     }
 
