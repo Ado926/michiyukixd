@@ -10,13 +10,16 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     let api = await (await fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${text}`)).json();
     let dl_url = api.data.dl;
 
-    await conn.sendMessage(m.chat, { video: { url: dl_url }, caption: `${resp}` },{ quoted: m });
+    await conn.sendMessage(m.chat, {
+      video: { url: dl_url },
+      caption: `✅ Video descargado correctamente.`,
+    }, { quoted: m });
 
     await m.react('✅');
   } catch (error) {
     console.error(error);
     await m.react('❌');
-    conn.reply(m.chat, `✖️ error comando mal usado ${usedPrefix + commando} *<url>*  `, m, rcanal);
+    conn.reply(m.chat, `✖️ Error al usar el comando ${usedPrefix + command} *<url>*`, m, rcanal);
   }
 };
 
