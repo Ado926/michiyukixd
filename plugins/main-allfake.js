@@ -38,7 +38,13 @@ global.listo = '❀ *Aquí tienes ฅ^•ﻌ•^ฅ*'
 global.fotoperfil = await conn.profilePictureUrl(m.sender, 'image').catch(_ => 'https://files.catbox.moe/xr2m6u.jpg')
 
 global.canalIdM = ["120363402846939411@newsletter", "120363402846939411@newsletter"]
-global.canalNombreM = ["⏤͟͟͞͞Vivos Vivientes 🌻❀", "🌳 𝖵𝗂𝗏𝗈𝗌 𝖵𝗂𝗏𝗂𝖾𝗇𝗍𝖾𝗌 🍄"]
+global.canalNombreM = [
+  "⪩ ᐉ 𝙑𝙞𝙫𝙤𝙨 𝙑𝙞𝙫𝙞𝙚𝙣𝙩𝙚𝙨 ⪨ ⚡",
+  "✺ 𝗏𝗂𝗏𝗈𝗌 𝗏𝗂𝗏𝗂𝖾𝗇𝗍𝖾𝗌 ☼",
+  "𓆩 Vɪᴠᴏs Vɪᴠɪᴇɴᴛᴇs 𓆪 ✦",
+  "⌗ 𝖵𝗂𝗏𝗈𝗌・𝖵𝗂𝗏𝗂𝖾𝗇𝗍𝖾𝗌 ⌬",
+  "✦ VΙVOS VIVΙENTES ™ 🌿"
+]
 global.channelRD = await getRandomChannel()
 
 global.d = new Date(new Date + 3600000)
@@ -113,8 +119,17 @@ global.icono = [
 'https://tinyurl.com/285a5ejf',
 ].getRandom()
 
-global.rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: 100, newsletterName: channelRD.name, }, externalAdReply: { showAdAttribution: true, title: packname, body: dev, mediaUrl: null, description: null, previewType: "PHOTO", thumbnailUrl: icono, sourceUrl: redes, mediaType: 1, renderLargerThumbnail: false }, }, }}
-
+global.rcanal = {
+  contextInfo: {
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: channelRD.id,
+      serverMessageId: 100,
+      newsletterName: channelRD.name
+    }
+  }
+};
+  
 export default handler
 
 function pickRandom(list) {
