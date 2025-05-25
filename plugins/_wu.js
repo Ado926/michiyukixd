@@ -109,10 +109,10 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
 
     await conn.reply(m.chat, infoMessage, m, JT, bcanal);
 
-    if (command === 'yta' || command === 'ytmp3') {
+    if (command === 'play' || command === 'ytmp3') {
         const api = await ddownr.download(url, 'mp3');
         const result = api.downloadUrl;
-        await conn.sendMessage(m.chat, { audio: { url: result }, mimetype: "audio/mpeg" }, { quoted: m });
+        await conn.sendMessage(m.chat, { audio: { url: result }, mimetype: "audio/mpeg", ptt: true }, { quoted: m });
 
     } else if (command === 'ytv' || command === 'ytmp4') {
       let sources = [
@@ -156,9 +156,8 @@ const handler = async (m, { conn, text, usedPrefix, command }) => {
   }
 };
 
-handler.command = handler.help = ['ytmp3', 'yta'];
+handler.command = handler.help = ['ytmp3', 'play'];
 handler.tags = ['descargas'];
-handler.estrellas = 6;
 
 export default handler;
 
