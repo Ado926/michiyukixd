@@ -56,7 +56,7 @@ const handler = async (m, { conn, text, command }) => {
   }
 };
 
-handler.command = ['play2', 'ytv', 'ytmp4'];
+handler.command = ['play2', 'ytv'];
 handler.tags = ['downloader'];
 handler.help = ['play2 <texto>'];
 
