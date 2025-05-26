@@ -136,4 +136,4 @@ handler.all = async function (m, { conn }) {
   }
 }
 
-export default handlerq
+export default handler
