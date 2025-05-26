@@ -68,6 +68,21 @@ global.canalNombreM = ["⏤͟͟͞͞Vivos Vivientes 🌻❀", "🌳 𝖵𝗂𝗏�
   var github = 'https://github.com/The-King-Destroy/Yuki_Suou-Bot'
   let correo = 'thekingdestroy507@gmail.com'
   global.redes = [canal, comunidad, git, github, correo][Math.floor(Math.random() * 5)]
+
+global.fkontak = {
+    key: {
+      participant: `0@s.whatsapp.net`,
+      ...(m.chat ? { remoteJid: `6285600793871-1614953337@g.us` } : {})
+    },
+    message: {
+      contactMessage: {
+        displayName: `${nombre}`,
+        vcard: `BEGIN:VCARD\nVERSION:3.0\nN:XL;${nombre};;;\nFN:${nombre}\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Celular\nEND:VCARD`
+      }
+    }
+  }
+}
+
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = 'Baileys';
