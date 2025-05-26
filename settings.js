@@ -52,6 +52,15 @@ global.canalNombreM = ["⏤͟͟͞͞Vivos Vivientes 🌻❀", "🌳 𝖵𝗂𝗏�
 // Si tienes la función getRandomChannel, descomenta esta línea y haz que sea async o inicialízalo en otra parte
 // global.channelRD = await getRandomChannel(); // <- Esto da error si no está dentro de función async
 
+  global.canalIdM = ["120363402846939411@newsletter", "120363402846939411@newsletter"]
+  global.canalNombreM = [
+    "⪩ ᐉ 𝙑𝙞𝙫𝙤𝙨 𝙑𝙞𝙫𝙞𝙚𝙣𝙩𝙚𝙨 ⪨ ⚡",
+    "✺ 𝗏𝗂𝗏𝗈𝗌 𝗏𝗂𝗏𝗂𝖾𝗇𝗍𝖾𝗌 ☼",
+    "𓆩 Vɪᴠᴏs Vɪᴠɪᴇɴᴛᴇs 𓆪 ✦",
+    "⌗ 𝖵𝗂𝗏𝗈𝗌・𝖵𝗂𝗏𝗂𝖾𝗇𝗍𝖾𝗌 ⌬",
+    "✦ VΙVOS VIVΙENTES ™ 🌿"
+  ]
+  global.channelRD = canalNombreM[Math.floor(Math.random() * canalNombreM.length)]
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = 'Baileys';
