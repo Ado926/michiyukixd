@@ -5,7 +5,7 @@ import fetch from 'node-fetch'
 let handler = async (m) => {
   let q = m.quoted ? m.quoted : m
   let mime = (q.msg || q).mimetype || ''
-  if (!mime) return conn.reply(m.chat, `${emoji} Por favor, responda a una *Imagen* o *Vídeo.*`, m)
+  if (!mime) return conn.reply(m.chat, `${emoji} ⍴᥆r 𝖿ᥲ᥎᥆r rᥱs⍴᥆ᥒძᥱ ᥲ ᥙᥒᥲ *іmᥲgᥱᥒ* ᥆ *᥎іძᥱ᥆*`, m)
   await m.react(rwait)
   try {
   let media = await q.download()
