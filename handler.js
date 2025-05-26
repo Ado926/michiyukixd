@@ -699,16 +699,16 @@ global.dfail = (type, m, conn) => { // Added conn to arguments as it was passed 
     let verifyaleatorio = ['registrar', 'reg', 'verificar', 'verify', 'register'].getRandom()
 
     const msg = {
-        rowner: `✦ Solo los *creadores del bot* pueden usar el comando *${global.comando}*.`, // Use global.comando
-        owner: `✦ El comando *${global.comando}* está reservado para los *desarrolladores del bot*.`,
-        mods: `✦ Este comando (*${global.comando}*) solo puede ser usado por *moderadores*.`,
-        premium: `✦ El comando *${global.comando}* es exclusivo para *usuarios premium*.`,
-        group: `✦ El comando *${global.comando}* solo se puede usar en *grupos*.`,
-        private: `✦ El comando *${global.comando}* solo se puede usar en *chat privado*.`,
-        admin: `✦ Debes ser *administrador del grupo* para usar el comando *${global.comando}*.`,
-        botAdmin: `✦ Necesito ser *administrador del grupo* para ejecutar el comando *${global.comando}*.`,
-        unreg: `✦ Debes estar *registrado* para usar el comando *${global.comando}*.\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
-        restrict: `✦ Esta función está *desactivada* por el creador del bot.`
+        rowner: `🍀 Solo los *creadores del bot* pueden usar el comando *${global.comando}*.`, // Use global.comando
+        owner: `🌹 El comando *${global.comando}* está reservado para los *desarrolladores del bot*.`,
+        mods: `🌈 Este comando (*${global.comando}*) solo puede ser usado por *moderadores*.`,
+        premium: `🌷 El comando *${global.comando}* es exclusivo para *usuarios premium*.`,
+        group: `🌱 El comando *${global.comando}* solo se puede usar en *grupos*.`,
+        private: `🎋 El comando *${global.comando}* solo se puede usar en *chat privado*.`,
+        admin: `🍃 Debes ser *administrador del grupo* para usar el comando *${global.comando}*.`,
+        botAdmin: `🌾 Necesito ser *administrador del grupo* para ejecutar el comando *${global.comando}*.`,
+        unreg: `🎍 Debes estar *registrado* para usar el comando *${global.comando}*.\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
+        restrict: `🌻 Esta función está *desactivada* por el creador del bot.`
     } [type];
 
     if (msg) {
