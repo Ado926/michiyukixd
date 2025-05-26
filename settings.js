@@ -61,6 +61,13 @@ global.canalNombreM = ["⏤͟͟͞͞Vivos Vivientes 🌻❀", "🌳 𝖵𝗂𝗏�
     "✦ VΙVOS VIVΙENTES ™ 🌿"
   ]
   global.channelRD = canalNombreM[Math.floor(Math.random() * canalNombreM.length)]
+//redes XS
+  var canal = 'https://whatsapp.com/channel/0029Vagdmfv1SWt5nfdR4z3w'
+  var comunidad = 'https://chat.whatsapp.com/I0dMp2fEle7L6RaWBmwlAa'
+  var git = 'https://github.com/The-King-Destroy'
+  var github = 'https://github.com/The-King-Destroy/Yuki_Suou-Bot'
+  let correo = 'thekingdestroy507@gmail.com'
+  global.redes = [canal, comunidad, git, github, correo][Math.floor(Math.random() * 5)]
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = 'Baileys';
