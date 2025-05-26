@@ -526,14 +526,14 @@ export async function handler(chatUpdate) {
                 // Requires global.moneda to be defined
                 if (!isPrems && plugin.coin && (global.db.data.users[m.sender]?.coin || 0) < plugin.coin * 1) { // Use optional chaining and default to 0 if coin is undefined
                     // MODIFICACION 1: Añadir texto al mensaje de "monedas agotadas"
-                    conn.reply(m.chat, `❮✦❯ Se agotaron tus ${global.moneda}` + '', m)
+                    conn.reply(m.chat, `🍃 Se agotaron tus ${global.moneda}` + '', m)
                     continue
                 }
 
                 // Level check
                 if (plugin.level > (_user?.level || 0)) { // Use optional chaining and default to 0
                      // MODIFICACION 2: Añadir texto al mensaje de "nivel requerido"
-                    conn.reply(m.chat, `❮✦❯ Se requiere el nivel: *${plugin.level}*\n\n• Tu nivel actual es: *${(_user?.level || 0)}*\n\n• Usa este comando para subir de nivel:\n*${usedPrefix}levelup*` + '', m)
+                    conn.reply(m.chat, `🎋 Se requiere el nivel: *${plugin.level}*\n\n• Tu nivel actual es: *${(_user?.level || 0)}*\n\n• Usa este comando para subir de nivel:\n*${usedPrefix}levelup*` + '', m)
                     continue
                 }
 
