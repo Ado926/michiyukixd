@@ -191,7 +191,11 @@ conn.well = false;
 if (!opts['test']) {
 if (global.db) setInterval(async () => {
 if (global.db.data) await global.db.write()
-if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [tmpdir(), 'tmp', `${jadi}`], tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])));
+// Ajuste para autocleartmp, asegurando que 'tmp' se defina correctamente dentro del contexto
+if (opts['autocleartmp'] && (global.support || {}).find) {
+    let tmp = [tmpdir(), 'tmp', `${global.jadi}`]; // Asegúrate que `global.jadi` esté definido si se usa aquí
+    tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
+}
 }, 1000 * 60 * 2); // OPTIMIZADO: Escribir la base de datos cada 2 minutos (antes 30 segundos)
 }
 
@@ -303,9 +307,9 @@ global.rutaJadiBot = join(__dirname, './JadiBots')
 if (global.yukiJadibts) {
 if (!existsSync(global.rutaJadiBot)) {
 mkdirSync(global.rutaJadiBot, { recursive: true }) 
-console.log(chalk.bold.cyan(`La carpeta: ${jadi} se creó correctamente.`))
+console.log(chalk.bold.cyan(`La carpeta: ${global.jadi} se creó correctamente.`)) // Usar global.jadi si es una variable global
 } else {
-console.log(chalk.bold.cyan(`La carpeta: ${jadi} ya está creada.`)) 
+console.log(chalk.bold.cyan(`La carpeta: ${global.jadi} ya está creada.`)) // Usar global.jadi
 }
 
 const readRutaJadiBot = readdirSync(rutaJadiBot)
@@ -389,8 +393,11 @@ Object.freeze(global.support);
 }
 
 function clearTmp() {
-const tmpDir = join(__dirname, 'tmp')
-if (!existsSync(tmpDir)) return; // Añadido para evitar error si tmp no existe
+const tmpDir = join(tmpdir(), 'tmp') // Asegurarse que tmpDir apunte al directorio temporal del sistema
+if (!existsSync(tmpDir)) {
+    mkdirSync(tmpDir, { recursive: true }); // Crear el directorio si no existe
+    return; 
+} 
 const filenames = readdirSync(tmpDir)
 filenames.forEach(file => {
 const filePath = join(tmpDir, file)
@@ -403,14 +410,14 @@ console.error(chalk.bold.red(`\n✘ Error al eliminar archivo temporal ${file}: 
 
 function purgeSession() {
 let prekey = []
-let directorio = readdirSync(`./${sessions}`)
+let directorio = readdirSync(`./${global.sessions}`) // Usar global.sessions
 let filesFolderPreKeys = directorio.filter(file => {
 return file.startsWith('pre-key-')
 })
 prekey = [...prekey, ...filesFolderPreKeys]
 filesFolderPreKeys.forEach(files => {
 try {
-unlinkSync(`./${sessions}/${files}`)
+unlinkSync(`./${global.sessions}/${files}`) // Usar global.sessions
 } catch (err) {
 console.error(chalk.bold.red(`\n✘ Error al eliminar pre-key de sesión ${files}: ${err.message}`));
 }})
@@ -418,110 +425,32 @@ console.error(chalk.bold.red(`\n✘ Error al eliminar pre-key de sesión ${files
 
 function purgeSessionSB() {
 try {
-const listaDirectorios = readdirSync(`./${jadi}/`);
+const listaDirectorios = readdirSync(`./${global.jadi}/`); // Usar global.jadi
 let SBprekey = [];
 listaDirectorios.forEach(directorio => {
-if (statSync(`./${jadi}/${directorio}`).isDirectory()) {
-const DSBPreKeys = readdirSync(`./${jadi}/${directorio}`).filter(fileInDir => {
+if (statSync(`./${global.jadi}/${directorio}`).isDirectory()) { // Usar global.jadi
+const DSBPreKeys = readdirSync(`./${global.jadi}/${directorio}`).filter(fileInDir => { // Usar global.jadi
 return fileInDir.startsWith('pre-key-')
 })
 SBprekey = [...SBprekey, ...DSBPreKeys];
 DSBPreKeys.forEach(fileInDir => {
 if (fileInDir !== 'creds.json') {
 try {
-unlinkSync(`./${jadi}/${directorio}/${fileInDir}`)
+unlinkSync(`./${global.jadi}/${directorio}/${fileInDir}`) // Usar global.jadi
 } catch (err) {
 console.error(chalk.bold.red(`\n✘ Error al eliminar pre-key de sub-bot ${fileInDir} en ${directorio}: ${err.message}`));
 }})
 }})
 if (SBprekey.length === 0) {
-console.log(chalk.bold.green(`\n╭» ❍ ${jadi} ❍\n│→ NADA POR ELIMINAR EN JADIBOTS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻︎`))
+console.log(chalk.bold.green(`\n╭» ❍ ${global.jadi} ❍\n│→ NADA POR ELIMINAR EN JADIBOTS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻︎`)) // Usar global.jadi
 } else {
-console.log(chalk.bold.cyanBright(`\n╭» ❍ ${jadi} ❍\n│→ ARCHIVOS NO ESENCIALES DE JADIBOTS ELIMINADOS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻︎︎`))
+console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.jadi} ❍\n│→ ARCHIVOS NO ESENCIALES DE JADIBOTS ELIMINADOS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻︎︎`)) // Usar global.jadi
 }} catch (err) {
-console.error(chalk.bold.red(`\n╭» ❍ ${jadi} ❍\n│→ OCURRIÓ UN ERROR AL PURGAR JADIBOTS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻\n` + err))
+console.error(chalk.bold.red(`\n╭» ❍ ${global.jadi} ❍\n│→ OCURRIÓ UN ERROR AL PURGAR JADIBOTS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻\n` + err)) // Usar global.jadi
 }}
 
 function purgeOldFiles() {
-const directories = [`./${sessions}/`, `./${jadi}/`]
+const directories = [`./${global.sessions}/`, `./${global.jadi}/`] // Usar global.sessions y global.jadi
 directories.forEach(dir => {
 if (!existsSync(dir)) return; // Añadido para evitar error si el directorio no existe
-readdirSync(dir).forEach(file => { // Simplificado para no usar callback, es más moderno y directo
-if (file !== 'creds.json') {
-const filePath = path.join(dir, file);
-try {
-unlinkSync(filePath)
-console.log(chalk.bold.green(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} BORRADO CON ÉXITO\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))
-} catch (err) {
-console.error(chalk.bold.red(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} NO SE LOGRÓ BORRAR\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ✘\n` + err))
-} 
-}
-}) 
-}) 
-}
-
-function redefineConsoleMethod(methodName, filterStrings) {
-const originalConsoleMethod = console[methodName]
-console[methodName] = function() {
-const message = arguments[0]
-if (typeof message === 'string' && filterStrings.some(filterString => message.includes(atob(filterString)))) {
-arguments[0] = ""
-}
-originalConsoleMethod.apply(console, arguments)
-}}
-
-// OPTIMIZADO: Limpieza de archivos temporales cada 15 minutos (antes 4 min)
-setInterval(async () => {
-if (stopped === 'close' || !conn || !conn.user) return
-await clearTmp()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))
-}, 1000 * 60 * 15) // 15 minutos 
-
-// OPTIMIZADO: Purga de sesiones, solo creds.json restante (cada 1 hora, antes 2 min)
-setInterval(async () => {
-    if (stopped === 'close' || !conn || !conn.user) return;
-    const sessionDir = `./${sessions}/`;
-    if (existsSync(sessionDir)) {
-        const files = readdirSync(sessionDir);
-        files.forEach(file => {
-            const filePath = join(sessionDir, file);
-            if (file !== 'creds.json') {
-                try {
-                    unlinkSync(filePath);
-                    // console.log(chalk.bold.cyanBright(`\n🗑️ Archivo de sesión eliminado: ${file}`)); // Descomentar si quieres ver cada archivo eliminado
-                } catch (err) {
-                    console.error(chalk.bold.red(`\n✘ Error al eliminar archivo de sesión ${file}: ${err.message}`));
-                }
-            }
-        });
-        console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SESIONES NO ESENCIALES ELIMINADAS (solo creds.json restante)\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`));
-    }
-}, 1000 * 60 * 60); // 1 hora
-
-// OPTIMIZADO: Purga de sesiones de sub-bots (cada 30 minutos, antes 10 min)
-setInterval(async () => {
-if (stopped === 'close' || !conn || !conn.user) return
-await purgeSessionSB()}, 1000 * 60 * 30) // 30 minutos
-
-// OPTIMIZADO: Purga de archivos antiguos (cada 1 hora, antes 10 min)
-setInterval(async () => {
-if (stopped === 'close' || !conn || !conn.user) return
-await purgeOldFiles()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ ARCHIVOS ❍\n│→ ARCHIVOS RESIDUALES ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))
-}, 1000 * 60 * 60) // 1 hora
-
-_quickTest().then(() => conn.logger.info(chalk.bold(`✦  H E C H O\n`.trim()))).catch(console.error)
-
-async function isValidPhoneNumber(number) {
-try {
-number = number.replace(/\s+/g, '')
-if (number.startsWith('+521')) {
-number = number.replace('+521', '+52');
-} else if (number.startsWith('+52') && number[4] === '1') {
-number = number.replace('+52 1', '+52');
-}
-const parsedNumber = phoneUtil.parseAndKeepRawInput(number)
-return phoneUtil.isValidNumber(parsedNumber)
-} catch (error) {
-return false
-}}
+readdirSync(dir).
