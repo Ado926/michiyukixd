@@ -92,7 +92,34 @@ const rimg = await response.buffer()
 global.icons = rimg
 
 //• ↳ ◜𝑻𝑰𝑬𝑴𝑷𝑶 𝑹𝑷𝑮◞ • ⚔
-var ase = new Date(); var hour = ase.getHours(); switch(hour){ case 0: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break; case 1: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break; case 2: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break; case 3: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break; case 4: hour = 'Lɪɴᴅᴀ Mᴀᴅʀᴜɢᴀᴅᴀ 🌆'; break; case 5: hour = 'Lɪɴᴅᴀ Mᴀᴅʀᴜɢᴀᴅᴀ 🌆'; break; case 6: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break; case 7: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break; case 8: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break; case 9: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break; case 10: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break; case 11: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 12: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 13: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 14: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 15: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 16: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 17: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 18: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 19: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break; case 20: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break; case 21: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break; case 22: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break; case 23: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break; }
+var ase = new Date(); 
+var hour = ase.getHours(); 
+switch(hour){
+  case 0: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break;
+  case 1: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break;
+  case 2: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break;
+  case 3: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break;
+  case 4: hour = 'Lɪɴᴅᴀ Mᴀᴅʀᴜɢᴀᴅᴀ 🌆'; break;
+  case 5: hour = 'Lɪɴᴅᴀ Mᴀᴅʀᴜɢᴀᴅᴀ 🌆'; break;
+  case 6: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break;
+  case 7: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break;
+  case 8: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break;
+  case 9: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break;
+  case 10: hour = 'Lɪɴᴅᴀ Mᴀñᴀɴᴀ 🌅'; break;
+  case 11: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 12: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 13: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 14: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 15: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 16: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 17: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 18: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 19: hour = 'Lɪɴᴅᴀ Tᴀʀᴅᴇ 🌞'; break;
+  case 20: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break;
+  case 21: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break;
+  case 22: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break;
+  case 23: hour = 'Lɪɴᴅᴀ Nᴏᴄʜᴇ 🌃'; break;
+}
 global.saludo = hour;
 
 //tags
@@ -102,7 +129,10 @@ var more = String.fromCharCode(8206)
 global.readMore = more.repeat(850)
 
 //Fakes
-global.fkontak = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `6285600793871-1614953337@g.us` } : {}) }, message: { 'contactMessage': { 'displayName': `${nombre}`, 'vcard': ""}}}
+global.fkontak = { 
+  key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `6285600793871-1614953337@g.us` } : {}) }, 
+  message: { 'contactMessage': { 'displayName': `${nombre}`, 'vcard': ""}}
+}
 
 // CORRECCIÓN: objeto combinado correctamente
 global.fake = {
@@ -121,7 +151,17 @@ global.icono = [
   'https://qu.ax/JwlJf.jpg'
 ].getRandom()
 
-global.rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: 100, newsletterName: channelRD.name, }, externalAdReply: { showAdAttribution: true } } }
+global.rcanal = { 
+  contextInfo: { 
+    isForwarded: true, 
+    forwardedNewsletterMessageInfo: { 
+      newsletterJid: channelRD.id, 
+      serverMessageId: 100, 
+      newsletterName: channelRD.name, 
+    }, 
+    externalAdReply: { showAdAttribution: true } 
+  } 
+}
 
 } // Fin handler.all
 
