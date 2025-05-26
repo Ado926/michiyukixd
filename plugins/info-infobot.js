@@ -27,7 +27,7 @@ let handler = async (m, { conn, usedPrefix }) => {
     info += `❒ *NodeJS Uso de memoria* :\n`
     info += `${'```' + Object.keys(process.memoryUsage()).map((key) => `${key}: ${format(process.memoryUsage()[key])}`).join('\n') + '```'}`
 
-    await conn.reply(m.chat, info, fkontak, { contextInfo: { mentionedJid: [owner[0][0] + '@s.whatsapp.net'] } })
+    await conn.reply(m.chat, info, m, { contextInfo: { mentionedJid: [owner[0][0] + '@s.whatsapp.net'] } })
 }
 
 handler.help = ['botinfo']
