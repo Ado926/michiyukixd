@@ -24,7 +24,7 @@ import path, { join, dirname } from 'path'
 import {Boom} from '@hapi/boom'
 import {makeWASocket, protoType, serialize} from './lib/simple.js'
 import {Low, JSONFile} from 'lowdb'
-import {mongoDB, mongoDBV2} from './lib/mongoDB.js'
+import {mongoDB, mongoDBV2} from './lib/mongoDB.js' // Aunque importado, no se usa como la BD principal en este código
 import store from './lib/store.js'
 const {proto} = (await import('@whiskeysockets/baileys')).default
 import pkg from 'google-libphonenumber'
@@ -136,7 +136,7 @@ console.info = () => {}
 console.debug = () => {} 
 
 const connectionOptions = {
-logger: pino({ level: 'silent' }),
+logger: pino({ level: 'silent' }), // Sigue silenciado para reducir el I/O de la consola
 printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
 mobile: MethodMobile, 
 browser: opcion == '1' ? [`${nameqr}`, 'Edge', '20.0.04'] : methodCodeQR ? [`${nameqr}`, 'Edge', '20.0.04'] : ['Ubuntu', 'Edge', '110.0.1587.56'],
@@ -191,8 +191,8 @@ conn.well = false;
 if (!opts['test']) {
 if (global.db) setInterval(async () => {
 if (global.db.data) await global.db.write()
-if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 'tmp', `${jadi}`], tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])));
-}, 30 * 1000);
+if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [tmpdir(), 'tmp', `${jadi}`], tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])));
+}, 1000 * 60 * 2); // OPTIMIZADO: Escribir la base de datos cada 2 minutos (antes 30 segundos)
 }
 
 // if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
@@ -296,7 +296,7 @@ isInit = false
 return true
 };
 
-//Arranque nativo para subbots by - ReyEndymion >> https://github.com/ReyEndymion
+//Arranque nativo para subbots by - ReyEndymion
 
 global.rutaJadiBot = join(__dirname, './JadiBots')
 
@@ -390,10 +390,15 @@ Object.freeze(global.support);
 
 function clearTmp() {
 const tmpDir = join(__dirname, 'tmp')
+if (!existsSync(tmpDir)) return; // Añadido para evitar error si tmp no existe
 const filenames = readdirSync(tmpDir)
 filenames.forEach(file => {
 const filePath = join(tmpDir, file)
-unlinkSync(filePath)})
+try {
+unlinkSync(filePath)
+} catch (err) {
+console.error(chalk.bold.red(`\n✘ Error al eliminar archivo temporal ${file}: ${err.message}`));
+}})
 }
 
 function purgeSession() {
@@ -404,8 +409,11 @@ return file.startsWith('pre-key-')
 })
 prekey = [...prekey, ...filesFolderPreKeys]
 filesFolderPreKeys.forEach(files => {
+try {
 unlinkSync(`./${sessions}/${files}`)
-})
+} catch (err) {
+console.error(chalk.bold.red(`\n✘ Error al eliminar pre-key de sesión ${files}: ${err.message}`));
+}})
 } 
 
 function purgeSessionSB() {
@@ -420,32 +428,37 @@ return fileInDir.startsWith('pre-key-')
 SBprekey = [...SBprekey, ...DSBPreKeys];
 DSBPreKeys.forEach(fileInDir => {
 if (fileInDir !== 'creds.json') {
+try {
 unlinkSync(`./${jadi}/${directorio}/${fileInDir}`)
+} catch (err) {
+console.error(chalk.bold.red(`\n✘ Error al eliminar pre-key de sub-bot ${fileInDir} en ${directorio}: ${err.message}`));
 }})
 }})
 if (SBprekey.length === 0) {
-console.log(chalk.bold.green(`\n╭» ❍ ${jadi} ❍\n│→ NADA POR ELIMINAR \n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻︎`))
+console.log(chalk.bold.green(`\n╭» ❍ ${jadi} ❍\n│→ NADA POR ELIMINAR EN JADIBOTS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻︎`))
 } else {
-console.log(chalk.bold.cyanBright(`\n╭» ❍ ${jadi} ❍\n│→ ARCHIVOS NO ESENCIALES ELIMINADOS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻︎︎`))
+console.log(chalk.bold.cyanBright(`\n╭» ❍ ${jadi} ❍\n│→ ARCHIVOS NO ESENCIALES DE JADIBOTS ELIMINADOS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻︎︎`))
 }} catch (err) {
-console.log(chalk.bold.red(`\n╭» ❍ ${jadi} ❍\n│→ OCURRIÓ UN ERROR\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻\n` + err))
+console.error(chalk.bold.red(`\n╭» ❍ ${jadi} ❍\n│→ OCURRIÓ UN ERROR AL PURGAR JADIBOTS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻\n` + err))
 }}
 
 function purgeOldFiles() {
 const directories = [`./${sessions}/`, `./${jadi}/`]
 directories.forEach(dir => {
-readdirSync(dir, (err, files) => {
-if (err) throw err
-files.forEach(file => {
+if (!existsSync(dir)) return; // Añadido para evitar error si el directorio no existe
+readdirSync(dir).forEach(file => { // Simplificado para no usar callback, es más moderno y directo
 if (file !== 'creds.json') {
 const filePath = path.join(dir, file);
-unlinkSync(filePath, err => {
-if (err) {
-console.log(chalk.bold.red(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} NO SE LOGRÓ BORRAR\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ✘\n` + err))
-} else {
+try {
+unlinkSync(filePath)
 console.log(chalk.bold.green(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} BORRADO CON ÉXITO\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))
-} }) }
-}) }) }) }
+} catch (err) {
+console.error(chalk.bold.red(`\n╭» ❍ ARCHIVO ❍\n│→ ${file} NO SE LOGRÓ BORRAR\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ✘\n` + err))
+} 
+}
+}) 
+}) 
+}
 
 function redefineConsoleMethod(methodName, filterStrings) {
 const originalConsoleMethod = console[methodName]
@@ -457,12 +470,14 @@ arguments[0] = ""
 originalConsoleMethod.apply(console, arguments)
 }}
 
+// OPTIMIZADO: Limpieza de archivos temporales cada 15 minutos (antes 4 min)
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await clearTmp()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 4) // 4 min 
+console.log(chalk.bold.cyanBright(`\n╭» ❍ MULTIMEDIA ❍\n│→ ARCHIVOS DE LA CARPETA TMP ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))
+}, 1000 * 60 * 15) // 15 minutos 
 
-// Modified interval for purging sessions, only leaving creds.json
+// OPTIMIZADO: Purga de sesiones, solo creds.json restante (cada 1 hora, antes 2 min)
 setInterval(async () => {
     if (stopped === 'close' || !conn || !conn.user) return;
     const sessionDir = `./${sessions}/`;
@@ -471,22 +486,29 @@ setInterval(async () => {
         files.forEach(file => {
             const filePath = join(sessionDir, file);
             if (file !== 'creds.json') {
-                unlinkSync(filePath);
-                console.log(chalk.bold.cyanBright(`\n🗑️ Archivo de sesión eliminado: ${file}`));
+                try {
+                    unlinkSync(filePath);
+                    // console.log(chalk.bold.cyanBright(`\n🗑️ Archivo de sesión eliminado: ${file}`)); // Descomentar si quieres ver cada archivo eliminado
+                } catch (err) {
+                    console.error(chalk.bold.red(`\n✘ Error al eliminar archivo de sesión ${file}: ${err.message}`));
+                }
             }
         });
         console.log(chalk.bold.cyanBright(`\n╭» ❍ ${global.sessions} ❍\n│→ SESIONES NO ESENCIALES ELIMINADAS (solo creds.json restante)\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`));
     }
-}, 1000 * 60 * 2); // Every 2 minutes
+}, 1000 * 60 * 60); // 1 hora
 
+// OPTIMIZADO: Purga de sesiones de sub-bots (cada 30 minutos, antes 10 min)
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
-await purgeSessionSB()}, 1000 * 60 * 10) 
+await purgeSessionSB()}, 1000 * 60 * 30) // 30 minutos
 
+// OPTIMIZADO: Purga de archivos antiguos (cada 1 hora, antes 10 min)
 setInterval(async () => {
 if (stopped === 'close' || !conn || !conn.user) return
 await purgeOldFiles()
-console.log(chalk.bold.cyanBright(`\n╭» ❍ ARCHIVOS ❍\n│→ ARCHIVOS RESIDUALES ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))}, 1000 * 60 * 10)
+console.log(chalk.bold.cyanBright(`\n╭» ❍ ARCHIVOS ❍\n│→ ARCHIVOS RESIDUALES ELIMINADAS\n╰― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ― ⌫ ♻`))
+}, 1000 * 60 * 60) // 1 hora
 
 _quickTest().then(() => conn.logger.info(chalk.bold(`✦  H E C H O\n`.trim()))).catch(console.error)
 
