@@ -38,7 +38,6 @@ handler.all = async function (m, { conn }) {
   global.namegrupo = 'ᰔᩚ ᥡᥙkі sᥙ᥆ᥙ • ᥆𝖿іᥴіᥲᥣ ❀'
   global.namecomu = 'ᰔᩚ ᥡᥙkіᑲ᥆𝗍-mძ • ᥴ᥆mᥙᥒі𝗍ᥡ ❀'
   global.listo = '❀ *Aquí tienes ฅ^•ﻌ•^ฅ*'
-  global.fotoperfil = await conn.profilePictureUrl(m.sender, 'image').catch(_ => 'https://files.catbox.moe/xr2m6u.jpg')
 
   // Canal random
   global.canalIdM = ["120363402846939411@newsletter", "120363402846939411@newsletter"]
